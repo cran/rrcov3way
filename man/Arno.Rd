@@ -49,7 +49,7 @@ colnames(Arno[,,1])     # the 11 chemical compositions
 dim(Arno[,1,])          # [1] 23  4
 colnames(Arno[,1,])     # the four occasions
 
-res <- Tucker3(Arno, robust=FALSE, ilr=TRUE)
+res <- Tucker3(Arno, robust=FALSE, coda.transform="ilr")
 res
 
 ## Distance-distance plot

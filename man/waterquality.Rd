@@ -22,7 +22,9 @@ The third dimension refers to the time of collection - ten occasions.
 %\details{}
 %\source{}
 \references{
-Engle, M.A., Gallo, M., Schroeder, K.T., Geboy, N.J., Zupancic, J.W., (2014). Three-way compositional analysis of water quality monitoring data. \emph{Environmental and Ecological Statistics}, 21(3):565-581.
+Engle, M.A., Gallo, M., Schroeder, K.T., Geboy, N.J., Zupancic, J.W., (2014). 
+Three-way compositional analysis of water quality monitoring data. 
+\emph{Environmental and Ecological Statistics}, 21(3):565-581.
 }
 \examples{
 data(waterquality)
@@ -33,7 +35,7 @@ colnames(waterquality[,,1])     # the 12 chemical compositions
 dim(waterquality[,1,])          # [1] 14 10
 colnames(waterquality[,1,])     # the ten occasions
 
-(res <- Tucker3(waterquality, robust=FALSE, ilr=TRUE))
+(res <- Tucker3(waterquality, robust=FALSE, coda.transform="ilr"))
 
 ## Distance-distance plot
 plot(res, which="dd", main="Distance-distance plot")

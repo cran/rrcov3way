@@ -6,14 +6,34 @@ importFrom("stats", "runif", "median", "mad", "qnorm", "sd", "mahalanobis", "qch
 importFrom("robustbase", "doScale")
 importFrom("stats", "weights")
 importFrom("stats", "na.omit")
+importFrom("stats", "coef")
+importFrom("stats", "rnorm")
 
-# Export all names
-exportPattern(".")
+importFrom("nnls", "nnls")
+##importFrom("pracma", "subspace")
 
 ## Import all packages listed as Imports or Depends
 import(
-    ThreeWay,
     rrcov
+)
+
+export(
+    Parafac,
+    Tucker3,
+    do3Scale,
+    do3Postprocess,
+    do3Rotate,
+    reflect,
+    reorder,
+    coordinates,
+    krp,
+    congruence,
+    mtrace,
+    orth,
+    permute,
+    toArray,
+    unfold,
+    cp_als
 )
 
 ##S3 generics
@@ -28,6 +48,7 @@ S3method(do3Postprocess, tucker3)
 S3method(do3Scale, default)
 S3method(do3Scale, parafac)
 S3method(do3Scale, tucker3)
+S3method(do3Rotate, tucker3)
 S3method(reflect, parafac)
 S3method(reflect, tucker3)
 S3method(reorder, parafac)

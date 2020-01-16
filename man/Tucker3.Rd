@@ -9,8 +9,10 @@ Compute a robust Tucker3 model for compositional data
 }
 \usage{
 Tucker3(X, P = 2, Q = 2, R = 2, conv = 1e-06, 
-    center = FALSE, scale = FALSE, scale.mode = c("B", "A", "C"), 
-    robust = FALSE, ilr = FALSE, ncomp.rpca = 2, alpha = 0.75, 
+    center = FALSE, center.mode = c("A", "B", "C", "AB", "AC", "BC", "ABC"), 
+    scale = FALSE, scale.mode = c("B", "A", "C"), 
+    robust = FALSE, coda.transform=c("none", "ilr"), 
+    ncomp.rpca = 0, alpha = 0.75, 
     maxiter=100, crit=0.975, trace = FALSE)
 }
 \arguments{
@@ -20,10 +22,12 @@ Tucker3(X, P = 2, Q = 2, R = 2, conv = 1e-06,
   \item{R}{Number of C-mode components}
   \item{conv}{Convergence criterion, defaults to \code{1e-6}}
   \item{center}{Whether to center the data}
+  \item{center.mode}{If scaling the data, on which mode to do this}
   \item{scale}{Whether to scale the data}
-  \item{scale.mode}{If centering and/or scaling the data, on which mode to do this}
+  \item{scale.mode}{If centering the data, on which mode to do this}
   \item{robust}{Whether to apply a robust estimation}
-  \item{ilr}{If the data are a composition, use an ilr transformation}
+  \item{coda.transform}{If the data are a composition, use an ilr transformation. 
+    Default is non-compositional data, i.e. \code{coda.transform="none"}}
   \item{ncomp.rpca}{Number of components for robust PCA}
   \item{alpha}{Measures the fraction of outliers the algorithm should
     resist. Allowed values are between 0.5 and 1 and the default is 0.75}
@@ -42,7 +46,7 @@ The function can compute four
     \item Robust Tucker3 for compositional data.
 }
 
-This is controlled through the parameters \code{robust=TRUE} and \code{ilr=TRUE}.
+This is controlled through the parameters \code{robust=TRUE} and \code{coda.transform="ilr"}.
 }
 \value{
 An object of class "tucker3" which is basically a list with components:
@@ -51,7 +55,7 @@ An object of class "tucker3" which is basically a list with components:
 \item{A}{Orthogonal loading matrix for the A-mode}
 \item{B}{Orthogonal loading matrix for the B-mode}
 \item{Bclr}{Orthogonal loading matrix for the B-mode, clr transformed.
-    Available only if \code{ilr=TRUE} (default), otherwise NULL}
+    Available only if \code{coda.transform="ilr"}, otherwise NULL}
 \item{C}{Orthogonal loading matrix for the C-mode}
 \item{GA}{Core matrix, which describes the relation between \code{A}, \code{B} and \code{C},
     unfolded in A-form. The largest squared elements of the core matrix indicate the
@@ -78,46 +82,6 @@ Michele Gallo \email{mgallo@unior.it}
 }
 
 \examples{
-##
-## The Bus data from package ThreeWay
-##
-data(Bus)       # from ThreeWay: 7x5x37, unfolded to 7x185
-dim(Bus)
-
-## Preprocessing
-##
-max.scale <- c(47, 10, 10, 15, 15)
-maxBus <- rep(max.scale, 37)
-BusN <- t(t(Bus)/maxBus)
-
-## Use toArray to turn to a 3-way array
-##
-X <- toArray(BusN, 7, 5, 37)
-dimnames(X) <- list(dimnames(Bus)[[1]], 
-                    substr(dimnames(Bus)[[2]][1:5], 1, 1), 
-                    substr(dimnames(Bus)[[2]][seq(1, ncol(Bus), 5)], 3, 8))
-dimnames(X)
-
-## Perform classical Tucker3 (non-robust option and no
-##  ilr transformation for compositional data)
-res <- Tucker3(X, robust=FALSE, ilr=FALSE)
-
-## Distance-distance plot
-plot(res, which="dd", main="Distance-distance plot")
-
-## Paired component plot, mode A
-plot(res, which="comp", main="Paired component plot (mode A)")
-
-## Paired component plot, mode B
-plot(res, which="comp", mode="B", main="Paired component plot (mode B)")
-
-## Joint biplot
-plot(res, which="jbplot", main="Joint biplot")
-
-## Trajectory plot
-plot(res, which="tjplot", main="Trajectory biplot")
-
-
 #############
 ##
 ## Example with the UNIDO Manufacturing value added data
@@ -150,7 +114,7 @@ plot(res, which="comp", mode="B", main="Paired component plot (mode B)")
 plot(res, which="jbplot", main="Joint biplot")
 
 ## Trajectory
-plot(res, which="tjplot", main="Trajectory biplot")
+plot(res, which="tjplot", choices=c(1:4), arrows=FALSE, main="Trajectory biplot")
 
 }
 \keyword{ Multivariate }

@@ -11,6 +11,8 @@
 \usage{
     \method{plot}{tucker3}(x, which = c("dd", "comp", "allcomp", "jbplot", 
     "tjplot", "all"), ask = (which == "all" && dev.interactive(TRUE)), id.n, ...)
+    \method{plot}{parafac}(x, which = c("dd", "comp", "percomp", "allcomp", 
+    "all"), ask = (which == "all" && dev.interactive(TRUE)), id.n, ...)
 }
 \arguments{
   \item{x}{A \code{tucker3} object}
@@ -20,11 +22,13 @@
   \item{\dots}{Other parameters to be passed to the lower level functions.}
 }
 \details{
-Different plots for a \code{tucker3} object will be produced. Use the parameter 
+Different plots for a \code{tucker3} or \code{parafac} object will be produced. Use the parameter 
     \code{which} to select which plot to produce:
 \describe{
     \item{\code{dd}}{Distance-distance plot}
-    \item{\code{comp}}{Paired component plot}
+    \item{\code{comp}}{Paired components plot}
+    \item{\code{percomp}}{Per-component plot}
+    \item{\code{allcomp}}{All components plot}
     \item{\code{jbplot}}{Joint biplot}
     \item{\code{tjplot}}{Trajectory plot}
 }
@@ -37,32 +41,29 @@ Kroonenberg, P.M. (1983).Three-mode principal component analysis:
     Theory and applications (Vol. 2), DSWO press.
 }
 \author{
-Valentin Todorov \email{valentin.todorov@chello.at} and 
-Maria Anna Di Palma \email{madipalma@unior.it} and
-Michele Gallo \email{mgallo@unior.it}
+    Valentin Todorov \email{valentin.todorov@chello.at} and 
+    Maria Anna Di Palma \email{madipalma@unior.it} and
+    Michele Gallo \email{mgallo@unior.it}
 }
 \examples{
+#############
 ##
-## The Bus data from package ThreeWay
-##
-data(Bus)       # from ThreeWay: 7x5x37, unfolded to 7x185
-dim(Bus)
+## Example with the UNIDO Manufacturing value added data
 
-## Preprocessing
-##
-max.scale <- c(47, 10, 10, 15, 15)
-maxBus <- rep(max.scale, 37)
-BusN <- t(t(Bus)/maxBus)
+data(va3way)
+dim(va3way)
 
-## Use rarray to turn back to a 3-way array
-##
-X <- rarray(BusN, 7, 5, 37)
-dimnames(X) <- list(dimnames(Bus)[[1]], c("L-Occ", "P-Occ", "Q-Occ", 
-    "S-Occ", "R-Occ"), paste("V",1:37,sep=""))
+## Treat quickly and dirty the zeros in the data set (if any)
+va3way[va3way==0] <- 0.001
 
-## Perform classical Tucker3 (nor robust option and no 
-##  ilr transformation for compositional data)
-res <- Tucker3(X, robust=FALSE, ilr=FALSE)
+##
+res <- Tucker3(va3way)
+res
+print(res$fit)
+print(res$A)
+
+## Print the core matrix
+print(res$GA)
 
 ## Distance-distance plot
 plot(res, which="dd", main="Distance-distance plot")
@@ -71,14 +72,13 @@ plot(res, which="dd", main="Distance-distance plot")
 plot(res, which="comp", main="Paired component plot (mode A)")
 
 ## Paired component plot, mode B
-plot(res, which="comp", mode="B", main="Paired component plot (mode B)") 
+plot(res, which="comp", mode="B", main="Paired component plot (mode B)")
 
 ## Joint biplot
-plot(res, which="jbplot", main="Joint biplot") 
+plot(res, which="jbplot", main="Joint biplot")
 
-## Trajectory plot
-plot(res, which="tjplot", main="Trajectory biplot") 
-
+## Trajectory
+plot(res, which="tjplot", choices=c(1:4), arrows=FALSE, main="Trajectory biplot")
 
 }
 \keyword{ Multivariate }

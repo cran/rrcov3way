@@ -10,7 +10,7 @@ technology intensity for 55 countries in the period 2000--2010.
 UNIDO maintains a unique database containing key industrial 
 statistics indicators for more than 160 countries in the 
 world in the period 1963-2011: INDSTAT 2, available at 
-    \url{stat.unido.org}. The data are organized according 
+    \url{http://stat.unido.org}. The data are organized according 
 to the International Standard Industrial Classification of all 
 economic activities (ISIC) Revision 3 at 2-digit level. The present data 
 set was created by aggregating the 23 2-digit divisions into five groups 
@@ -34,7 +34,7 @@ a constant - the total manufacturing value added of a country
 in a given year and thus the data set has a compositional character.
 }
 \source{
-    \url{stat.unido.org}
+    \url{http://stat.unido.org}
 }
 \references{
     Upahdyaya S (2011). Derived classifications for industrial performance indicators.

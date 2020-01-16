@@ -1,26 +1,34 @@
-Tucker3 <- function(X, P=2, Q=2, R=2, conv=1e-6, center=FALSE, scale=FALSE, scale.mode=c("B", "A", "C"), robust=FALSE, ilr=FALSE, ncomp.rpca=2, alpha=0.75, maxiter=100, crit=0.975, trace=FALSE)
+Tucker3 <- function(X, P=2, Q=2, R=2,
+    conv=1e-6,
+    center=FALSE, center.mode=c("A", "B", "C", "AB", "AC", "BC", "ABC"),
+    scale=FALSE, scale.mode=c("B", "A", "C"),
+    robust=FALSE, coda.transform=c("none", "ilr"),
+    ncomp.rpca=0, alpha=0.75, maxiter=100, crit=0.975, trace=FALSE)
 {
     call = match.call()
+    center.mode <- match.arg(center.mode)
     scale.mode <- match.arg(scale.mode)
+    coda.transform <- match.arg(coda.transform)
+    ilr <- coda.transform != "none"
 
     stopifnot(alpha <=1 & alpha >= 0.5)
 
     if(robust & ilr)
     {
         ret <- .Tucker3.rob.ilr(X=X, P=P, Q=Q, R=R, conv=conv,
-            center=center, scale=scale, scale.mode=scale.mode, ncomp.rpca=ncomp.rpca, alpha=alpha, maxiter=maxiter, crit=crit, trace=trace)
+            center=center, center.mode=center.mode, scale=scale, scale.mode=scale.mode, coda.transform=coda.transform, ncomp.rpca=ncomp.rpca, alpha=alpha, maxiter=maxiter, crit=crit, trace=trace)
     }
     else if(!robust & !ilr)
     {
-        ret <- .Tucker3(X=X, P=P, Q=Q, R=R, conv=conv, center=center, scale=scale, scale.mode=scale.mode, crit=crit, trace=trace)
+        ret <- .Tucker3(X=X, P=P, Q=Q, R=R, conv=conv, center=center, center.mode=center.mode, scale=scale, scale.mode=scale.mode, crit=crit, trace=trace)
     }
     else if(!robust & ilr)                  # classical for compositional data
     {
-        ret <- .Tucker3.ilr(X=X, P=P, Q=Q, R=R, conv=conv, center=center, scale=scale, scale.mode=scale.mode, crit=crit, trace=trace)
+        ret <- .Tucker3.ilr(X=X, P=P, Q=Q, R=R, conv=conv, center=center, center.mode=center.mode, scale=scale, scale.mode=scale.mode, coda.transform=coda.transform, crit=crit, trace=trace)
     }
     else if(robust & !ilr)                  # robust, non-compositional data
     {
-        ret <- .Tucker3.rob(X=X, P=P, Q=Q, R=R, conv=conv, center=center, scale=scale, scale.mode=scale.mode, ncomp.rpca=ncomp.rpca, alpha=alpha, maxiter=maxiter, crit=crit, trace=trace)
+        ret <- .Tucker3.rob(X=X, P=P, Q=Q, R=R, conv=conv, center=center, center.mode=center.mode, scale=scale, scale.mode=scale.mode, ncomp.rpca=ncomp.rpca, alpha=alpha, maxiter=maxiter, crit=crit, trace=trace)
     }
     else
         stop("Not yet implemented!")
@@ -62,14 +70,17 @@ Tucker3 <- function(X, P=2, Q=2, R=2, conv=1e-6, center=FALSE, scale=FALSE, scal
 ##
 ## Classical (non-robust) Tucker3 (non-compositional data)
 ##
-.Tucker3 <- function(X, P=2, Q=2, R=2, conv=1e-10, center=FALSE, scale=FALSE, scale.mode=c("B", "A", "C"), crit=0.975, trace=FALSE)
+.Tucker3 <- function(X, P=2, Q=2, R=2, conv=1e-10, center=FALSE,
+        center.mode=c("A", "B", "C", "AB", "AC", "BC", "ABC"), scale=FALSE, scale.mode=c("B", "A", "C"),
+        crit=0.975, trace=FALSE)
 {
+    center.mode <- match.arg(center.mode)
     scale.mode <- match.arg(scale.mode)
     dn <- dimnames(X)
     di <- dim(X)
 
     ## center and scale
-    X <- do3Scale(X, center=center, scale=scale, scale.mode=scale.mode)
+    X <- do3Scale(X, center=center, center.mode=center.mode, scale=scale, scale.mode=scale.mode)
 
     ret <- .TK(X=X, P=P, Q=Q, R=R, conv=conv, crit=crit)
     ret$robust <- FALSE
@@ -86,10 +97,15 @@ Tucker3 <- function(X, P=2, Q=2, R=2, conv=1e-6, center=FALSE, scale=FALSE, scal
 ##
 ## Classical (non-robust) Tucker3 for compositional data
 ##
-.Tucker3.ilr <- function(X, P=2, Q=2, R=2, conv=1e-10,
-    center=FALSE, scale=FALSE, scale.mode=c("B", "A", "C"), crit=0.975, trace=FALSE)
+.Tucker3.ilr <- function(X, P=2, Q=2, R=2, conv=1e-10, center=FALSE,
+    center.mode=c("A", "B", "C", "AB", "AC", "BC", "ABC"), scale=FALSE, scale.mode=c("B", "A", "C"),
+    coda.transform=c("ilr"),
+    crit=0.975, trace=FALSE)
 {
+    center.mode <- match.arg(center.mode)
     scale.mode <- match.arg(scale.mode)
+    coda.transform <- match.arg(coda.transform)
+
     dn <- dimnames(X)
     di <- dim(X)
     I <- di[1]
@@ -102,7 +118,7 @@ Tucker3 <- function(X, P=2, Q=2, R=2, conv=1e-6, center=FALSE, scale=FALSE, scal
 
     J <- J - 1
     Xarrayilr <- toArray(Xwideilr, I, J, K)
-    Xarrayilr <- do3Scale(Xarrayilr, center=center, scale=scale, scale.mode=scale.mode)
+    Xarrayilr <- do3Scale(Xarrayilr, center=center, center.mode=center.mode, scale=scale, scale.mode=scale.mode)
     Xwideilr <- unfold(Xarrayilr)
 
     TUCKER <- .TK(Xarrayilr, P=P, Q=Q, R=R, conv=conv)
@@ -157,15 +173,18 @@ Tucker3 <- function(X, P=2, Q=2, R=2, conv=1e-6, center=FALSE, scale=FALSE, scal
 }
 
 ## Robust, no ilr transformation
-.Tucker3.rob <- function(X, P=2, Q=2, R=2, conv=1e-6, center=FALSE, scale=FALSE, scale.mode=c("B", "A", "C"), ncomp.rpca=2, alpha=alpha, maxiter=100, crit=0.975, trace=FALSE)
+.Tucker3.rob <- function(X, P=2, Q=2, R=2, conv=1e-6, center=FALSE,
+        center.mode=c("A", "B", "C", "AB", "AC", "BC", "ABC"), scale=FALSE, scale.mode=c("B", "A", "C"),
+        ncomp.rpca, alpha=alpha, maxiter=100, crit=0.975, trace=FALSE)
 {
+    center.mode <- match.arg(center.mode)
     scale.mode <- match.arg(scale.mode)
     di <- dim(X)
     I <- di[1]
     J <- di[2]
     K <- di[3]
     dn <- dimnames(X)
-    X <- do3Scale(X, center=center, scale=scale, scale.mode=scale.mode)
+    X <- do3Scale(X, center=center, center.mode=center.mode, scale=scale, scale.mode=scale.mode)
     Xwide <- unfold(X)
 
     ## define num. of outliers the algorithm should resists
@@ -175,7 +194,7 @@ Tucker3 <- function(X, P=2, Q=2, R=2, conv=1e-6, center=FALSE, scale=FALSE, scal
     if(trace)
         cat("\nStep 1. Perform robust PCA on the unfolded matrix.")
 
-    outrobpca <- PcaHubert(Xwide, ncomp.rpca, alpha=alpha, )
+    outrobpca <- PcaHubert(Xwide, k=ncomp.rpca, kmax=ncol(Xwide), alpha=alpha, mcd=FALSE)
     Hset <- sort(sort(outrobpca@od, index.return=TRUE)$ix[1:h])
     Xhat <- Xwide[Hset,] #Xunf
     fitprev <- 0
@@ -262,9 +281,15 @@ Tucker3 <- function(X, P=2, Q=2, R=2, conv=1e-6, center=FALSE, scale=FALSE, scal
     ret
 }
 
-.Tucker3.rob.ilr <- function(X, P=2, Q=2, R=2, conv=1e-10, center=FALSE, scale=FALSE, scale.mode=c("B", "A", "C"), ncomp.rpca=2, alpha=alpha, maxiter=100, crit=0.975, trace=FALSE)
+.Tucker3.rob.ilr <- function(X, P=2, Q=2, R=2, conv=1e-10, center=FALSE,
+        center.mode=c("A", "B", "C", "AB", "AC", "BC", "ABC"), scale=FALSE, scale.mode=c("B", "A", "C"),
+        coda.transform=c("ilr"),
+        ncomp.rpca, alpha=alpha, maxiter=100, crit=0.975, trace=FALSE)
 {
+    center.mode <- match.arg(center.mode)
     scale.mode <- match.arg(scale.mode)
+    coda.transform <- match.arg(coda.transform)
+
     di <- dim(X)
     I <- di[1]
     J <- di[2]
@@ -278,7 +303,7 @@ Tucker3 <- function(X, P=2, Q=2, R=2, conv=1e-6, center=FALSE, scale=FALSE, scal
 
     J <- J-1
     Xarrayilr <- toArray(Xwideilr, I, J, K)
-    Xarrayilr <- do3Scale(Xarrayilr, center=center, scale=scale, scale.mode=scale.mode)
+    Xarrayilr <- do3Scale(Xarrayilr, center=center, center.mode=center.mode, scale=scale, scale.mode=scale.mode)
     Xwideilr <- unfold(Xarrayilr)
 
     ## define num. of outliers the algorithm should resists
@@ -288,7 +313,7 @@ Tucker3 <- function(X, P=2, Q=2, R=2, conv=1e-6, center=FALSE, scale=FALSE, scal
     if(trace)
         cat("\nStep 1. Perform robust PCA on the unfolded matrix.")
 
-    outrobpca <- PcaHubert(Xwideilr, ncomp.rpca)
+    outrobpca <- PcaHubert(Xwideilr, k=ncomp.rpca, kmax=ncol(Xwideilr), alpha=alpha, mcd=FALSE)
     Hset <- sort(sort(outrobpca@od, index.return=TRUE)$ix[1:h])
     Xhat <- Xwideilr[Hset,] #Xunf
     fitprev <- 0

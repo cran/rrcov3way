@@ -48,7 +48,7 @@ The third dimension refers to the years in the period 1978--1985.
 \examples{
 data(elind)
 
-res <- Parafac(elind, robust=FALSE, ilr=FALSE)
+res <- Parafac(elind, robust=FALSE, coda.transform="none")
 
 ## Distance-distance plot
 plot(res, which="dd", main="Distance-distance plot")

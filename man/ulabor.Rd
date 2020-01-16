@@ -36,14 +36,16 @@ str(ulabor)
 
 ## Plot robust and non-robust DD-plots of the ilr-transformed data
 usr <- par(mfrow=c(1,2))
-res1 <- Parafac(ulabor, robust=TRUE, ilr=TRUE)
-res2 <- Parafac(ulabor, ilr=TRUE)
+res1 <- Parafac(ulabor, robust=TRUE, coda.transform="ilr")
+res2 <- Parafac(ulabor, coda.transform="ilr")
 plot(res1)
 plot(res2)
 par(usr)
 
+\dontrun{
+
 ## Plot Orthonormalized A-mode component plot
-res <- Parafac(ulabor, robust=TRUE, ilr=TRUE)
+res <- Parafac(ulabor, robust=TRUE, coda.transform="ilr")
 plot(res, which="comp", mode="A", main="Component plot, A-mode")
 
 ## Plot Orthonormalized B-mode component plot
@@ -57,10 +59,10 @@ plot(res, which="comp", mode="C", main="Component plot, C-mode")
 ## adapted for the example and only for robust, ilr transformed model
 ##
 ##
-res <- Parafac(ulabor, robust=TRUE, ilr=TRUE)
+res <- Parafac(ulabor, robust=TRUE, coda.transform="ilr")
 
 plot(res, which="percomp")              # component 1
 plot(res, which="percomp", comp=2)      # component 2
-
+}
 }
 \keyword{datasets}

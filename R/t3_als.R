@@ -20,7 +20,7 @@
     RD <- sqrt(odsq)
 
 ##    critRD <- (mean(RD^(2/3)) + sd(RD^(2/3)) * qnorm(crit))^(3/2)
-    critRD <- .cutoff.rd(RD, robust=FALSE)
+    critRD <- .cutoff.rd(RD, crit=crit, robust=FALSE)
 
     flag <- (RD <= critRD)
 

@@ -1,4 +1,29 @@
+######
+##  VT::16.09.2019
+##
+##  roxygen2::roxygenise("C:/projects/statproj/R/rrcov3way")
+##
+
 do3Scale <- function (x, ...) UseMethod("do3Scale")
+
+#'  Varimax Rotation for Tucker3 models
+#'
+#' @description Computes \emph{varimax} rotation of the core and component matrix of a Tucker3 model to simple structure.
+#'
+#' @param x A Tucker 3 object
+#' @param \dots Potential further arguments passed to called functions.
+#' @return A list including the following components:
+#'
+#' @examples
+#' @rdname do3Rotate
+#' @export
+#' @author Valentin Todorov, \email{valentin.todorov@@chello.at}
+do3Rotate <- function (x, ...) UseMethod("do3Rotate")
+
+do3Postprocess <- function (x, ...) UseMethod("do3Postprocess")
+reflect <- function (x, ...) UseMethod("reflect")
+reorder <- function (x, ...) UseMethod("reorder")
+coordinates <- function (x, ...) UseMethod("coordinates")
 
 permute <- function(X, n, m, p) {
     matrix(as.vector(t(as.matrix(X))), m, n*p)
@@ -72,6 +97,42 @@ tall2wide <- function(Xtall, I, J, K)
     Xwide
 }
 
+ilrArray <- function(x) {
+    di <- dim(x)
+    I <- di[1]
+    J <- di[2]
+    K <- di[3]
+
+    dn <- dimnames(x)
+
+    Xtall <- tallArray(x)
+    Xilr <- .ilrV(Xtall)
+    Xwideilr <- tall2wide(Xilr, I, J, K)
+
+    ret <- toArray(Xwideilr, I, J-1, K)
+    dimnames(ret)[[1]] <- dn[[1]]
+    dimnames(ret)[[2]] <- paste0("Coord-", 1:(J-1))
+    dimnames(ret)[[3]] <- dn[[3]]
+    ret
+}
+
+## Check if the matrix a is with orthonormal columns:
+## - a matrix has orthonormal columns if its Gram matrix is the identity
+#   i.e. A'A == I
+##
+is.orthogonal <- function(a)
+{
+    ata <- t(a) %*% a
+    diag(ata) <- 1
+    ret <- all.equal(ata, diag(ncol(a)), check.attributes=FALSE)
+    is.logical(ret) && ret
+}
+is.orthonormal <- function(a)
+{
+    ret <- all.equal(t(a) %*% a, diag(ncol(a)), check.attributes=FALSE)
+    is.logical(ret) && ret
+}
+
 do3Scale.tucker3 <- function(x, renorm.mode=c("A", "B", "C"), ...)
 {
     renorm.mode <- match.arg(renorm.mode)
@@ -140,10 +201,13 @@ do3Scale.parafac <- function(x, renorm.mode=c("A", "B", "C"), ...)
     x
 }
 
-do3Scale.default <- function(x, center=FALSE, scale=FALSE, center.mode=c("A", "B", "C"), scale.mode=c("B", "A", "C"), only.data=TRUE, ...)
+do3Scale.default <- function(x, center=FALSE, scale=FALSE, center.mode=c("A", "B", "C", "AB", "AC", "BC", "ABC"), scale.mode=c("B", "A", "C"), only.data=TRUE, ...)
 {
     ss <- function(x) sqrt(sum(x^2))
     center.mode <- match.arg(center.mode)
+    cmode <- vector("character", length=3)
+    for(i in 1:nchar(center.mode))
+        cmode[i] <- substr(center.mode, i, i)
     scale.mode <- match.arg(scale.mode)
     di <- dim(x)
     dn <- dimnames(x)
@@ -154,14 +218,22 @@ do3Scale.default <- function(x, center=FALSE, scale=FALSE, center.mode=c("A", "B
 
     if(!is.logical(center) || center == TRUE)
     {
-        x <- unfold(x, center.mode)
-        if(is.logical(center) && center == TRUE)
-            center <- mean
+        for(i in 1:length(cmode))
+        {
+            cmi <- cmode[i]
+            if(nchar(cmi) > 0)
+            {
+                ## print(paste("Centering mode ", cmi))
+                x <- unfold(x, cmi)
+                if(is.logical(center) && center == TRUE)
+                    center <- mean
 
-        x1 <- doScale(x, center=center, scale=NULL)
-        xcenter <- x1$center
-        x <- toArray(x1$x, di[1], di[2], di[3], mode=center.mode)
-        dimnames(x) <- dn
+                x1 <- doScale(x, center=center, scale=NULL)
+                xcenter <- x1$center
+                x <- toArray(x1$x, di[1], di[2], di[3], mode=cmi)
+                dimnames(x) <- dn
+            }
+        }
     }
 
     if(!is.null(scale) && (!is.logical(scale) || scale == TRUE))
@@ -180,10 +252,44 @@ do3Scale.default <- function(x, center=FALSE, scale=FALSE, center.mode=c("A", "B
     ret
 }
 
-reflect <- function (x, ...) UseMethod("reflect")
-reorder <- function (x, ...) UseMethod("reorder")
-do3Postprocess <- function (x, ...) UseMethod("do3Postprocess")
-coordinates <- function (x, ...) UseMethod("coordinates")
+#' @param weights A numeric vector with length 3: relative weights (greater or equal 0)
+#'  for the simplicity of the compoent matrices \code{A}, \code{B} and \code{C} respectively.
+#' @param rotate Within which mode to rotate the Tucker3 solution:
+#'  \code{rotate="A"} means to rotate the component matrix \code{A} of mode A;
+#'  \code{rotate=c("A", "B")} means to rotate the component matrices \code{A} and
+#'  \code{B} of modes A and B respectively. Default is to rotate all modes,
+#'  i.e. \code{rotate=c("A", "B", "C")}.
+#'
+#' @rdname do3Rotate
+#' @export
+do3Rotate.tucker3 <- function(x, weights=c(0, 0, 0), rotate=c("A", "B", "C"), ...)
+{
+    rot1 <- rot2 <- rot3 <- 0
+    rot1 <- ifelse("A" %in% rotate, 1, rot1)
+    rot2 <- ifelse("B" %in% rotate, 1, rot2)
+    rot3 <- ifelse("C" %in% rotate, 1, rot3)
+
+    rot <- .varimcoco(x$A, x$B, x$C, x$G, weights[1], weights[2], weights[3], rot1, rot2, rot3, nanal=1, ...)
+    dn1 <- dimnames(x$A)
+    dn2 <- dimnames(x$B)
+    dn3 <- dimnames(x$C)
+    dn <- dimnames(x$GA)
+    x$A <- rot$AS; dimnames(x$A) <- dn1
+    x$B <- rot$BT; dimnames(x$B) <- dn2
+    x$C <- rot$CU; dimnames(x$C) <- dn3
+    x$GA <- rot$K; dimnames(x$GA) <- dn
+    vvalue <- rep(0, 4)
+    names(vvalue) <- c("GA", "A", "B", "C")
+    vvalue[1] <- rot$f1
+    vvalue[2] <- rot$f2a
+    vvalue[3] <- rot$f2b
+    vvalue[4] <- rot$f2c
+
+    ans <- list(x=x, S=rot$S, T=rot$T, U=rot$U, vvalue=vvalue, f=rot$f)
+    class(ans) <- "rotation"
+
+    ans
+}
 
 coordinates.parafac <- function(x, mode=c("A", "B", "C"), type=c("normalized", "unit", "principal"), ...)
 {
@@ -325,23 +431,6 @@ reflect.parafac <- function(x, mode=c("A", "B", "C"), rsign=1, ...)
     x
 }
 
-## Check if the matrix a is with orthonormal columns:
-## - a matrix has orthonormal columns if its Gram matrix is the identity
-#   i.e. A'A == I
-##
-is.orthogonal <- function(a)
-{
-    ata <- t(a) %*% a
-    diag(ata) <- 1
-    ret <- all.equal(ata, diag(ncol(a)), check.attributes=FALSE)
-    is.logical(ret) && ret
-}
-is.orthonormal <- function(a)
-{
-    ret <- all.equal(t(a) %*% a, diag(ncol(a)), check.attributes=FALSE)
-    is.logical(ret) && ret
-}
-
 ##  Calculate the explained variance (standardized weights)
 ##  by component for a PARAFAC model.
 ##
@@ -434,18 +523,29 @@ reorder.tucker3 <- function(x, mode=c("A", "B", "C"), order=TRUE, ...)
     if(length(unique(order)) != ncomp | max(order) > ncomp | min(order) < 1)
         stop("Incorrect new order specified. Must have length equal to ", ncomp, " and contain unique integers in the range 1 to ", ncomp, ".")
 
+    dn <- dimnames(x$GA)
     if(mode == "A")
     {
         x$A <- x$A[, order]
-        x$GA <- x$GA[order, ]
+        ga <- toArray(x$GA, P, Q, R)
+        ga <- ga[order,,]
+        x$GA <- unfold(ga)
+        rownames(x$GA) <- colnames(x$A)
+        colnames(x$GA) <- dn[[2]]
     } else if(mode=="B")
     {
         x$B <- x$B[, order]
-        x$GA <- x$GA[order, ]
+        ga <- toArray(x$GA, P, Q, R)
+        ga <- ga[,order,]
+        x$GA <- unfold(ga)
+        rownames(x$GA) <- dn[[1]]
     }else
     {
         x$C <- x$C[, order]
-        x$GA <- x$GA[order, ]
+        ga <- toArray(x$GA, P, Q, R)
+        ga <- ga[,,order]
+        x$GA <- unfold(ga)
+        rownames(x$GA) <- dn[[1]]
     }
 
     x

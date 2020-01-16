@@ -67,7 +67,7 @@
 }
 
 ##
-##  Loadings plot for modes A, B and C of Tucker model
+##  Loadings plot for modes A, B and C of Tucker3 model
 ##
 .compplot.tucker3 <- function (x, mode=c("A", "B", "C"), choices=1L:2L, xlim, ylim, arrows=TRUE, ...)
 {
@@ -152,7 +152,7 @@
 }
 
 ##
-##  Loadings plot for modes A, B and C of Tucker model
+##  Loadings plot for modes A, B and C of PARAFAC model
 ##
 .compplot.parafac <- function (x, mode=c("A", "B", "C"), choices=1L:2L, xlim, ylim, arrows=TRUE, ...)
 {
@@ -238,9 +238,10 @@
     return(invisible(x))
 }
 
-.allcompplot <- function (x, mode=c("C", "B", "A"), xlim, ylim, xlab, ylab, legend.position="topleft", ...)
+.allcompplot <- function (x, mode=c("C", "B", "A"), xlim, ylim, xlab, ylab, legend.position="topleft", points=TRUE, ...)
 {
     mode <- match.arg(mode)
+
     C <- x$C
     if(mode == "A")
         C <- x$A
@@ -258,13 +259,14 @@
     plot(time, C[,1], ylim=ylim, xlab=xlab, ylab=ylab, type="n", xaxt="n", ...)
     for(i in 1:ncol(C))
     {
-        points(time, C[,i], pch=i, col=i, bg=i)
-        lines(time, C[,i], col=i)
+        if(points)
+            points(time, C[,i], pch=i, col=i, bg=i)
+        lines(time, C[,i], col=i, lty=1:ncol(C))
     }
     abline(h=0, lty="dotted")
     axis(side=1, at=time, labels=names(time))
-    legend(legend.position, pch=1:ncol(C), col=1:ncol(C), pt.bg=1:ncol(C), legend=paste("Component", 1:ncol(C)))
-
+    if(!is.null(legend.position) && legend.position != "none")
+        legend(legend.position, pch=1:ncol(C), col=1:ncol(C), pt.bg=1:ncol(C), legend=paste("Component", 1:ncol(C)), lty=1:ncol(C))
 }
 
 .percompplot.parafac <- function (x, comp=1, ...)
@@ -444,7 +446,7 @@
         x <- c(min(ACco[cx, 1]), max(ACco[cx, 1]))
         y <- c(min(ACco[cx, 2]), max(ACco[cx, 2]))
     }
-    plot(x, y, xlab="First trajectory axis", ylab="Second trajectory axis", type="n", cex=1.2)
+    plot(x, y, xlab="First trajectory axis", ylab="Second trajectory axis", type="n", cex=1.2, ...)
     abline(v=0, h=0, lty = 2)
 
     if(arrows)

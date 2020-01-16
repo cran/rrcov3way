@@ -14,7 +14,8 @@ array across one mode (modes indicated by "A", "B" or "C").
     \method{do3Scale}{tucker3}(x, renorm.mode = c("A", "B", "C"), \dots)
     \method{do3Scale}{parafac}(x, renorm.mode = c("A", "B", "C"), \dots)
     \method{do3Scale}{default}(x, center = FALSE, scale = FALSE, 
-        center.mode = c("A", "B", "C"), scale.mode = c("B", "A", "C"), 
+        center.mode = c("A", "B", "C", "AB", "AC", "BC", "ABC"), 
+        scale.mode = c("B", "A", "C"), 
         only.data=TRUE, \dots)
 }
 \arguments{

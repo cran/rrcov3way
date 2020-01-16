@@ -1,6 +1,29 @@
+2020-01-14  Valentin Todorov  <valentin.todorov@chello.at>
+    *
+    * DESCRIPTION (Version): 0.1-18
+    * DESCRIPTION (Version): 0.1-17
+    *   Removed dependency to ThreeWay
+    *   NAMESPACE fixed to export correctly only the user-level functions
+    *   data/amino.rda, man/amino.rda - added data set amino 
+    *   Parameter ilr=TRUE/FALSE in Parafac () and Tucker3() changed to coda.transform=c("none", "ilr")
+    *   Added utility and matrix utility functions: mtrace, krp, orth, orthmax2, congruence, varimcoco
+    *
+
+2017-08-01  Valentin Todorov  <valentin.todorov@chello.at>
+    *
+    * DESCRIPTION (Version): 0.1-12
+    *   R/utils.R - added function do3Rotate.tucker3() to rotate a Tucker3 solution;
+    *       - calls .varimcoco(), adapted from ThreeWay;
+    *       - in turn it calls orth() and orthmax2()
+    *   R/utils - do3Scale() updated to perform double centering. Also, Tucker3 and Parafac updated to
+    *       use double centering
+    *   R/utils - added function ilrArray() to perform ilr transformation on an array
+    *
+    *
+
 2017-06-19  Valentin Todorov  <valentin.todorov@chello.at>
     *
-    * DESCRIPTION (Version): 0.1-8, 0.1-9
+    * DESCRIPTION (Version): 0.1-8, 0.1-9, 0.1-10
     *
     * First version submitted to CRAN
     *

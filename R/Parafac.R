@@ -1,37 +1,44 @@
 ##  Return:
 ##  .Parafac:       list(fit=fit, A=A, B=B, C=C, Xhat=Xfit, RD=RD)
-##  .Parafac.rob:   list(fit=fit, A=Arew, B=Brew, C=Crew, Xhat=out.Xhat.rew,
+##  .Parafac.rob:   list(fit=fit, A=Arew, B=Brew, C=Crew, Xhat=Xhat.rew,
 ##                      flag=flag, Hset=Hset, iter=iter, RD=out.rd)
 ##  .Parafac.ilr:   list(fit=fit, A=A, B=B, Bclr=Bclr, C=C, Zhat=Zfit, RD=RD)
 ##  .Parafac.rob.ilr: list(fit=fit, A=Arew, B=Brew, Bclr=Bclr, C=Crew,
-##                      Zhat=out.Xhat.rew, flag=flag, Hset=Hset,
+##                      Zhat=Xhat.rew, flag=flag, Hset=Hset,
 ##                      iter=iter, RD=out.rd)
 ###############################
 ##
-Parafac <- function(X, ncomp=2, conv=1e-6, center=FALSE, scale=FALSE, scale.mode=c("B", "A", "C"),
-    orth=c(),
-    robust=FALSE, ilr=FALSE, ncomp.rpca=2, alpha=0.75,
-    maxiter=100, crit=0.975, trace=FALSE)
+Parafac <- function(X, ncomp=2,
+    center=FALSE, center.mode=c("A", "B", "C", "AB", "AC", "BC", "ABC"),
+    scale=FALSE, scale.mode=c("B", "A", "C"),
+    const="none", conv=1e-6, start="svd", maxit=10000,
+    robust=FALSE, coda.transform=c("none", "ilr"),
+    ncomp.rpca=0, alpha=0.75, robiter=100, crit=0.975,      # arguments for the robust parafac
+    trace=FALSE)
 {
+    center.mode <- match.arg(center.mode)
     scale.mode <- match.arg(scale.mode)
+    coda.transform <- match.arg(coda.transform)
+    ilr <- coda.transform != "none"
+
     call <- match.call()
     stopifnot(alpha <=1 & alpha >= 0.5)
 
     if(robust & ilr)
     {
-        ret <- .Parafac.rob.ilr(X=X, ncomp=ncomp, conv=conv, center=center, scale=scale, scale.mode=scale.mode, orth=orth, ncomp.rpca=ncomp.rpca, alpha=alpha, maxiter=maxiter, crit=crit, trace=trace)
+        ret <- .Parafac.rob.ilr(X=X, ncomp=ncomp, center=center, center.mode=center.mode, scale=scale, scale.mode=scale.mode, const=const, conv=conv, start=start, maxit=maxit, coda.transform=coda.transform, ncomp.rpca=ncomp.rpca, alpha=alpha, robiter=robiter, crit=crit, trace=trace)
     }
     else if(!robust & !ilr)
     {
-        ret <- .Parafac(X=X, ncomp=ncomp, conv=conv, center=center, scale=scale, scale.mode=scale.mode, orth=orth, crit=crit, trace=trace)
+        ret <- .Parafac(X=X, ncomp=ncomp, center=center, center.mode=center.mode, scale=scale, scale.mode=scale.mode, const=const, conv=conv, start=start, maxit=maxit, crit=crit, trace=trace)
     }
     else if(!robust & ilr)                  # classical for compositional data
     {
-        ret <- .Parafac.ilr(X=X, ncomp=ncomp, conv=conv, center=center, scale=scale, scale.mode=scale.mode, orth=orth, crit=crit, trace=trace)
+        ret <- .Parafac.ilr(X=X, ncomp=ncomp, center=center, center.mode=center.mode, scale=scale, scale.mode=scale.mode, const=const, conv=conv, start=start, maxit=maxit, coda.transform=coda.transform, crit=crit, trace=trace)
     }
     else if(robust & !ilr)                  # robust, for non-compositional data
     {
-        ret <- .Parafac.rob(X=X, ncomp=ncomp, conv=conv, center=center, scale=scale, scale.mode=scale.mode, orth=orth, ncomp.rpca=ncomp.rpca, alpha=alpha, maxiter=maxiter, crit=crit, trace=trace)
+        ret <- .Parafac.rob(X=X, ncomp=ncomp, center=center, center.mode=center.mode, scale=scale, scale.mode=scale.mode, const=const, conv=conv, start=start, maxit=maxit, ncomp.rpca=ncomp.rpca, alpha=alpha, robiter=robiter, crit=crit, trace=trace)
     }
     else
         stop("Not yet implemented!")
@@ -51,27 +58,27 @@ Parafac <- function(X, ncomp=2, conv=1e-6, center=FALSE, scale=FALSE, scale.mode
     ret
 }
 
-.cutoff.rd <- function(od, h, crit=0.975, robust=TRUE)
+.cutoff.rd <- function(rd, h, crit=0.975, robust=TRUE)
 {
     if(robust)
     {
         ## a) Using median and MAD
-        ##  ret <-  (median(od^(2/3)) + mad(od^(2/3)) * qnorm(crit))^(3/2)
+        ##  ret <-  (median(rd^(2/3)) + mad(rd^(2/3)) * qnorm(crit))^(3/2)
         ##
         ## b) Using MASS cov.mcd (will need to import - library(MASS))
-        ## unimcd <- cov.mcd(od^(2/3),quantile.used=h)
+        ## unimcd <- cov.mcd(rd^(2/3),quantile.used=h)
         ## ret <- sqrt(qnorm(0.975, unimcd$center, sqrt(unimcd$cov))^3)
         ##
         ## c) Using UNIMCD
-         unimcd <- rrcov:::unimcd(od^(2/3), quan=h)
+         unimcd <- rrcov:::unimcd(rd^(2/3), quan=h)
          ret <- sqrt(qnorm(crit, unimcd$tmcd, unimcd$smcd)^3)
 
         ## d) Using UNIMCD by CovMcd
-        ## unimcd <- CovMcd(od, alpha=h/length(od))
+        ## unimcd <- CovMcd(rd, alpha=h/length(rd))
         ## ret <- sqrt(qnorm(crit, getCenter(unimcd), sqrt(getCov(unimcd)))^3)
         ##
     } else
-        ret <- (mean(od^(2/3)) + sd(od^(2/3)) * qnorm(crit))^(3/2)
+        ret <- (mean(rd^(2/3)) + sd(rd^(2/3)) * qnorm(crit))^(3/2)
 
     ret
 }
@@ -99,9 +106,14 @@ Parafac <- function(X, ncomp=2, conv=1e-6, center=FALSE, scale=FALSE, scale.mode
 
 ## Classical PARAFAC
 ##
-##  - orth=c(): no orthogonality constraints, orth=c("A") means orthogonality constraint on mode A.
-.Parafac <- function (X, ncomp, conv=1e-6, center=FALSE, scale=FALSE, scale.mode=c("B", "A", "C"), orth=c(), crit=0.975, trace=FALSE)
+##  - const: constraints 9defaultes to "none"), orth=orthogonality constraints,
+##      nonneg=nonnegativity, zerocor=zero correlation constraints
+.Parafac <- function (X, ncomp, center=FALSE, center.mode=c("A", "B", "C", "AB", "AC", "BC", "ABC"),
+    scale=FALSE, scale.mode=c("B", "A", "C"),
+    const="none", conv=1e-6, start="svd", maxit=10000,
+    crit=0.975, trace=FALSE)
 {
+    center.mode <- match.arg(center.mode)
     scale.mode <- match.arg(scale.mode)
     di <- dim(X)
     I <- di[1]
@@ -109,14 +121,10 @@ Parafac <- function(X, ncomp=2, conv=1e-6, center=FALSE, scale=FALSE, scale.mode
     K <- di[3]
     dn <- dimnames(X)
 
-    X <- do3Scale(X, center=center, scale=scale, scale.mode=scale.mode)
+    X <- do3Scale(X, center=center, center.mode=center.mode, scale=scale, scale.mode=scale.mode)
     Xwide <- unfold(X)
 
-    ort1 <- ort2 <- ort3 <- 1
-    ort1 <- ifelse("A" %in% orth, 2, ort1)
-    ort2 <- ifelse("B" %in% orth, 2, ort2)
-    ort3 <- ifelse("C" %in% orth, 2, ort3)
-    modelPar <- .CPfunc(Xwide, I, J, K, ncomp, ort1, ort2, ort3, start=0, conv=conv, maxit=10000, trace=trace)
+    modelPar <- cp_als(X, ncomp=ncomp, const=const, conv=conv, start=start, maxit=maxit, trace=trace)
     A <- modelPar$A
     B <- modelPar$B
     C <- modelPar$C
@@ -125,9 +133,9 @@ Parafac <- function(X, ncomp=2, conv=1e-6, center=FALSE, scale=FALSE, scale.mode
     Xfitw <- A %*% t(KR)
     Xfit <- array(Xfitw, c(I,J,K))
 
-    odsq <- apply((Xwide-Xfitw)^2,1,sum)
-    fit <- sum(odsq)
-    rd <- sqrt(odsq)
+    rdsq <- apply((Xwide-Xfitw)^2,1,sum)
+    fit <- sum(rdsq)
+    rd <- sqrt(rdsq)
     cutoff.rd <- .cutoff.rd(rd, robust=FALSE)
 
     out.sd <- .cutoff.sd(A, crit=crit, robust=FALSE)
@@ -140,15 +148,19 @@ Parafac <- function(X, ncomp=2, conv=1e-6, center=FALSE, scale=FALSE, scale.mode
     dimnames(Xfit) <- list(dn[[1]],dn[[2]],dn[[3]])
     names(rd) <- dn[[1]]
 
-    ret <- list(fit=modelPar$f, fp=modelPar$fp, A=A, B=B, C=C, Xhat=Xfit, rd=rd, cutoff.rd=cutoff.rd, sd=out.sd$sd, cutoff.sd=out.sd$cutoff.sd, robust=FALSE, ilr=FALSE)
+    ret <- list(fit=modelPar$f, fp=modelPar$fp, A=A, B=B, C=C, Xhat=Xfit, const=modelPar$const,
+        rd=rd, cutoff.rd=cutoff.rd, sd=out.sd$sd, cutoff.sd=out.sd$cutoff.sd, robust=FALSE, ilr=FALSE)
     class(ret) <- "parafac"
     ret
 }
 
 ## Robust PARAFAC
-.Parafac.rob <- function (X, ncomp, conv=1e-6, center=FALSE, scale=FALSE, scale.mode=c("B", "A", "C"),
-    orth=c(), ncomp.rpca=2, alpha=0.75, maxiter=100, crit=0.975, trace=FALSE)
+.Parafac.rob <- function (X, ncomp, center=FALSE, center.mode=c("A", "B", "C", "AB", "AC", "BC", "ABC"),
+    scale=FALSE, scale.mode=c("B", "A", "C"),
+    const="none", conv=1e-6, start="svd", maxit=10000,
+    ncomp.rpca, alpha=0.75, robiter=100, crit=0.975, trace=FALSE)
 {
+    center.mode <- match.arg(center.mode)
     scale.mode <- match.arg(scale.mode)
 
     ## ncomp is the number of components
@@ -159,13 +171,8 @@ Parafac <- function(X, ncomp=2, conv=1e-6, center=FALSE, scale=FALSE, scale.mode
 
     dn <- dimnames(X)
 
-    X <- do3Scale(X, center=center, scale=scale, scale.mode=scale.mode)
+    X <- do3Scale(X, center=center, center.mode=center.mode, scale=scale, scale.mode=scale.mode)
     Xwide <- unfold(X)
-
-    ort1 <- ort2 <- ort3 <- 1
-    ort1 <- ifelse("A" %in% orth, 2, ort1)
-    ort2 <- ifelse("B" %in% orth, 2, ort2)
-    ort3 <- ifelse("C" %in% orth, 2, ort3)
 
     Ahat <- matrix(0, dim(X)[1], ncomp)
 
@@ -173,23 +180,23 @@ Parafac <- function(X, ncomp=2, conv=1e-6, center=FALSE, scale=FALSE, scale.mode
     h <- round(alpha*dim(X)[1])
 
     ## Step 1 RobPCA XA
-    outrobpca <- PcaHubert(Xwide, ncomp.rpca, alpha=alpha)
+    outrobpca <- PcaHubert(Xwide, k=ncomp.rpca, kmax=ncol(Xwide), alpha=alpha, mcd=FALSE)
     Hset <- sort(sort(outrobpca@od, index.return=TRUE)$ix[1:h])
     Xhat <-Xwide[Hset,]
     fitprev <- 0
     changeFit <- 1 + conv
     iter <- 0
-    while (changeFit > conv & iter <= maxiter)
+    while (changeFit > conv & iter <= robiter)
     {
         iter <- iter+1
-        print(iter)
 
-        ##Step 2 - PARAFAC analysis
-        modelPar <- .CPfunc(Xhat, h, J, K, ncomp, ort1, ort2, ort3, start=0, conv=conv, maxit=10000, trace=trace)
+        ##  Step 2 - PARAFAC analysis
+        modelPar <- cp_als(Xhat, h, J, K, ncomp=ncomp, const=const, conv=conv, start=start, maxit=maxit, trace=trace)
         Ah<-modelPar$A
         Bh<-modelPar$B
         Ch<-modelPar$C
 
+        ## Step 3 - Fit the model
         KR <- krp(Ch, Bh)  # Khatri-Rao product
         for(i in 1:dim(X)[1])
         {
@@ -197,35 +204,26 @@ Parafac <- function(X, ncomp=2, conv=1e-6, center=FALSE, scale=FALSE, scale.mode
             Ahat[i,] <- .pinv(KR) %*% t(vJKx1)
         }
         Xfit <- Ahat %*% t(KR)
-        out.Xhat <- array(Xfit, c(I,J,K))
 
-        ## Step 4  Computation of the od
-        odsq <- apply((Xwide-Xfit)^2, 1, sum)       #Xunf
-        od <- sqrt(odsq)
-        Hset <- sort(sort(odsq, index.return=TRUE)$ix[1:h])
-        fit <- sum(odsq[Hset])
+        ##  Step 4  - Computation of the residual distances
+        rdsq <- apply((Xwide-Xfit)^2, 1, sum)
+        rd <- sqrt(rdsq)
+        Hset <- sort(sort(rdsq, index.return=TRUE)$ix[1:h])
+        fit <- sum(rdsq[Hset])
         Xhat <- Xwide[Hset,]#Xunf
 
-        ## Step 5  Fit of the model
-        if (fitprev==0)
-        {
-            changeFit <- 1 + conv
-        }
-        else
-        {
-            changeFit <- abs(fit-fitprev)/fitprev
-        }
-
+        ##  Step 5  Fit of the model
+        changeFit <- if(fitprev == 0) 1 + conv else abs(fit-fitprev)/fitprev
         fitprev <- fit
     }
 
     ## reweighting
-    cutoffOD <- .cutoff.rd(od, h)
-    flag <- od <= cutoffOD
+    cutoffOD <- .cutoff.rd(rd, h)
+    flag <- rd <= cutoffOD
     Xflag <- X[flag,,]
     dim <- dim(Xflag)[1]
     Xflag_unf <- matrix(Xflag, dim, J*K)
-    modelParrew <- .CPfunc(Xflag_unf, dim, J, K, ncomp, ort1, ort2, ort3, start=0, conv=conv, maxit=10000, trace=trace)
+    modelParrew <- cp_als(Xflag_unf, dim, J, K, ncomp=ncomp, const=const, conv=conv, start=start, maxit=maxit, trace=trace)
     Arew <- modelParrew$A
     Brew <- modelParrew$B
     Crew <- modelParrew$C
@@ -242,7 +240,7 @@ Parafac <- function(X, ncomp=2, conv=1e-6, center=FALSE, scale=FALSE, scale.mode
     out.rd <- odrew <- sqrt(odsqrew)
     cutoffOD <- .cutoff.rd(odrew, h)
     flag <- odrew <= cutoffOD
-    out.Xhat.rew <- array(Xfitrew, c(I,J,K))
+    Xhat.rew <- array(Xfitrew, c(I,J,K))
 
     for(i in 1:ncomp)
     {
@@ -258,22 +256,30 @@ Parafac <- function(X, ncomp=2, conv=1e-6, center=FALSE, scale=FALSE, scale.mode
     dimnames(Arew) <- list(dn[[1]],nfac)
     dimnames(Brew) <- list(dn[[2]],nfac)
     dimnames(Crew) <- list(dn[[3]],nfac)
-    dimnames(out.Xhat.rew) <- list(dn[[1]],dn[[2]],dn[[3]])
+    dimnames(Xhat.rew) <- list(dn[[1]],dn[[2]],dn[[3]])
     names(flag) <- dn[[1]]
     names(out.rd) <- dn[[1]]
 
-    res <- list(fit=fit, fp=modelPar$fp, A=Arew, B=Brew, C=Crew, Xhat=out.Xhat.rew,
+    res <- list(fit=fit, fp=modelPar$fp, A=Arew, B=Brew, C=Crew, Xhat=Xhat.rew, const=modelParrew$const,
                 flag=flag, Hset=Hset, iter=iter, alpha=alpha,
-                rd=out.rd, cutoff.rd=cutoffOD, sd=out.sd$sd, cutoff.sd=out.sd$cutoff.sd, robust=TRUE, ilr=FALSE)
+                rd=out.rd, cutoff.rd=cutoffOD, sd=out.sd$sd, cutoff.sd=out.sd$cutoff.sd,
+                pcaobj=outrobpca,
+                robust=TRUE, ilr=FALSE)
 
     class(res) <- "parafac"
     res
 }
 
 ## Classical PARAFAC for compositional data
-.Parafac.ilr <- function (X, ncomp, conv=1e-6, center=FALSE, scale=FALSE, scale.mode=c("B", "A", "C"), orth=c(), crit=0.975, trace=FALSE)
+.Parafac.ilr <- function (X, ncomp, center=FALSE, center.mode=c("A", "B", "C", "AB", "AC", "BC", "ABC"),
+        scale=FALSE, scale.mode=c("B", "A", "C"),
+        const="none", conv=1e-6, start="svd", maxit=10000, coda.transform=c("ilr"),
+        crit=0.975, trace=FALSE)
 {
+    center.mode <- match.arg(center.mode)
     scale.mode <- match.arg(scale.mode)
+    coda.transform <- match.arg(coda.transform)
+
     ## ncomp is the number of components
     di <- dim(X)
     I <- di[1]
@@ -291,15 +297,10 @@ Parafac <- function(X, ncomp=2, conv=1e-6, center=FALSE, scale=FALSE, scale.mode
     Xarrayilr <- array(Xwideilr, c(I, J, K))
 
     ## centering the compositions
-    Xarrayilr <- do3Scale(Xarrayilr, center=center, scale=scale, scale.mode=scale.mode)
+    Xarrayilr <- do3Scale(Xarrayilr, center=center, center.mode=center.mode, scale=scale, scale.mode=scale.mode)
     Xwideilr <- unfold(Xarrayilr)
 
-    ort1 <- ort2 <- ort3 <- 1
-    ort1 <- ifelse("A" %in% orth, 2, ort1)
-    ort2 <- ifelse("B" %in% orth, 2, ort2)
-    ort3 <- ifelse("C" %in% orth, 2, ort3)
-
-    modelPar <- .CPfunc(Xwideilr, I, J, K, ncomp, ort1, ort2, ort3, start=0, conv=conv, maxit=10000, trace=trace)
+    modelPar <- cp_als(Xwideilr, I, J, K, ncomp, const=const, conv=conv, start=start, maxit=maxit, trace=trace)
     A <- modelPar$A
     B <- modelPar$B
     C <- modelPar$C
@@ -308,9 +309,9 @@ Parafac <- function(X, ncomp=2, conv=1e-6, center=FALSE, scale=FALSE, scale.mode
     Zfitw <- A%*%t(KR)
     Zfit <- array(Zfitw,c(I,J,K))
 
-    odsq <- apply((Xwideilr-Zfitw)^2,1,sum)
-    fit <- sum(odsq)
-    RD <- sqrt(odsq)
+    rdsq <- apply((Xwideilr-Zfitw)^2,1,sum)
+    fit <- sum(rdsq)
+    RD <- sqrt(rdsq)
     cutoff.rd <- .cutoff.rd(RD, robust=FALSE)
 
     ## Back-transformation of loadings to clr
@@ -334,15 +335,22 @@ Parafac <- function(X, ncomp=2, conv=1e-6, center=FALSE, scale=FALSE, scale.mode
     dimnames(Zfit) <- list(dn[[1]],NULL,dn[[3]])
     names(RD) <- dn[[1]]
 
-    res <- list(fit=fit, fp=modelPar$fp, A=A, B=B, Bclr=Bclr, C=C, Zhat=Zfit, rd=RD, cutoff.rd=cutoff.rd, sd=out.sd$sd, cutoff.sd=out.sd$cutoff.sd, robust=FALSE, ilr=TRUE)
+    res <- list(fit=fit, fp=modelPar$fp, A=A, B=B, Bclr=Bclr, C=C, Zhat=Zfit, const=modelPar$const,
+        rd=RD, cutoff.rd=cutoff.rd, sd=out.sd$sd, cutoff.sd=out.sd$cutoff.sd, robust=FALSE, ilr=TRUE)
     class(res) <- "parafac"
     res
 }
 
 ## Robust PARAFAC for compositional data
-.Parafac.rob.ilr <- function (X, ncomp, conv=1e-6, center=FALSE, scale=FALSE, scale.mode=c("B", "A", "C"), orth=c(), ncomp.rpca=2, alpha=0.75, maxiter=100, crit=0.975, trace=FALSE)
+.Parafac.rob.ilr <- function (X, ncomp, center=FALSE, center.mode=c("A", "B", "C", "AB", "AC", "BC", "ABC"),
+        scale=FALSE, scale.mode=c("B", "A", "C"),
+        const="none", conv=1e-6, start="svd", maxit=10000, coda.transform=c("ilr"),
+        ncomp.rpca, alpha=0.75, robiter=100, crit=0.975, trace=FALSE)
 {
+    center.mode <- match.arg(center.mode)
     scale.mode <- match.arg(scale.mode)
+    coda.transform <- match.arg(coda.transform)
+
     ## ncomp is the number of components
     di <- dim(X)
     I <- di[1]
@@ -359,13 +367,8 @@ Parafac <- function(X, ncomp=2, conv=1e-6, center=FALSE, scale=FALSE, scale.mode
     Xarrayilr <- array(Xwideilr, c(I, J, K))
 
     ## centering the compositions
-    Xarrayilr <- do3Scale(Xarrayilr, center=center, scale=scale, scale.mode=scale.mode)
+    Xarrayilr <- do3Scale(Xarrayilr, center=center, center.mode=center.mode, scale=scale, scale.mode=scale.mode)
     Xwideilr <- unfold(Xarrayilr)
-
-    ort1 <- ort2 <- ort3 <- 1
-    ort1 <- ifelse("A" %in% orth, 2, ort1)
-    ort2 <- ifelse("B" %in% orth, 2, ort2)
-    ort3 <- ifelse("C" %in% orth, 2, ort3)
 
     Ahat<-matrix(0,dim(X)[1],ncomp)
 
@@ -373,18 +376,17 @@ Parafac <- function(X, ncomp=2, conv=1e-6, center=FALSE, scale=FALSE, scale.mode
     h <- round(alpha * dim(X)[1])
 
     ## Step 1 RobPCA XA
-    outrobpca<-PcaHubert(Xwideilr, ncomp.rpca, alpha=alpha)
+    outrobpca <- PcaHubert(Xwideilr, k=ncomp.rpca, kmax=ncol(Xwideilr), alpha=alpha, mcd=FALSE)
     Hset <- sort(sort(outrobpca@od, index.return=TRUE)$ix[1:h])
     Xhat <-Xwideilr[Hset,]
     fitprev <- 0
     changeFit <- 1 + conv
     iter <- 0
-    while (changeFit > conv & iter <= maxiter) {
+    while (changeFit > conv & iter <= robiter) {
         iter <- iter+1
-        print(iter)
 
         ## Step 2 - PARAFAC analysis
-        modelPar <- .CPfunc(Xhat, h, J, K, ncomp, ort1, ort2, ort3, start=0, conv=conv, maxit=10000, trace=trace)
+        modelPar <- cp_als(Xhat, h, J, K, ncomp, const=const, conv=conv, start=start, maxit=maxit, trace=trace)
         Ah <- modelPar$A
         Bh <- modelPar$B
         Ch <- modelPar$C
@@ -395,13 +397,12 @@ Parafac <- function(X, ncomp=2, conv=1e-6, center=FALSE, scale=FALSE, scale.mode
             Ahat[i,] <- .pinv(KR) %*% t(vJKx1)
         }
         Xfit <- Ahat %*%t (KR)
-        out.Xhat <- array(Xfit, c(I, J, K))
 
-        ## Step 4  Computation of the od
-        odsq <- apply((Xwideilr-Xfit)^2, 1, sum)
-        od <- sqrt(odsq)
-        Hset <- sort(sort(odsq, index.return=TRUE)$ix[1:h])
-        fit <- sum(odsq[Hset])
+        ## Step 4  Computation of the rd
+        rdsq <- apply((Xwideilr-Xfit)^2, 1, sum)
+        rd <- sqrt(rdsq)
+        Hset <- sort(sort(rdsq, index.return=TRUE)$ix[1:h])
+        fit <- sum(rdsq[Hset])
         Xhat <- Xwideilr[Hset,]#Xunf
 
         ## Step 5  Fit of the model
@@ -414,13 +415,13 @@ Parafac <- function(X, ncomp=2, conv=1e-6, center=FALSE, scale=FALSE, scale.mode
     }
 
     ## Reweighting
-    cutoffOD <- .cutoff.rd(od, h)
-    out.rd <- od
+    cutoffOD <- .cutoff.rd(rd, h)
+    out.rd <- rd
     flag <- (out.rd <= cutoffOD)
     Xflag <- Xarrayilr[flag,,] #X
     dim <- dim(Xflag)[1]
     Xflag_unf <- matrix(Xflag,dim,J*K)
-    modelParrew <- .CPfunc(Xflag_unf, dim, J, K, ncomp, ort1, ort2, ort3, start=0, conv=conv, maxit=10000, trace=trace)
+    modelParrew <- cp_als(Xflag_unf, dim, J, K, ncomp, const=const, conv=conv, start=start, maxit=maxit, trace=trace)
     Arew <- modelParrew$A
     Brew <- modelParrew$B
     Crew <- modelParrew$C
@@ -437,7 +438,7 @@ Parafac <- function(X, ncomp=2, conv=1e-6, center=FALSE, scale=FALSE, scale.mode
     out.rd <- sqrt(odsqrew)
     cutoffOD <- .cutoff.rd(out.rd, h)
     flag <- out.rd <= cutoffOD
-    out.Xhat.rew <- array(Xfitrew, c(I, J, K))
+    Xhat.rew <- array(Xfitrew, c(I, J, K))
 
     for(i in 1:ncomp) {
         Arew[,i] <- Arew[,i] * norm(as.matrix(Brew[,i]), type="F") * norm(as.matrix(Crew[,i]), type="F")
@@ -462,13 +463,14 @@ Parafac <- function(X, ncomp=2, conv=1e-6, center=FALSE, scale=FALSE, scale.mode
     dimnames(Brew) <- list(NULL, nfac)
     dimnames(Bclr) <- list(dn[[2]], nfac)
     dimnames(Crew) <- list(dn[[3]], nfac)
-    dimnames(out.Xhat.rew) <- list(dn[[1]], NULL, dn[[3]])
+    dimnames(Xhat.rew) <- list(dn[[1]], NULL, dn[[3]])
     names(flag) <- dn[[1]]
     names(out.rd) <- dn[[1]]
 
-    res <- list(fit=fit, fp=modelPar$fp, A=Arew, B=Brew, Bclr=Bclr, C=Crew, Zhat=out.Xhat.rew,
+    res <- list(fit=fit, fp=modelPar$fp, A=Arew, B=Brew, Bclr=Bclr, C=Crew, Zhat=Xhat.rew, const=modelParrew$const,
             flag=flag, Hset=Hset, iter=iter, alpha=alpha,
             rd=out.rd, cutoff.rd=cutoffOD, sd=out.sd$sd, cutoff.sd=out.sd$cutoff.sd,
+            pcaobj=outrobpca,
             robust=TRUE, ilr=TRUE)
 
     class(res) <- "parafac"
@@ -522,7 +524,7 @@ print.parafac <- function(x, ...)
             msg <- paste(msg, ", ", sep="")
         msg <- paste(msg, "ilr-transformed", "\n", sep="")
     }
-    cat(msg)
+    cat(msg, "\n")
 
     invisible(x)
 }
@@ -539,6 +541,7 @@ print.parafac <- function(x, ...)
 .CPfunc <- function (X, n, m, p, r, ort1, ort2, ort3, start, conv, maxit, A, B, C, trace=FALSE)
 {
     X <- as.matrix(X)
+
     ftiter <- matrix(0, maxit/10, 2)
     mintripcos <- 0
     ssx <- sum(X^2)
@@ -607,6 +610,7 @@ print.parafac <- function(x, ...)
     iter <- 0
     BB <- t(B) %*% B
     CC <- t(C) %*% C
+
     while((fold - f > conv * f | iter < 2) & f > conv^2 & iter < maxit) {
         fold <- f
         Z1 <- permute(X, n, m, p)
@@ -670,7 +674,7 @@ print.parafac <- function(x, ...)
 
         CC <- t(C) %*% C
         if (ort3 == 1) {
-            f <- ssx - tr(CC %*% FF)
+            f <- ssx - mtrace(CC %*% FF)
         } else {
             H1 <- permute(H, r, r, r)
             H1 <- permute(B %*% H1, m, r, r)
@@ -680,13 +684,13 @@ print.parafac <- function(x, ...)
 
         iter <- iter + 1
         if ((iter%%10) == 0) {
-            tripcos <- min(phi(A, A) * phi(B, B) * phi(C, C))
+            tripcos <- min(congruence(A, A) * congruence(B, B) * congruence(C, C))
             if (iter == 10)
                 mintripcos <- tripcos
             if (tripcos < mintripcos)
                 mintripcos <-  tripcos
             if ((iter%%1000) == 0 & trace)
-                cat(paste("Minimal Triple cosine =", tripcos, sep = " "), fill = TRUE)
+                cat(paste("Minimal Triple cosine =", tripcos), fill = TRUE)
 
             ftiter[iter/10, ] <- c(f, tripcos)
         }
@@ -696,8 +700,9 @@ print.parafac <- function(x, ...)
         }
     }
 
+    ftiter <- ftiter[1:iter/10, ]           # take only the first iter/10 rows
     fp <- 100 - 100 * f/ssx
-    tripcos <- min(phi(A, A) * phi(B, B) * phi(C, C))
+    tripcos <- min(congruence(A, A) * congruence(B, B) * congruence(C, C))
     names(tripcos) <- c("Minimal triple cosine")
 
     if (iter < 10) {

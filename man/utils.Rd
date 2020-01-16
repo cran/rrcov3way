@@ -67,7 +67,7 @@ Michele Gallo \email{mgallo@unior.it}
 \examples{
     data(elind)
     x1 <- do3Scale(elind, center=TRUE, scale=TRUE)
-    cp <- Parafac(x1, ncomp=3, orth="A")
+    cp <- Parafac(x1, ncomp=3, const=c("orth", "none", "none"))
     cp$B
     cp1 <- do3Postprocess(cp, reflectB=-1)      # change the sign of all components of B
     cp$B
