@@ -7,8 +7,7 @@
 \usage{
 do3Rotate(x, ...)
 
-\method{do3Rotate}{tucker3}(x, weights = c(0, 0, 0), rotate = c("A",
-  "B", "C"), ...)
+\method{do3Rotate}{tucker3}(x, weights = c(0, 0, 0), rotate = c("A", "B", "C"), ...)
 }
 \arguments{
 \item{x}{A Tucker 3 object}
@@ -29,6 +28,14 @@ A list including the following components:
 }
 \description{
 Computes \emph{varimax} rotation of the core and component matrix of a Tucker3 model to simple structure.
+}
+\examples{
+ ## Rotation of a Tucker3 solution
+ data(elind)
+ (t3 <- Tucker3(elind, 3, 2, 2))
+ xout <- do3Rotate(t3, c(3, 3, 3), rotate=c("A", "B", "C"))
+ xout$vvalue
+
 }
 \author{
 Valentin Todorov, \email{valentin.todorov@chello.at}

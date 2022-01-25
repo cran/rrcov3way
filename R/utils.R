@@ -15,6 +15,12 @@ do3Scale <- function (x, ...) UseMethod("do3Scale")
 #' @return A list including the following components:
 #'
 #' @examples
+#'  ## Rotation of a Tucker3 solution
+#'  data(elind)
+#'  (t3 <- Tucker3(elind, 3, 2, 2))
+#'  xout <- do3Rotate(t3, c(3, 3, 3), rotate=c("A", "B", "C"))
+#'  xout$vvalue
+#'
 #' @rdname do3Rotate
 #' @export
 #' @author Valentin Todorov, \email{valentin.todorov@@chello.at}
@@ -36,7 +42,7 @@ toArray <- function(x, n, m, r, mode=c("A", "B", "C")) {
         X <- array(0, c(n, m, p))
         for(k in 1:p)
             for(j in 1:m)
-                X[, j, k] = x[, (k - 1) * m + j]
+                X[, j, k] <- x[, (k - 1) * m + j]
         X
     }
 
@@ -97,6 +103,42 @@ tall2wide <- function(Xtall, I, J, K)
     Xwide
 }
 
+## ILR transformation (see package 'chemometrics')
+.ilrV <- function(x)
+{
+    dn <- dimnames(x)
+    x.ilr <- matrix(NA, nrow = nrow(x), ncol = ncol(x) - 1)
+    if(!is.null(dn) && is.list(dn))
+        rownames(x.ilr) <- dn[[1]]
+    colnames(x.ilr) <- paste0("Z", 1:(ncol(x) - 1))
+    for (i in seq_len(ncol(x.ilr)))
+    {
+        x.ilr[, i] <- sqrt((i)/(i + 1)) * log(((apply(as.matrix(x[,1:i]), 1, prod))^(1/i))/(x[, i + 1]))
+    }
+
+    if (is.data.frame(x))
+        x.ilr <- data.frame(x.ilr)
+    return(x.ilr)
+}
+
+.clrV <- function(x)
+{
+    res <- if(dim(x)[2] == 1) x
+           else{
+            	gm <- apply(x, 1, .gm)
+            	res <- log(x/gm, exp(1))
+            }
+    res
+}
+
+## Geometric mean
+.gm <- function (x)
+{
+    if (!is.numeric(x))
+        stop("x has to be a vector of class numeric")
+    if(any(na.omit(x == 0))) 0 else exp(mean(log(unclass(x)[is.finite(x) & x > 0])))
+}
+
 ilrArray <- function(x) {
     di <- dim(x)
     I <- di[1]
@@ -104,7 +146,6 @@ ilrArray <- function(x) {
     K <- di[3]
 
     dn <- dimnames(x)
-
     Xtall <- tallArray(x)
     Xilr <- .ilrV(Xtall)
     Xwideilr <- tall2wide(Xilr, I, J, K)
@@ -113,6 +154,22 @@ ilrArray <- function(x) {
     dimnames(ret)[[1]] <- dn[[1]]
     dimnames(ret)[[2]] <- paste0("Coord-", 1:(J-1))
     dimnames(ret)[[3]] <- dn[[3]]
+    ret
+}
+
+clrArray <- function(x) {
+    di <- dim(x)
+    I <- di[1]
+    J <- di[2]
+    K <- di[3]
+
+    dn <- dimnames(x)
+    Xtall <- tallArray(x)
+    Xclr <- .clrV(Xtall)
+    Xwideclr <- tall2wide(Xclr, I, J, K)
+
+    ret <- toArray(Xwideclr, I, J, K)
+    dimnames(ret) <- dn
     ret
 }
 
@@ -204,6 +261,7 @@ do3Scale.parafac <- function(x, renorm.mode=c("A", "B", "C"), ...)
 do3Scale.default <- function(x, center=FALSE, scale=FALSE, center.mode=c("A", "B", "C", "AB", "AC", "BC", "ABC"), scale.mode=c("B", "A", "C"), only.data=TRUE, ...)
 {
     ss <- function(x) sqrt(sum(x^2))
+
     center.mode <- match.arg(center.mode)
     cmode <- vector("character", length=3)
     for(i in 1:nchar(center.mode))
@@ -218,7 +276,7 @@ do3Scale.default <- function(x, center=FALSE, scale=FALSE, center.mode=c("A", "B
 
     if(!is.logical(center) || center == TRUE)
     {
-        for(i in 1:length(cmode))
+        for(i in seq_len(length(cmode)))
         {
             cmi <- cmode[i]
             if(nchar(cmi) > 0)
@@ -228,7 +286,7 @@ do3Scale.default <- function(x, center=FALSE, scale=FALSE, center.mode=c("A", "B
                 if(is.logical(center) && center == TRUE)
                     center <- mean
 
-                x1 <- doScale(x, center=center, scale=NULL)
+                x1 <- robustbase::doScale(x, center=center, scale=NULL)
                 xcenter <- x1$center
                 x <- toArray(x1$x, di[1], di[2], di[3], mode=cmi)
                 dimnames(x) <- dn
@@ -242,7 +300,7 @@ do3Scale.default <- function(x, center=FALSE, scale=FALSE, center.mode=c("A", "B
         if(is.logical(scale) && scale == TRUE)
             scale <- ss
 
-        x1 <- doScale(x, center=NULL, scale=scale)
+        x1 <- robustbase::doScale(x, center=NULL, scale=scale)
         xscale <- x1$scale
         x <- toArray(t(x1$x), di[1], di[2], di[3], mode=scale.mode)
         dimnames(x) <- dn
@@ -269,7 +327,7 @@ do3Rotate.tucker3 <- function(x, weights=c(0, 0, 0), rotate=c("A", "B", "C"), ..
     rot2 <- ifelse("B" %in% rotate, 1, rot2)
     rot3 <- ifelse("C" %in% rotate, 1, rot3)
 
-    rot <- .varimcoco(x$A, x$B, x$C, x$G, weights[1], weights[2], weights[3], rot1, rot2, rot3, nanal=1, ...)
+    rot <- ThreeWay::varimcoco(x$A, x$B, x$C, x$G, weights[1], weights[2], weights[3], rot1, rot2, rot3, nanal=1)
     dn1 <- dimnames(x$A)
     dn2 <- dimnames(x$B)
     dn3 <- dimnames(x$C)
@@ -441,6 +499,7 @@ weights.parafac <- function(object, ...)
 {
     if(!is.orthogonal(object$A) && !is.orthogonal(object$B) && !is.orthogonal(object$C))
         warning("It is not possible to obtain a partitioning of the total variability by components since none of the modes has orthogonal components!")
+
     object$GA^2/object$ss
 }
 

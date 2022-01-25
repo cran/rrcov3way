@@ -44,7 +44,7 @@ A named list, consisting of the centered and/or scaled data, a center vector,
 a scale vector and the mode in which the data were centered/scaled. 
 }
 \references{
-    Kiers, H.A.L. (2000).Towards a standardizrd notationand terminology 
+    Kiers, H.A.L. (2000).Towards a standardizrd notation and terminology 
         in multiway analysis. \emph{Journal of Chemometrics}, 14:105-122.
         
     Kroonenberg, P.M. (1983).Three-mode principal component analysis: 

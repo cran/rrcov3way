@@ -1,11 +1,11 @@
 \name{plot.tucker3}
 \alias{plot.tucker3}
 \alias{plot.parafac}
-\title{ Plot a tucker3 object
+\title{ Plot a parafac or a tucker3 object
 }
 \description{
-    Different plots for the results of Tucker3 analysis, stored in a 
-    \code{tucker3} object, see Details.
+    Different plots for the results of Parafac or Tucker3 analysis, stored in a 
+    \code{Parafac} or a \code{tucker3} object, see Details.
 }
 
 \usage{
@@ -16,7 +16,7 @@
 }
 \arguments{
   \item{x}{A \code{tucker3} object}
-  \item{which}{Which plot to select (see Details). Default is \code{dd}, Distance-distance plot.}
+  \item{which}{Which plot to select (see Details). Default is \code{dd}, distance-distance plot.}
   \item{ask}{Generates all plots in interactive mode}
   \item{id.n}{Number of items to highlight}
   \item{\dots}{Other parameters to be passed to the lower level functions.}
@@ -27,10 +27,10 @@ Different plots for a \code{tucker3} or \code{parafac} object will be produced. 
 \describe{
     \item{\code{dd}}{Distance-distance plot}
     \item{\code{comp}}{Paired components plot}
-    \item{\code{percomp}}{Per-component plot}
+    \item{\code{percomp}}{Per-component plot - only for Parafac}
     \item{\code{allcomp}}{All components plot}
-    \item{\code{jbplot}}{Joint biplot}
-    \item{\code{tjplot}}{Trajectory plot}
+    \item{\code{jbplot}}{Joint biplot - only for Tucker3}
+    \item{\code{tjplot}}{Trajectory plot - only for Tucker3}
 }
 }
 \references{

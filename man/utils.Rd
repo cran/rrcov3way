@@ -53,10 +53,12 @@
   \item{\dots}{Potential further arguments passed to lower level functions.}
 }
 \value{
-The output value of do3Postproces() is the postprocessed solution, Parafac or Tucker3. The output of \code{weights()} and \code{coordinates()} are the respoective values.
+    The output value of do3Postproces() is the postprocessed solution, Parafac or Tucker3. 
+    The output of \code{weights()} and \code{coordinates()} are the respective values.
 }
 \references{
-REFERENCES
+    Kroonenberg (2008). Applied multiway data analysis. Wiley series 
+        in probability and statistics. Hoboken NJ, Wiley.
 }
 \author{
 Valentin Todorov \email{valentin.todorov@chello.at} and
@@ -67,13 +69,27 @@ Michele Gallo \email{mgallo@unior.it}
 \examples{
     data(elind)
     x1 <- do3Scale(elind, center=TRUE, scale=TRUE)
-    cp <- Parafac(x1, ncomp=3, const=c("orth", "none", "none"))
+    (cp <- Parafac(x1, ncomp=3, const=c("orth", "none", "none")))
+    
     cp$B
     cp1 <- do3Postprocess(cp, reflectB=-1)      # change the sign of all components of B
-    cp$B
+    cp1$B
     weights(cp1)
     coordinates(cp1)
     coordinates(cp1, type="principal")
+
+    ## Same as above - the centering and scaling is done inside the Parafac procedure
+    (cp1 <- Parafac(elind, ncomp=3, const=c("orth", "none", "none"), 
+        center=TRUE, scale=TRUE))
+
+    ## Robust estimation with robust scaling with median and mad
+    (cp1 <- Parafac(elind, ncomp=3, const=c("orth", "none", "none"), 
+        center=median, scale=mad, robust=TRUE))
+
+    ## Robust estimation with robust scaling with median and Qn (Rousseeuw and Croux, 1993)
+    require(robustbase)
+    (cp1 <- Parafac(elind, ncomp=3, const=c("orth", "none", "none"), 
+        center=median, scale=Qn, robust=TRUE))
 }
 \keyword{array}
 \keyword{multivariate}

@@ -14,7 +14,7 @@
 ##  with a slope 1.
 .ddplot <- function(obj, crit=0.975, id.n, labs, ...)
 {
-    .label <- function(x, y, id.n=3, labs=1:length(x), ...) {
+    .label <- function(x, y, id.n=3, labs=seq_len(length(x)), ...) {
         if(id.n > 0) {
             xrange <- par("usr")
             xrange <- xrange[2] - xrange[1]
@@ -55,7 +55,7 @@
     if(missing(labs))
         labs <- rownames(A)
     if(is.null(labs))
-        labs <- 1:nrow(A)
+        labs <- seq_len(nrow(A))
     xlim <- c(0,max(SD, critSD))
     xlim[2] <- xlim[2] + 0.1*xlim[2]
     plot(SD, RD, xlab=xl, ylab=yl, xlim=xlim, ylim=c(0,max(RD, critRD)), cex.lab=1, type="p", ...)
@@ -75,7 +75,7 @@
     mode <- match.arg(mode)
 
     A <- x$A
-    B <- if(x$ilr) x$Bclr else x$B
+    B <- if(x$coda.transform == "ilr") x$Bclr else x$B
     C <- x$C
     GA<- x$GA
     P <- dim(A)[2]
@@ -98,26 +98,26 @@
     if(mode == "A")
     {
         GGG <- unfold(GG, mode="A")
-        F <- kronecker(C,B) %*% t(GGG)
-        qrB <- qr(F)                # The QR Decomposition of a Matrix B == Q %*% R
-        T <- qr.R(qrB)
-        tilde <- A %*% solve(T)
+        Fx <- kronecker(C,B) %*% t(GGG)
+        qrB <- qr(Fx)                # The QR Decomposition of a Matrix B == Q %*% R
+        Tx <- qr.R(qrB)
+        tilde <- A %*% solve(Tx)
         lab <- rownames(A)
     } else if(mode == "B")
     {
         GGG <- unfold(GG, mode="B")
-        F <- kronecker(C,A) %*% t(GGG)
-        qrB <- qr(F)                # The QR Decomposition of a Matrix B == Q %*% R
-        T <- qr.R(qrB)
-        tilde <- B %*% solve(T)
+        Fx <- kronecker(C,A) %*% t(GGG)
+        qrB <- qr(Fx)                # The QR Decomposition of a Matrix B == Q %*% R
+        Tx <- qr.R(qrB)
+        tilde <- B %*% solve(Tx)
         lab <- rownames(B)
     } else
     {
         GGG <- unfold(GG, mode="C")
-        F <- kronecker(B,A) %*% t(GGG)
-        qrB <- qr(F)                # The QR Decomposition of a Matrix B == Q %*% R
-        T <- qr.R(qrB)
-        tilde <- C %*% solve(T)
+        Fx <- kronecker(B,A) %*% t(GGG)
+        qrB <- qr(Fx)                # The QR Decomposition of a Matrix B == Q %*% R
+        Tx <- qr.R(qrB)
+        tilde <- C %*% solve(Tx)
         lab <- rownames(C)
     }
 
@@ -141,7 +141,7 @@
 
     plot(tilde[,choices], type="n", xlab=paste("Axis", comp1), ylab=paste("Axis", comp2), xlim=xlim, ylim=ylim, cex=1.2, ...)
     abline(v=0, h=0, lty=2)
-    text(tilde[,comp1], tilde[,comp2], lab, cex=0.8)
+    text(tilde[,comp1], tilde[,comp2], lab, cex=0.8, ...)
 
     if(mode == "B" & arrows)
     {
@@ -159,7 +159,7 @@
     mode <- match.arg(mode)
 
     A <- x$A
-    B <- if(x$ilr) x$Bclr else x$B
+    B <- if(x$coda.transform=="ilr") x$Bclr else x$B
     C <- x$C
     ncomp <- x$ncomp
 
@@ -220,7 +220,7 @@
 
     plot(tilde[,choices], type="n", xlim=xlim, ylim=ylim, xlab="First component", ylab="Second component", cex=0.8, ...)
     abline(v=0, h=0, lty = 2)
-    text(tilde[, comp1], tilde[, comp2], labels=rownames(tilde), col=1, cex=0.8)
+    text(tilde[, comp1], tilde[, comp2], labels=rownames(tilde), cex=0.8, ...)
 
     if(mode == "B" & arrows)
     {
@@ -254,19 +254,22 @@
         xlab <- "Time"
     if(missing(ylab))
         ylab <- "Component score"
-    time <- 1:nrow(C)
+    time <- seq_len(nrow(C))
     names(time) <- rownames(C)
     plot(time, C[,1], ylim=ylim, xlab=xlab, ylab=ylab, type="n", xaxt="n", ...)
-    for(i in 1:ncol(C))
+    for(i in seq_len(ncol(C)))
     {
         if(points)
             points(time, C[,i], pch=i, col=i, bg=i)
-        lines(time, C[,i], col=i, lty=1:ncol(C))
+        lines(time, C[,i], col=i, lty=i)
     }
+
     abline(h=0, lty="dotted")
     axis(side=1, at=time, labels=names(time))
+    myseq <- seq_len(ncol(C))
     if(!is.null(legend.position) && legend.position != "none")
-        legend(legend.position, pch=1:ncol(C), col=1:ncol(C), pt.bg=1:ncol(C), legend=paste("Component", 1:ncol(C)), lty=1:ncol(C))
+        legend(legend.position, pch=myseq, col=myseq, pt.bg=myseq,
+            legend=paste("Component", myseq), lty=myseq)
 }
 
 .percompplot.parafac <- function (x, comp=1, ...)
@@ -274,7 +277,7 @@
     stopifnot(comp <= x$ncomp)
 
     Ah <- x$A
-    Bh <- if(x$ilr) x$Bclr else x$B
+    Bh <- if(x$coda.transform=="ilr") x$Bclr else x$B
     Ch <- x$C
     ncomp <- x$ncomp
     Anames <- rownames(Ah)
@@ -284,26 +287,26 @@
 
     x1 <- Ah[,comp]/sqrt(sum(Ah[,comp]^2))
     x2 <- Bh[,comp]/sqrt(sum(Bh[,comp]^2))
-    x3 <- Ch[,comp]/sqrt(sum(Bh[,comp]^2))
-#    x1 <- Ah[,comp]/sqrt(nrow(Ah))
-#    x2 <- Bh[,comp]/sqrt(nrow(Ah))
-#    x3 <- Ch[,comp]/sqrt(nrow(Ah))
+    x3 <- Ch[,comp]/sqrt(sum(Ch[,comp]^2))
+##    x1 <- Ah[,comp]/sqrt(nrow(Ah))
+##    x2 <- Bh[,comp]/sqrt(nrow(Bh))
+##    x3 <- Ch[,comp]/sqrt(nrow(Ch))
 
     eps <- 0.1
     ylim1 <- min(x1,x2,x3)
     ylim2 <- max(x1,x2,x3)
     ylim <- c(ylim1 - ylim1 * eps, ylim2 + ylim2 * eps)
 
-    plot(c(-2,0,2), c(ylim1,0,ylim2), type="n", ylab=paste("Component", comp), xlab= "", xaxt="n");
-    text(1, x1, Anames,cex=0.5);
-    text(-0.25, x3, Cnames,  cex=0.5);
-    text(-1, x2, Bnames, cex=0.5);
+    plot(c(-2,0,2), c(ylim1,0,ylim2), type="n", ylab=paste("Component", comp), xlab= "", xaxt="n")
+    text(1, x1, Anames,cex=0.5)
+    text(-0.25, x3, Cnames,  cex=0.5)
+    text(-1, x2, Bnames, cex=0.5)
 
-    arrows(0, x1, 0.9, x1, code = 2, length = 0.09);
-    arrows(0, x2, -0.9, x2,  code = 2, length = 0.09);
-    abline(v=0);
+    arrows(0, x1, 0.9, x1, code = 2, length = 0.09)
+    arrows(0, x2, -0.9, x2,  code = 2, length = 0.09)
+    abline(v=0)
     axis(1, at = c(-1, 0, 1),
-    labels = c("Second Mode","Third Mode", "First Mode "), cex.axis=0.7, tick=FALSE);
+    labels = c("Second Mode","Third Mode", "First Mode "), cex.axis=0.7, tick=FALSE)
 ##    axis(2, at = c(-0.5,0,0.5),labels = c(-0.5,0,0.5),cex.axis=0.9,tick=FALSE)
 
     return(invisible(x))
@@ -326,7 +329,7 @@
     ##  need to change the sign of all the elements of first B loading
 
     A <- x$A
-    B <- if(x$ilr) x$Bclr else x$B
+    B <- if(x$coda.transform == "ilr") x$Bclr else x$B
     C <- x$C
     GA<- x$GA
 
@@ -387,7 +390,7 @@
     ## G is wide unfolded core array.
 
     A <- x$A
-    B <- if(x$ilr) x$Bclr else x$B
+    B <- if(x$coda.transform == "ilr") x$Bclr else x$B
     C <- x$C
     GA<- x$GA
 
@@ -419,18 +422,18 @@
     ## The QR Decomposition of a Matrix B == Q %*% R
     qrB <- qr(B)
     Bco <- qr.Q(qrB)
-    T <- qr.R(qrB)
+    Tx <- qr.R(qrB)
 
     ## to enforce positive diagonals of R, and thereby
     ## get a unique factorisation. Is this correct?
-    D <- diag(sign(diag(T)))
+    D <- diag(sign(diag(Tx)))
 
 ##  !!!!!!!!!!!!!!!!!!
 ##    Bco <- Bco %*% D
     Bco <- Bco %*% D/2
-    T <- D %*% T
+    Tx <- D %*% Tx
 
-    ACco <- kronecker(C,A) %*% t(GB) %*% solve(T)
+    ACco <- kronecker(C,A) %*% t(GB) %*% solve(Tx)
 
     ## collect the selected points for the choices objects
     cx <- c()

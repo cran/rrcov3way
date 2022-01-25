@@ -58,3 +58,57 @@ print(res.rc$rd)
 print(res$cutoff.rd)
 print(res.rc$Hset)
 print(res.rc$flag)
+
+##================================================================
+##
+##  Example with the TV data from ThreeWay: ratings of 15 American television
+##  shows on 16 bipolar scales made by 30 students: 15x16x30 array
+##  in A-mode, i.e. 15x450.
+data(TV, package="ThreeWay")
+
+## Transform to 3-way array, to pass to Parafac() and set the dimnames
+tv <- toArray(TV[[1]], 30, 16, 15, mode="B")
+dimnames(tv)[[1]] <- TV[[4]]
+dimnames(tv)[[2]] <- TV[[2]]
+dimnames(tv)[[3]] <- TV[[3]]
+
+(tvcp <- Parafac(tv, 2))
+tvcp$A; tvcp$B; tvcp$C; tvcp$GA
+tvcp$cutoff.rd
+sort(tvcp$rd)
+tvcp$cutoff.sd
+sort(tvcp$sd)
+
+(rtvcp <- Parafac(tv, 2, robust=TRUE))
+rtvcp$A; rtvcp$B; rtvcp$C; rtvcp$GA
+rtvcp$cutoff.rd
+sort(rtvcp$rd)
+rtvcp$cutoff.sd
+sort(rtvcp$sd)
+
+## ===============================================================
+##
+##  Compositional data and robustness
+
+data(ulabor)
+
+(res0 <- Parafac(ulabor))
+res0$A; res0$B; res0$C; res0$GA
+res0$cutoff.rd
+sort(res0$rd)
+res0$cutoff.sd
+sort(res0$sd)
+
+(res <- Parafac(ulabor, robust=TRUE, coda.transform="ilr"))
+res$A; res$B; res$C; res$GA
+res$cutoff.rd
+sort(res$rd)
+res$cutoff.sd
+sort(res$sd)
+
+(res1 <- Parafac(ulabor, coda.transform="clr"))
+res1$A; res1$B; res1$C; res1$GA
+res1$cutoff.rd
+sort(res1$rd)
+res1$cutoff.sd
+sort(res1$sd)

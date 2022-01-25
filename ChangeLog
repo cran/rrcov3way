@@ -1,10 +1,46 @@
+2022-01-24  Valentin Todorov  <valentin.todorov@chello.at>
+    *
+    * DESCRIPTION (Version): 0.2-0
+    *
+    *
+    *   Added Readme.md and development version published on GitHub
+    *
+    *   R/Parafac.R, R/Tucker3.R: fixed a bug in the computation of the returned fit and fit percentage values.
+    *
+    *   R/Tucker3.R: initialization option implemented (start=)
+    *
+    *   R/Parafac.R, R/Tucker3.R, R/plot-utils.R: added clr transformation - parameter ilr=TRUE/FALSE
+    *       in Parafac() and Tucker3() changed to coda.transform=c("none", "ilr", "clr")
+    *
+    *   R/Parafac.R, function .cutoff.sd() fixed a bug, now Parafac works for ncomp=1 and robust=TRUE.
+    *       actually the issue was in rrcov/PcaHubert and was fixed also there.
+    *
+    *   man/plot-methods.Rd - fixed the description also for the plot for Parafac objects
+    *
+    *   DESCRIPTION, NAMESPACE and others: All functions which were adapted from ThreeWay are now removed and
+    *       imported from ThreeWay (added to DESCRIPTION and NAMESPACE)
+    *
+    *   DESCRIPTION, NAMESPACE and others: All functions which were adapted from pracma are now removed and
+    *       imported from pracma (added to DESCRIPTION and NAMESPACE)
+    *
+    *   DESCRIPTION, NAMESPACE and others: dependence on rrcov removed, all necessary functions are imported
+    *
+    *   R\Parafac.R, Tucker3.R: if robust=TRUE and center=TRUE and/or scale=TRUE, robust centering and scaling
+    *       through median and mad is performed. Of course the user can select any robust centering/scaling
+    *       function from the available in robustbase (or elsewhere).
+    *
+    *   R\Parafac.R, Tucker3.R - the parameter crit was not used always - fixed
+    *
+
+
+
 2020-01-14  Valentin Todorov  <valentin.todorov@chello.at>
     *
     * DESCRIPTION (Version): 0.1-18
     * DESCRIPTION (Version): 0.1-17
     *   Removed dependency to ThreeWay
     *   NAMESPACE fixed to export correctly only the user-level functions
-    *   data/amino.rda, man/amino.rda - added data set amino 
+    *   data/amino.rda, man/amino.rda - added data set amino
     *   Parameter ilr=TRUE/FALSE in Parafac () and Tucker3() changed to coda.transform=c("none", "ilr")
     *   Added utility and matrix utility functions: mtrace, krp, orth, orthmax2, congruence, varimcoco
     *

@@ -17,11 +17,9 @@
 #' @format A three-way array with dimension 5x201x61.
 #'  The first dimension refers to the 5 samples. The second dimension refers to the emission measurements (250-450nm, 1nm intervals).
 #'  The third dimension refers to the excitation (240-300 nm, 1nm intervals).
-#'
-#'  @source
+#' @source
 #'  \url{http://www.models.life.ku.dk/Amino_Acid_fluo}.
-#'
-#'  @references
+#' @references
 #'  Bro, R, PARAFAC: Tutorial and applications, Chemometrics and Intelligent Laboratory Systems, 1997, 38, 149-171
 #'  Bro, R, Multi-way Analysis in the Food Industry. Models, Algorithms, and Applications. 1998. Ph.D. Thesis,
 #'      University of Amsterdam (NL) & Royal Veterinary and Agricultural University (DK).

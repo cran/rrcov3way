@@ -1,6 +1,6 @@
 
-R Under development (unstable) (2020-01-08 r77640) -- "Unsuffered Consequences"
-Copyright (C) 2020 The R Foundation for Statistical Computing
+R Under development (unstable) (2021-10-11 r81035) -- "Unsuffered Consequences"
+Copyright (C) 2021 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -37,7 +37,8 @@ Parafac(X = va3way)
 
 
 PARAFAC analysis with  2  components.
-Fit value: 94.18 %
+Fit value: 1.975174e+23 
+Fit percentage: 94.18 %
  
 > print(res$fit)
 [1] 1.975174e+23
@@ -145,10 +146,11 @@ Parafac(X = va3way, robust = TRUE)
 
 
 PARAFAC analysis with  2  components.
-Fit value: 98.5 %
+Fit value: 1.088602e+22 
+Fit percentage: 99.68 %
 Robust 
 > print(res.r$fit)
-[1] 8.577221e+21
+[1] 1.088602e+22
 > ## IGNORE_RDIFF_BEGIN
 > print(res.r$A)
               F1           F2
@@ -253,11 +255,11 @@ HIGH  -0.05314684 0.54860224
   ALB   AUT   BEL   BRA   BGR   CAN   TWN   COL   CRI   CYP   CZE   DNK   ECU 
  TRUE  TRUE  TRUE FALSE  TRUE FALSE FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE 
   EST   FIN   FRA   GEO   PSE   DEU   HUN   IND   IDN   IRN   ISR   ITA   JOR 
- TRUE  TRUE  TRUE  TRUE  TRUE FALSE  TRUE FALSE FALSE FALSE  TRUE  TRUE  TRUE 
+ TRUE  TRUE FALSE  TRUE  TRUE FALSE  TRUE FALSE FALSE FALSE  TRUE FALSE  TRUE 
   KOR   LVA   LTU   MUS   OMN   NLD   NOR   PER   POL   PRT   QAT   ROU   RUS 
 FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE FALSE 
   SEN   SGP   SVK   SVN   ESP   SWE   CHE   TUR   GBR   YEM 
- TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE FALSE  TRUE 
+ TRUE FALSE  TRUE  TRUE FALSE  TRUE FALSE  TRUE FALSE  TRUE 
 > 
 > (res.c <- Parafac(va3way, coda.transform="ilr"))
 Call:
@@ -265,7 +267,8 @@ Parafac(X = va3way, coda.transform = "ilr")
 
 
 PARAFAC analysis with  2  components.
-Fit value: 89.53 %
+Fit value: 489.8643 
+Fit percentage: 89.53 %
 ilr-transformed
  
 > print(res.c$fit)
@@ -323,11 +326,11 @@ TUR  -5.8546826  2.0732667
 GBR  -0.9576233  1.0289954
 YEM -19.4635409  0.2865485
 > print(res.c$B)
-              F1         F2
-[1,]  0.21488734  0.7373969
-[2,] -0.01922373 -0.7590357
-[3,]  0.28791828 -0.8298999
-[4,]  0.83161168  0.2865615
+            F1         F2
+Z1  0.21488734  0.7373969
+Z2 -0.01922373 -0.7590357
+Z3  0.28791828 -0.8298999
+Z4  0.83161168  0.2865615
 > print(res.c$Bclr)
                F1          F2
 LAGRO  0.41316911  0.03604894
@@ -376,11 +379,12 @@ Parafac(X = va3way, robust = TRUE, coda.transform = "ilr")
 
 
 PARAFAC analysis with  2  components.
-Fit value: 94.94 %
+Fit value: 229.0781 
+Fit percentage: 95.11 %
 Robust, ilr-transformed
  
 > print(res.rc$fit)
-[1] 133.7519
+[1] 229.0781
 > ## IGNORE_RDIFF_BEGIN
 > print(res.rc$A)
               F1        F2
@@ -434,11 +438,11 @@ TUR  -4.42689252  6.464105
 GBR  -0.45620871  2.861227
 YEM -17.17227178  3.986416
 > print(res.rc$B)
-            F1         F2
-[1,] 0.2316983  0.6024772
-[2,] 0.1028190 -0.5048004
-[3,] 0.4803041 -0.5306502
-[4,] 0.8396738  0.3171880
+          F1         F2
+Z1 0.2316983  0.6024772
+Z2 0.1028190 -0.5048004
+Z3 0.4803041 -0.5306502
+Z4 0.8396738  0.3171880
 > print(res.rc$Bclr)
               F1         F2
 LAGRO  0.5322197  0.1376717
@@ -487,12 +491,438 @@ HIGH  -0.7510271 -0.2837015
   ALB   AUT   BEL   BRA   BGR   CAN   TWN   COL   CRI   CYP   CZE   DNK   ECU 
 FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE FALSE  TRUE  TRUE  TRUE  TRUE 
   EST   FIN   FRA   GEO   PSE   DEU   HUN   IND   IDN   IRN   ISR   ITA   JOR 
- TRUE  TRUE  TRUE  TRUE FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE 
+ TRUE  TRUE  TRUE  TRUE FALSE  TRUE  TRUE  TRUE  TRUE FALSE  TRUE  TRUE  TRUE 
   KOR   LVA   LTU   MUS   OMN   NLD   NOR   PER   POL   PRT   QAT   ROU   RUS 
- TRUE  TRUE  TRUE  TRUE FALSE  TRUE  TRUE  TRUE  TRUE  TRUE FALSE  TRUE  TRUE 
+ TRUE  TRUE  TRUE FALSE FALSE  TRUE  TRUE  TRUE  TRUE  TRUE FALSE  TRUE  TRUE 
   SEN   SGP   SVK   SVN   ESP   SWE   CHE   TUR   GBR   YEM 
- TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE 
+ TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE FALSE 
+> 
+> ##================================================================
+> ##
+> ##  Example with the TV data from ThreeWay: ratings of 15 American television
+> ##  shows on 16 bipolar scales made by 30 students: 15x16x30 array
+> ##  in A-mode, i.e. 15x450.
+> data(TV, package="ThreeWay")
+> 
+> ## Transform to 3-way array, to pass to Parafac() and set the dimnames
+> tv <- toArray(TV[[1]], 30, 16, 15, mode="B")
+> dimnames(tv)[[1]] <- TV[[4]]
+> dimnames(tv)[[2]] <- TV[[2]]
+> dimnames(tv)[[3]] <- TV[[3]]
+> 
+> (tvcp <- Parafac(tv, 2))
+Call:
+Parafac(X = tv, ncomp = 2)
+
+
+PARAFAC analysis with  2  components.
+Fit value: 60448.91 
+Fit percentage: 40.32 %
+ 
+> tvcp$A; tvcp$B; tvcp$C; tvcp$GA
+                 F1        F2
+Student 1  28.20179 16.075038
+Student 2  33.62310 24.665986
+Student 3  36.02469 19.422640
+Student 4  17.72004  8.513186
+Student 5  17.65531  5.481218
+Student 6  25.15715 18.808693
+Student 7  15.57876 10.879655
+Student 8  20.80833 17.297011
+Student 9  39.62199 23.489936
+Student 10 40.26835 22.855892
+Student 11 21.10459  9.692475
+Student 12 39.51864 21.340683
+Student 13 35.82538 28.978071
+Student 14 27.20539 11.612080
+Student 15 29.31589 11.230165
+Student 16 19.24097 10.251974
+Student 17 24.12598 20.122332
+Student 18 37.29077 20.584110
+Student 19 39.79069 12.020866
+Student 20 26.08499 13.028095
+Student 21 32.32501 18.785949
+Student 22 31.38384 20.606630
+Student 23 34.95060 19.752821
+Student 24 34.14619 15.500143
+Student 25 26.70510 21.260521
+Student 26 29.28465  9.846746
+Student 27 30.86823 16.839343
+Student 28 33.72179 13.509113
+Student 29 22.87919 16.539564
+Student 30 29.31201 10.555516
+                                                        F1          F2
+Thrilling-Boring                               -0.24372796 -0.34177895
+Intelligent-Idiotic                            -0.48504243 -0.44726983
+Erotic-Not Erotic                               0.20475922 -0.01764648
+Sensitive-Insensitive                          -0.27652097 -0.19454338
+Interesting-Uninteresting                      -0.43456999 -0.47375375
+Fast-Slow                                      -0.20635791 -0.28348333
+Intellectually Stimulating-Intellectually Dull -0.47021551 -0.45397363
+Violent-Peaceful                               -0.02541951 -0.09289508
+Caring-Callous                                 -0.25027738 -0.14852877
+Satirical-Not Satirical                         0.10621346 -0.23174996
+Informative-Uninformative                      -0.51352985 -0.46008818
+Touching-Leave Me Cold                         -0.22928028 -0.21761982
+Deep-Shallow                                   -0.34899775 -0.31471397
+Tasteful-Crude                                 -0.38234281 -0.23046305
+Real-Fantasy                                   -0.54823475 -0.39002381
+Funny-Not Funny                                -0.02350831 -0.26805945
+                                      F1          F2
+Mash                        -0.083803864  0.67796152
+Charlie's angels            -0.031493045 -0.42426424
+All in the family           -0.146155171  0.43688540
+60 minutes                   0.332239949  0.01793272
+The tonight show            -0.161969681  0.54858636
+Let's make a deal           -0.003376494 -0.51648387
+The waltons                  0.453192804 -0.90618164
+Saturday night live         -0.420584108  0.66494467
+News                         0.354523892 -0.17297345
+Kojak                        0.007055016 -0.15733666
+Mork and mindy              -0.206809625  0.32176462
+Jacques Cousteau             0.523994066 -0.42478997
+Football                     0.087498731 -0.10367947
+Little house on the prairie  0.442896570 -0.98151740
+Wild kingdom                 0.482519464 -0.57806392
+      F1       F2 
+266.8060 246.5506 
+> tvcp$cutoff.rd
+[1] 62.08767
+> sort(tvcp$rd)
+ Student 5  Student 4 Student 16 Student 14  Student 7 Student 20 Student 26 
+  25.00979   30.84055   32.06377   33.30293   33.57243   36.07897   38.06328 
+Student 15 Student 24 Student 29 Student 11 Student 19 Student 12  Student 2 
+  39.49078   39.57787   40.25878   41.03119   41.22830   43.56221   44.08275 
+ Student 3  Student 8 Student 28  Student 9  Student 1 Student 17 Student 10 
+  45.11740   45.18889   45.80252   45.83685   46.13295   46.80926   46.97476 
+Student 27 Student 13 Student 23 Student 22 Student 30 Student 18 Student 25 
+  47.73336   48.21781   48.58578   49.70027   50.63419   54.02359   54.62486 
+ Student 6 Student 21 
+  63.80763   64.12674 
+> tvcp$cutoff.sd
+[1] 2.716203
+> sort(tvcp$sd)
+ Student 1 Student 27 Student 21 Student 20 Student 23 Student 22 Student 14 
+ 0.1692217  0.2195167  0.4774541  0.5979556  0.7981549  0.8010742  0.8866742 
+ Student 3 Student 24 Student 18 Student 15 Student 29  Student 6 Student 28 
+ 0.9291269  0.9727256  1.1093464  1.1512997  1.1647774  1.1676362  1.2678371 
+Student 11 Student 30 Student 12 Student 16 Student 25 Student 26  Student 9 
+ 1.2933323  1.3036625  1.4137042  1.4263961  1.4487756  1.4612221  1.5161494 
+ Student 2 Student 10 Student 17  Student 8  Student 4  Student 7  Student 5 
+ 1.5451531  1.5460186  1.5957083  1.6430385  1.6885259  1.9226619  2.0096600 
+Student 13 Student 19 
+ 2.3441506  2.5566191 
+> 
+> (rtvcp <- Parafac(tv, 2, robust=TRUE))
+Call:
+Parafac(X = tv, ncomp = 2, robust = TRUE)
+
+
+PARAFAC analysis with  2  components.
+Fit value: 51923.43 
+Fit percentage: 48.74 %
+Robust 
+> rtvcp$A; rtvcp$B; rtvcp$C; rtvcp$GA
+                 F1       F2
+Student 1  46.84802 42.89640
+Student 2  56.42061 67.98367
+Student 3  59.80159 53.10888
+Student 4  30.00484 23.83426
+Student 5  29.06700 14.89055
+Student 6  37.39741 41.70353
+Student 7  26.28416 29.91106
+Student 8  33.95092 43.95949
+Student 9  64.27747 60.50079
+Student 10 65.83294 59.68509
+Student 11 34.61253 25.17244
+Student 12 65.53037 57.88567
+Student 13 59.56152 77.38860
+Student 14 44.58896 31.13668
+Student 15 48.33613 30.64320
+Student 16 32.15910 28.21699
+Student 17 37.31297 48.45842
+Student 18 58.88227 49.90525
+Student 19 63.98412 30.68405
+Student 20 43.64888 36.18670
+Student 21 48.09545 40.58983
+Student 22 51.53073 54.83762
+Student 23 56.54323 50.71547
+Student 24 56.20098 42.85436
+Student 25 44.72421 57.56234
+Student 26 47.59041 26.27620
+Student 27 49.98963 42.44759
+Student 28 54.58411 34.34173
+Student 29 38.40799 44.95037
+Student 30 47.78716 29.07781
+                                                        F1           F2
+Thrilling-Boring                               -0.19082201 -0.287776452
+Intelligent-Idiotic                            -0.35944898 -0.347321139
+Erotic-Not Erotic                               0.15632434  0.001522933
+Sensitive-Insensitive                          -0.18875096 -0.128336084
+Interesting-Uninteresting                      -0.32996281 -0.392339913
+Fast-Slow                                      -0.15823208 -0.237307022
+Intellectually Stimulating-Intellectually Dull -0.34893495 -0.351146608
+Violent-Peaceful                               -0.02859044 -0.086748475
+Caring-Callous                                 -0.17405227 -0.103663176
+Satirical-Not Satirical                         0.08073304 -0.188653110
+Informative-Uninformative                      -0.38490133 -0.365057383
+Touching-Leave Me Cold                         -0.16063761 -0.158676198
+Deep-Shallow                                   -0.25006231 -0.230891436
+Tasteful-Crude                                 -0.27634395 -0.180999842
+Real-Fantasy                                   -0.40946526 -0.312820128
+Funny-Not Funny                                -0.02255823 -0.224268795
+                                      F1           F2
+Mash                        -0.062396541  0.316511307
+Charlie's angels            -0.051565807 -0.156465570
+All in the family           -0.124950397  0.203122978
+60 minutes                   0.285085534 -0.004080375
+The tonight show            -0.144376644  0.304613537
+Let's make a deal           -0.020612200 -0.215276035
+The waltons                  0.373871652 -0.437100364
+Saturday night live         -0.380747907  0.383754525
+News                         0.293718313 -0.093807619
+Kojak                       -0.009097994 -0.041581269
+Mork and mindy              -0.188223269  0.188449624
+Jacques Cousteau             0.432021171 -0.204828052
+Football                     0.053292980  0.013641138
+Little house on the prairie  0.361801882 -0.460991281
+Wild kingdom                 0.385199377 -0.236453754
+      F1       F2 
+269.2412 246.0556 
+> rtvcp$cutoff.rd
+[1] 56.84462
+> sort(rtvcp$rd)
+ Student 5  Student 4 Student 16  Student 7 Student 14 Student 20 Student 26 
+  24.80523   30.25759   31.57001   33.04188   33.07041   35.25865   38.08297 
+Student 24 Student 15 Student 29 Student 11 Student 19  Student 2 Student 12 
+  39.04821   39.12462   39.49666   40.91797   41.42007   41.92968   42.49760 
+ Student 3  Student 1 Student 28  Student 8  Student 9 Student 10 Student 13 
+  44.14112   45.70593   45.80770   45.88353   46.38804   46.98671   47.32748 
+Student 27 Student 23 Student 17 Student 22 Student 30 Student 25 Student 18 
+  48.12516   49.01526   49.05052   49.40510   50.67454   53.81805   55.47309 
+ Student 6 Student 21 
+  66.24523   66.56113 
+> rtvcp$cutoff.sd
+[1] 2.716203
+> sort(rtvcp$sd)
+ Student 1 Student 21 Student 27 Student 20 Student 23 Student 14 Student 22 
+ 0.1230590  0.1991180  0.2491942  0.4526665  0.7580839  0.8375296  0.8844773 
+Student 24 Student 18  Student 3 Student 15  Student 6 Student 29 Student 30 
+ 0.9095919  0.9569802  1.0335430  1.0938373  1.0960513  1.1742498  1.1933478 
+Student 11 Student 28 Student 16 Student 26  Student 9 Student 12 Student 17 
+ 1.2939525  1.3303593  1.3538524  1.4274292  1.4810002  1.5248663  1.5317879 
+Student 25 Student 10  Student 4  Student 8  Student 2  Student 7  Student 5 
+ 1.5567850  1.5682777  1.5845329  1.6009467  1.8071195  1.8786461  1.9785792 
+Student 13 Student 19 
+ 2.4779838  2.5731329 
+> 
+> ## ===============================================================
+> ##
+> ##  Compositional data and robustness
+> 
+> data(ulabor)
+> 
+> (res0 <- Parafac(ulabor))
+Call:
+Parafac(X = ulabor)
+
+
+PARAFAC analysis with  2  components.
+Fit value: 3094.461 
+Fit percentage: 97.68 %
+ 
+> res0$A; res0$B; res0$C; res0$GA
+           F1         F2
+Pie  38.95683  7.3171572
+VdA  39.41582 10.6925141
+Lom  48.66291  9.2428751
+Lig  56.63443  8.5564525
+Tno  38.73119  4.7519814
+Bol  35.78668  4.3107081
+Tre  42.75059  5.4758829
+Ven  44.52300  9.7463912
+Fri  52.49969 11.8615250
+Emi  35.63438  8.8574464
+Tos  38.13003  5.9479300
+Umb  55.34899  7.1009096
+Mar  44.43006  9.0846232
+Laz  75.29310  8.3238769
+Abr  68.47878  6.9113553
+Mol  93.33735  0.4577208
+Cam  97.34571  7.7260059
+Pug  88.10102  3.9851227
+Bas 108.83055 -1.2300930
+Cal 161.71321 -2.6585784
+Sic 115.95199  1.5059349
+Sar  87.28745  4.6455548
+             F1         F2
+Agri -0.4186317  1.2978717
+Man  -0.4372669 -0.6672464
+Ind  -0.3711266 -0.6134723
+Con  -0.5189685 -0.6039138
+Serv -0.3818639  0.4514516
+             F1        F2
+2001 -0.4833987 0.8236546
+2003 -0.4219873 0.8309858
+2005 -0.4532562 1.0569151
+2007 -0.4496442 1.1807793
+2009 -0.4715091 1.2086574
+      F1       F2 
+340.5799 134.7309 
+> res0$cutoff.rd
+[1] 20.32832
+> sort(res0$rd)
+      Lig       VdA       Fri       Tos       Ven       Umb       Mar       Tno 
+ 5.004894  6.148439  6.639801  7.004848  7.205583  7.923234  8.373065  8.693511 
+      Pie       Emi       Sar       Bol       Tre       Pug       Mol       Sic 
+ 8.710359  8.737517  9.028275  9.759871  9.998747 11.455565 12.360752 13.105318 
+      Cal       Lom       Abr       Cam       Laz       Bas 
+13.189134 13.248666 15.091237 16.105366 18.353882 24.897291 
+> res0$cutoff.sd
+[1] 2.716203
+> sort(res0$sd)
+      Umb       Abr       Sar       Pug       Lig       Mar       Lom       Pie 
+0.3445949 0.4072854 0.6357073 0.6491598 0.7193043 0.8088524 0.8509300 0.9356166 
+      Emi       Ven       Laz       VdA       Tre       Tos       Sic       Mol 
+0.9381274 0.9775195 1.2106371 1.2285038 1.2445778 1.3068667 1.4870226 1.5184683 
+      Tno       Fri       Bas       Cam       Bol       Cal 
+1.6604968 1.8559615 1.9133046 1.9195695 1.9395451 2.8679666 
+> 
+> (res <- Parafac(ulabor, robust=TRUE, coda.transform="ilr"))
+Call:
+Parafac(X = ulabor, robust = TRUE, coda.transform = "ilr")
+
+
+PARAFAC analysis with  2  components.
+Fit value: 2.762842 
+Fit percentage: 99.5 %
+Robust, ilr-transformed
+ 
+> res$A; res$B; res$C; res$GA
+             F1          F2
+Pie -3.72720229  1.85186567
+VdA -8.01160297 14.94756434
+Lom -2.94754555  4.47629488
+Lig -2.38612649  2.25909277
+Tno -2.37761082  0.42109144
+Bol -2.62628736 -0.09465471
+Tre -2.25570657  0.94681676
+Ven -3.97534454  4.20404509
+Fri -4.03164680  4.23334797
+Emi -5.51554769  1.53691173
+Tos -2.85155164  2.76651503
+Umb -2.15187068  1.81632222
+Mar -4.27753394  2.02879000
+Laz -1.14414212  2.27096172
+Abr -1.26976164  3.00885515
+Mol  0.07156785  0.26284129
+Cam -1.10657923  1.19048983
+Pug -0.53401024  1.16945733
+Bas  0.27164673 -0.48518369
+Cal  0.77038965  0.44634127
+Sic  0.17418037  0.71757493
+Sar -0.74833305  0.93352617
+           F1          F2
+Z1  0.5884550  0.34214588
+Z2  0.1489703  0.62891030
+Z3  0.6005218 -0.69715815
+Z4 -0.5204826 -0.03712866
+             F1        F2
+2001 -0.3144027 0.4046315
+2003 -0.4493563 0.4573583
+2005 -0.4900969 0.4737227
+2007 -0.4939720 0.4516856
+2009 -0.4637096 0.4457169
+      F1       F2 
+14.46824 18.02759 
+> res$cutoff.rd
+[1] 0.6337104
+> sort(res$rd)
+      Sar       Cal       Lig       Fri       Umb       Sic       Mar       Pie 
+0.2928425 0.3218708 0.3392706 0.3450439 0.3718724 0.3830069 0.3922288 0.4053166 
+      Mol       Ven       Pug       Bol       Abr       Tos       Lom       Bas 
+0.4302996 0.4477137 0.4479510 0.4603592 0.4611033 0.4674324 0.4868503 0.5195072 
+      Tno       Cam       Emi       Tre       Laz       VdA 
+0.6398038 0.6531687 0.8354005 1.0202743 1.1592008 7.5554443 
+> res$cutoff.sd
+[1] 2.716203
+> sort(res$sd)
+       Umb        Lig        Cam        Tre        Tos        Sar        Pug 
+0.07303589 0.34451085 0.48680418 0.66770220 0.66803870 0.68316692 0.78639056 
+       Laz        Pie        Tno        Sic        Mol        Mar        Abr 
+0.86311503 1.00624704 1.11211488 1.14779785 1.15494455 1.28786403 1.30579300 
+       Cal        Bas        Ven        Fri        Bol        Lom        Emi 
+1.45819150 1.47862824 1.57936896 1.60035486 1.60395365 1.83701829 2.25514580 
+       VdA 
+8.53277110 
+> 
+> (res1 <- Parafac(ulabor, coda.transform="clr"))
+Call:
+Parafac(X = ulabor, coda.transform = "clr")
+
+
+PARAFAC analysis with  2  components.
+Fit value: 16.85476 
+Fit percentage: 96.95 %
+clr-transformed
+ 
+> res1$A; res1$B; res1$C; res1$GA
+              F1          F2
+Pie  -1.33444073  0.82292805
+VdA -18.73636304  1.82146654
+Lom  -4.10779897  0.75294149
+Lig  -1.96350146  0.56410819
+Tno  -0.01825101  0.50552154
+Bol   0.46737228  0.53488826
+Tre  -0.50748792  0.50227060
+Ven  -3.65748069  0.95469347
+Fri  -3.59174147  0.97443928
+Emi  -0.74392099  1.19066493
+Tos  -2.41880477  0.66889975
+Umb  -1.50515200  0.50105424
+Mar  -1.40716216  0.94115526
+Laz  -2.14667301  0.31880229
+Abr  -2.88222112  0.36188252
+Mol  -0.33984674 -0.01401674
+Cam  -0.99881304  0.27356145
+Pug  -1.16132224  0.14173066
+Bas   0.47396905 -0.06968556
+Cal  -0.62840999 -0.14648352
+Sic  -0.78812975 -0.01221515
+Sar  -0.90676292  0.17775341
+             F1         F2
+Agri  0.0975616 -1.3751331
+Man   0.1884542  0.9690904
+Ind  -0.7425677  0.3393905
+Con   0.3193768  0.8557385
+Serv  0.1371751 -0.7890863
+             F1         F2
+2001 -0.4495825 -0.7791732
+2003 -0.4510298 -0.9401260
+2005 -0.4507652 -1.0288730
+2007 -0.4216447 -1.1119078
+2009 -0.4192016 -1.0656330
+      F1       F2 
+17.19533 15.20402 
+> res1$cutoff.rd
+[1] 1.51674
+> sort(res1$rd)
+      Sar       Mol       Lig       Umb       Cal       Sic       Bas       Pie 
+0.3307659 0.4244839 0.4645352 0.5061766 0.5064754 0.5362422 0.5370514 0.5612077 
+      Pug       Mar       Cam       Tos       Tno       Bol       Tre       Ven 
+0.5835217 0.6637070 0.6911580 0.7699203 0.7900113 1.0042183 1.0125992 1.0545346 
+      Fri       Emi       Abr       VdA       Laz       Lom 
+1.0848290 1.0964189 1.1859928 1.2827753 1.3511843 1.4378710 
+> res1$cutoff.sd
+[1] 2.716203
+> sort(res1$sd)
+      Lig       Umb       Tos       Lom       Tre       Cam       Laz       Abr 
+0.1676457 0.2011131 0.3561272 0.5137738 0.5551266 0.5673312 0.6294170 0.7075238 
+      Tno       Sar       Pug       Ven       Bol       Fri       Pie       Mol 
+0.7370372 0.8104082 0.9496252 0.9677263 0.9719430 1.0325935 1.1145116 1.2639866 
+      Bas       Sic       Mar       Cal       Emi       VdA 
+1.3230551 1.3288321 1.4426268 1.6895083 2.3756852 4.2460716 
 > 
 > proc.time()
    user  system elapsed 
-   6.75    0.12    6.89 
+   4.09    0.31    4.37 

@@ -9,7 +9,7 @@ xout$vvalue
 
 w <- c(NA, 0, 0.5, 1, 2.5, 3, 3.5, 4, 5, 10, Inf)
 res <- matrix(NA, nrow=length(w), ncol=7)
-for(i in 1:length(w))
+for(i in seq_along(w))
 {
     res[i, 1] <- res[i, 2] <- res[i, 3] <- w[i]
     if(is.na(w[i]))
@@ -22,7 +22,7 @@ for(i in 1:length(w))
     res[i, 4:7] <- round(x$vvalue,3)
 }
 colnames(res) <- c("A", "B", "C", "Core", "A", "B", "C")
-rownames(res) <- 1:nrow(res)
+rownames(res) <- seq_len(nrow(res))
 res
 
 ## Example with the UNIDO Manufacturing value added data
@@ -69,3 +69,57 @@ print(res.rc$rd)
 print(res$cutoff.rd)
 print(res.rc$Hset)
 print(res.rc$flag)
+
+##================================================================
+##
+##  Example with the TV data from ThreeWay: ratings of 15 American television
+##  shows on 16 bipolar scales made by 30 students: 15x16x30 array
+##  in A-mode, i.e. 15x450.
+data(TV, package="ThreeWay")
+
+## Transform to 3-way array, to pass to Parafac() and set the dimnames
+tv <- toArray(TV[[1]], 30, 16, 15, mode="B")
+dimnames(tv)[[1]] <- TV[[4]]
+dimnames(tv)[[2]] <- TV[[2]]
+dimnames(tv)[[3]] <- TV[[3]]
+
+(tvt3 <- Tucker3(tv, 2, 3, 4))
+tvt3$A; tvt3$B; tvt3$C; tvt3$GA
+tvt3$cutoff.rd
+sort(tvt3$rd)
+tvt3$cutoff.sd
+sort(tvt3$sd)
+
+(rtvt3 <- Tucker3(tv, 2, 3, 4, robust=TRUE))
+rtvt3$A; rtvt3$B; rtvt3$C; rtvt3$GA
+rtvt3$cutoff.rd
+sort(rtvt3$rd)
+rtvt3$cutoff.sd
+sort(rtvt3$sd)
+
+## ===============================================================
+##
+##  Compositional data and robustness
+
+data(ulabor)
+
+(res0 <- Tucker3(ulabor))
+res0$A; res0$B; res0$C; res0$GA
+res0$cutoff.rd
+sort(res0$rd)
+res0$cutoff.sd
+sort(res0$sd)
+
+(res <- Tucker3(ulabor, robust=TRUE, coda.transform="ilr"))
+res$A; res$B; res$C; res$GA
+res$cutoff.rd
+sort(res$rd)
+res$cutoff.sd
+sort(res$sd)
+
+(res1 <- Tucker3(ulabor, coda.transform="clr"))
+res1$A; res1$B; res1$C; res1$GA
+res1$cutoff.rd
+sort(res1$rd)
+res1$cutoff.sd
+sort(res1$sd)

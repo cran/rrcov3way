@@ -1,6 +1,6 @@
 
-R Under development (unstable) (2019-12-20 r77608) -- "Unsuffered Consequences"
-Copyright (C) 2019 The R Foundation for Statistical Computing
+R Under development (unstable) (2021-10-11 r81035) -- "Unsuffered Consequences"
+Copyright (C) 2021 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -22,13 +22,22 @@ Type 'q()' to quit R.
 > data(elind)
 > t3 <- Tucker3(elind, 3, 2, 2)
 > xout <- do3Rotate(t3, c(3, 3, 3), rotate=c("A", "B", "C"))
+Results from  1  random starts
+Run no.  1  f =  32.568 (core:  3.136 ; A:  17.664 ; B:  7.631 ; C:  4.136 ),  4  iters
+Three-way orthomax function value for best solution is  32.5677
+Varimax values of core and AS, BT and CU (all based on natural weights)
+                Core             A               B               C 
+               3.136            5.888           2.544            1.379
+These simplicity values are based on 'natural' weights and therefore comparable across matrices
+When multiplied by the relative weights, they give the contribution to the overall simplicity value
+(they are I^2/p, J^2/q or K^2/r, resp., times the sum of the variances of squared values)
 > xout$vvalue
       GA        A        B        C 
 3.136374 5.888002 2.543755 1.378694 
 > 
 > w <- c(NA, 0, 0.5, 1, 2.5, 3, 3.5, 4, 5, 10, Inf)
 > res <- matrix(NA, nrow=length(w), ncol=7)
-> for(i in 1:length(w))
+> for(i in seq_along(w))
 + {
 +     res[i, 1] <- res[i, 2] <- res[i, 3] <- w[i]
 +     if(is.na(w[i]))
@@ -40,8 +49,107 @@ Type 'q()' to quit R.
 + 
 +     res[i, 4:7] <- round(x$vvalue,3)
 + }
+Results from  1  random starts
+Run no.  1  f =  6.873 (core:  6.873 ; A:  0 ; B:  0 ; C:  0 ),  1  iters
+Three-way orthomax function value for best solution is  6.8729
+Varimax values of core and AS, BT and CU (all based on natural weights)
+                Core             A               B               C 
+               6.873            4.479           1.392            0.743
+These simplicity values are based on 'natural' weights and therefore comparable across matrices
+When multiplied by the relative weights, they give the contribution to the overall simplicity value
+(they are I^2/p, J^2/q or K^2/r, resp., times the sum of the variances of squared values)
+Results from  1  random starts
+Run no.  1  f =  6.88 (core:  6.88 ; A:  0 ; B:  0 ; C:  0 ),  6  iters
+Three-way orthomax function value for best solution is  6.8802
+Varimax values of core and AS, BT and CU (all based on natural weights)
+                Core             A               B               C 
+               6.88            4.44           1.415            0.719
+These simplicity values are based on 'natural' weights and therefore comparable across matrices
+When multiplied by the relative weights, they give the contribution to the overall simplicity value
+(they are I^2/p, J^2/q or K^2/r, resp., times the sum of the variances of squared values)
+Results from  1  random starts
+Run no.  1  f =  10.378 (core:  6.701 ; A:  2.432 ; B:  0.847 ; C:  0.398 ),  6  iters
+Three-way orthomax function value for best solution is  10.3781
+Varimax values of core and AS, BT and CU (all based on natural weights)
+                Core             A               B               C 
+               6.701            4.864           1.694            0.796
+These simplicity values are based on 'natural' weights and therefore comparable across matrices
+When multiplied by the relative weights, they give the contribution to the overall simplicity value
+(they are I^2/p, J^2/q or K^2/r, resp., times the sum of the variances of squared values)
+Results from  1  random starts
+Run no.  1  f =  14.237 (core:  6.154 ; A:  5.177 ; B:  2.013 ; C:  0.893 ),  6  iters
+Three-way orthomax function value for best solution is  14.2368
+Varimax values of core and AS, BT and CU (all based on natural weights)
+                Core             A               B               C 
+               6.154            5.177           2.013            0.893
+These simplicity values are based on 'natural' weights and therefore comparable across matrices
+When multiplied by the relative weights, they give the contribution to the overall simplicity value
+(they are I^2/p, J^2/q or K^2/r, resp., times the sum of the variances of squared values)
+Results from  1  random starts
+Run no.  1  f =  27.704 (core:  3.643 ; A:  14.54 ; B:  6.282 ; C:  3.24 ),  5  iters
+Three-way orthomax function value for best solution is  27.7044
+Varimax values of core and AS, BT and CU (all based on natural weights)
+                Core             A               B               C 
+               3.643            5.816           2.513            1.296
+These simplicity values are based on 'natural' weights and therefore comparable across matrices
+When multiplied by the relative weights, they give the contribution to the overall simplicity value
+(they are I^2/p, J^2/q or K^2/r, resp., times the sum of the variances of squared values)
+Results from  1  random starts
+Run no.  1  f =  32.568 (core:  3.136 ; A:  17.664 ; B:  7.631 ; C:  4.136 ),  4  iters
+Three-way orthomax function value for best solution is  32.5677
+Varimax values of core and AS, BT and CU (all based on natural weights)
+                Core             A               B               C 
+               3.136            5.888           2.544            1.379
+These simplicity values are based on 'natural' weights and therefore comparable across matrices
+When multiplied by the relative weights, they give the contribution to the overall simplicity value
+(they are I^2/p, J^2/q or K^2/r, resp., times the sum of the variances of squared values)
+Results from  1  random starts
+Run no.  1  f =  37.501 (core:  2.812 ; A:  20.74 ; B:  8.95 ; C:  4.998 ),  3  iters
+Three-way orthomax function value for best solution is  37.5005
+Varimax values of core and AS, BT and CU (all based on natural weights)
+                Core             A               B               C 
+               2.812            5.926           2.557            1.428
+These simplicity values are based on 'natural' weights and therefore comparable across matrices
+When multiplied by the relative weights, they give the contribution to the overall simplicity value
+(they are I^2/p, J^2/q or K^2/r, resp., times the sum of the variances of squared values)
+Results from  1  random starts
+Run no.  1  f =  42.472 (core:  2.596 ; A:  23.789 ; B:  10.254 ; C:  5.833 ),  3  iters
+Three-way orthomax function value for best solution is  42.4719
+Varimax values of core and AS, BT and CU (all based on natural weights)
+                Core             A               B               C 
+               2.596            5.947           2.564            1.458
+These simplicity values are based on 'natural' weights and therefore comparable across matrices
+When multiplied by the relative weights, they give the contribution to the overall simplicity value
+(they are I^2/p, J^2/q or K^2/r, resp., times the sum of the variances of squared values)
+Results from  1  random starts
+Run no.  1  f =  52.475 (core:  2.333 ; A:  29.845 ; B:  12.845 ; C:  7.451 ),  3  iters
+Three-way orthomax function value for best solution is  52.4749
+Varimax values of core and AS, BT and CU (all based on natural weights)
+                Core             A               B               C 
+               2.333            5.969           2.569            1.49
+These simplicity values are based on 'natural' weights and therefore comparable across matrices
+When multiplied by the relative weights, they give the contribution to the overall simplicity value
+(they are I^2/p, J^2/q or K^2/r, resp., times the sum of the variances of squared values)
+Results from  1  random starts
+Run no.  1  f =  102.83 (core:  1.932 ; A:  59.914 ; B:  25.733 ; C:  15.251 ),  3  iters
+Three-way orthomax function value for best solution is  102.8296
+Varimax values of core and AS, BT and CU (all based on natural weights)
+                Core             A               B               C 
+               1.932            5.991           2.573            1.525
+These simplicity values are based on 'natural' weights and therefore comparable across matrices
+When multiplied by the relative weights, they give the contribution to the overall simplicity value
+(they are I^2/p, J^2/q or K^2/r, resp., times the sum of the variances of squared values)
+Results from  1  random starts
+Run no.  1  f =  10104550598230312960 (core:  1.652 ; A:  5996973441771404288 ; B:  2573883441686829056 ; C:  1533693714772079872 ),  2  iters
+Three-way orthomax function value for best solution is  10104550598230312960
+Varimax values of core and AS, BT and CU (all based on natural weights)
+                Core             A               B               C 
+               1.652            5.997           2.574            1.534
+These simplicity values are based on 'natural' weights and therefore comparable across matrices
+When multiplied by the relative weights, they give the contribution to the overall simplicity value
+(they are I^2/p, J^2/q or K^2/r, resp., times the sum of the variances of squared values)
 > colnames(res) <- c("A", "B", "C", "Core", "A", "B", "C")
-> rownames(res) <- 1:nrow(res)
+> rownames(res) <- seq_len(nrow(res))
 > res
       A    B    C  Core     A     B     C
 1    NA   NA   NA 6.873 4.479 1.392 0.743
@@ -70,7 +178,8 @@ Tucker3(X = va3way)
 
 
 Tucker3 analysis with  2 x 2 x 2  components.
-Fit value: 94.18 %
+Fit value: 1.974345e+23 
+Fit percentage: 94.18 %
 > print(res$fit)
 [1] 1.974345e+23
 > print(res$A)
@@ -175,9 +284,10 @@ Tucker3(X = va3way, robust = TRUE)
 
 
 Tucker3 analysis with  2 x 2 x 2  components.
-Fit value: 98.51 %
+Fit value: 1.085869e+22 
+Fit percentage: 99.68 %
 Robust> print(res.r$fit)
-[1] 8.54919e+21
+[1] 1.085869e+22
 > print(res.r$A)
                F1           F2
 ALB -0.0007979088  0.003125610
@@ -280,11 +390,11 @@ HIGH  -0.1876858  0.62839863
   ALB   AUT   BEL   BRA   BGR   CAN   TWN   COL   CRI   CYP   CZE   DNK   ECU 
  TRUE  TRUE  TRUE FALSE  TRUE FALSE FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE 
   EST   FIN   FRA   GEO   PSE   DEU   HUN   IND   IDN   IRN   ISR   ITA   JOR 
- TRUE  TRUE  TRUE  TRUE  TRUE FALSE  TRUE FALSE FALSE FALSE  TRUE  TRUE  TRUE 
+ TRUE  TRUE FALSE  TRUE  TRUE FALSE  TRUE FALSE FALSE FALSE  TRUE FALSE  TRUE 
   KOR   LVA   LTU   MUS   OMN   NLD   NOR   PER   POL   PRT   QAT   ROU   RUS 
 FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE FALSE 
   SEN   SGP   SVK   SVN   ESP   SWE   CHE   TUR   GBR   YEM 
- TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE FALSE  TRUE 
+ TRUE FALSE  TRUE  TRUE FALSE  TRUE FALSE  TRUE FALSE  TRUE 
 > 
 > (res.c <- Tucker3(va3way, coda.transform="ilr"))
 Call:
@@ -292,61 +402,62 @@ Tucker3(X = va3way, coda.transform = "ilr")
 
 
 Tucker3 analysis with  2 x 2 x 2  components.
-Fit value: 89.53 %
+Fit value: 489.8535 
+Fit percentage: 89.53 %
 ilr-transformed
 > print(res.c$fit)
 [1] 489.8535
 > print(res.c$A)
               F1           F2
-ALB -0.141027776  0.022249754
-AUT -0.073638380 -0.102412301
-BEL -0.096583648 -0.126010677
-BRA -0.108678865 -0.135840463
-BGR -0.115937446 -0.058305642
-CAN -0.080625958 -0.126613021
-TWN  0.027273004 -0.223927829
-COL -0.187688315 -0.006993891
-CRI -0.283578148  0.136652729
-CYP -0.176649383  0.130185375
-CZE -0.090714399 -0.138733705
-DNK -0.060385560 -0.071531206
-ECU -0.294384378  0.076978709
-EST -0.085296507  0.031249852
-FIN -0.034948543 -0.134431126
-FRA -0.051257484 -0.133224026
-GEO -0.098724223 -0.022311524
-PSE -0.284277658  0.262791759
-DEU -0.058662144 -0.177957490
-HUN -0.057855052 -0.198100335
-IND -0.109173982 -0.218701195
-IDN -0.083426441 -0.153837601
-IRN -0.155369169 -0.316936265
-ISR  0.013949842 -0.136319845
-ITA -0.081877175 -0.092652047
-JOR -0.213598528  0.015062238
-KOR -0.012948191 -0.296757913
-LVA -0.096862707  0.044832361
-LTU -0.080347635  0.045071675
-MUS -0.172127384  0.230977710
-OMN -0.238763625 -0.071446014
-NLD -0.063744259 -0.088416264
-NOR -0.028029390 -0.088270044
-PER -0.197759462  0.076433069
-POL -0.096024732 -0.065627330
-PRT -0.111641755 -0.009862555
-QAT -0.353953212 -0.013992256
-ROU -0.091466367 -0.061117138
-RUS -0.130890066 -0.112874412
-SEN -0.186997485 -0.086397478
-SGP  0.067054282 -0.269307823
-SVK -0.087172302 -0.148794019
-SVN -0.097342102 -0.105932156
-ESP -0.102956523 -0.066223085
-SWE -0.054648068 -0.139363519
-CHE -0.007754968 -0.166184519
-TUR -0.130006291 -0.091166640
-GBR -0.037643333 -0.074267709
-YEM -0.275487636  0.266179010
+ALB -0.141027987  0.022302485
+AUT -0.073638441 -0.102419501
+BEL -0.096583559 -0.126016940
+BRA -0.108678773 -0.135823883
+BGR -0.115937375 -0.058287270
+CAN -0.080625696 -0.126590957
+TWN  0.027273048 -0.223907933
+COL -0.187688274 -0.006985862
+CRI -0.283577628  0.136633188
+CYP -0.176649321  0.130198263
+CZE -0.090714445 -0.138744624
+DNK -0.060385774 -0.071543802
+ECU -0.294384237  0.076982373
+EST -0.085296718  0.031268096
+FIN -0.034948623 -0.134404567
+FRA -0.051257317 -0.133217515
+GEO -0.098724347 -0.022268320
+PSE -0.284277361  0.262778589
+DEU -0.058662211 -0.177978597
+HUN -0.057855166 -0.198097263
+IND -0.109173950 -0.218688855
+IDN -0.083426406 -0.153788087
+IRN -0.155369032 -0.316931432
+ISR  0.013950021 -0.136293182
+ITA -0.081877160 -0.092652470
+JOR -0.213598432  0.015052777
+KOR -0.012948115 -0.296732307
+LVA -0.096862792  0.044870018
+LTU -0.080347970  0.045098931
+MUS -0.172127466  0.231036848
+OMN -0.238764115 -0.071493064
+NLD -0.063744207 -0.088416717
+NOR -0.028029281 -0.088254558
+PER -0.197759424  0.076441887
+POL -0.096024755 -0.065624955
+PRT -0.111641786 -0.009846018
+QAT -0.353953789 -0.014116169
+ROU -0.091466436 -0.061096782
+RUS -0.130889887 -0.112869235
+SEN -0.186997420 -0.086370595
+SGP  0.067054302 -0.269324590
+SVK -0.087172304 -0.148800275
+SVN -0.097342246 -0.105950058
+ESP -0.102956356 -0.066225265
+SWE -0.054647952 -0.139364609
+CHE -0.007754913 -0.166190643
+TUR -0.130006322 -0.091150428
+GBR -0.037643198 -0.074267181
+YEM -0.275487553  0.266219675
 > print(res.c$B)
             F1         F2
 Z1 -0.42819116  0.3624405
@@ -378,19 +489,19 @@ HIGH   0.7762709  0.2769340
 2013 -0.2418436  0.59287429
 > print(res.c$rd)
        ALB        AUT        BEL        BRA        BGR        CAN        TWN 
- 5.2172366  1.1287803  1.2765110  1.4896635  1.9715625  2.4165468  3.0860340 
+ 5.2172367  1.1287803  1.2765110  1.4896636  1.9715626  2.4165468  3.0860341 
        COL        CRI        CYP        CZE        DNK        ECU        EST 
- 1.5593151  6.0728107  2.6943548  1.0649640  2.2487271  2.5433152  2.2589827 
+ 1.5593152  6.0728107  2.6943549  1.0649640  2.2487272  2.5433152  2.2589828 
        FIN        FRA        GEO        PSE        DEU        HUN        IND 
- 2.8329817  0.9267417  4.4565939  4.6664430  2.0082763  1.1582638  1.6831294 
+ 2.8329818  0.9267417  4.4565940  4.6664430  2.0082764  1.1582638  1.6831295 
        IDN        IRN        ISR        ITA        JOR        KOR        LVA 
- 4.4489453  1.8281414  3.1284317  0.6742614  2.4303793  3.0226388  3.6389297 
+ 4.4489454  1.8281414  3.1284317  0.6742614  2.4303793  3.0226388  3.6389298 
        LTU        MUS        OMN        NLD        NOR        PER        POL 
- 3.2027735  5.2939490  5.6791233  1.4971629  2.0017873  2.1140222  1.2501827 
+ 3.2027736  5.2939492  5.6791235  1.4971629  2.0017874  2.1140222  1.2501827 
        PRT        QAT        ROU        RUS        SEN        SGP        SVK 
- 2.1391853 10.2386144  2.2453029  2.0549622  2.8449603  2.1340105  1.3277102 
+ 2.1391853 10.2386149  2.2453030  2.0549622  2.8449604  2.1340106  1.3277102 
        SVN        ESP        SWE        CHE        TUR        GBR        YEM 
- 2.2948261  0.8184396  2.0483813  1.4394787  1.7575560  1.2950253  4.5464500 
+ 2.2948261  0.8184396  2.0483813  1.4394787  1.7575560  1.2950253  4.5464501 
 > print(res$cutoff.rd)
 [1] 141103532129
 > 
@@ -400,10 +511,11 @@ Tucker3(X = va3way, robust = TRUE, coda.transform = "ilr")
 
 
 Tucker3 analysis with  2 x 2 x 2  components.
-Fit value: 94.94 %
+Fit value: 229.0707 
+Fit percentage: 95.11 %
 Robust, ilr-transformed
 > print(res.rc$fit)
-[1] 133.748
+[1] 229.0707
 > print(res.rc$A)
               F1           F2
 ALB -0.181693034  0.058941794
@@ -508,12 +620,478 @@ HIGH   0.7110084  0.32049826
   ALB   AUT   BEL   BRA   BGR   CAN   TWN   COL   CRI   CYP   CZE   DNK   ECU 
 FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE FALSE  TRUE  TRUE  TRUE  TRUE 
   EST   FIN   FRA   GEO   PSE   DEU   HUN   IND   IDN   IRN   ISR   ITA   JOR 
- TRUE  TRUE  TRUE  TRUE FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE 
+ TRUE  TRUE  TRUE  TRUE FALSE  TRUE  TRUE  TRUE  TRUE FALSE  TRUE  TRUE  TRUE 
   KOR   LVA   LTU   MUS   OMN   NLD   NOR   PER   POL   PRT   QAT   ROU   RUS 
- TRUE  TRUE  TRUE  TRUE FALSE  TRUE  TRUE  TRUE  TRUE  TRUE FALSE  TRUE  TRUE 
+ TRUE  TRUE  TRUE FALSE FALSE  TRUE  TRUE  TRUE  TRUE  TRUE FALSE  TRUE  TRUE 
   SEN   SGP   SVK   SVN   ESP   SWE   CHE   TUR   GBR   YEM 
- TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE 
+ TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE FALSE 
+> 
+> ##================================================================
+> ##
+> ##  Example with the TV data from ThreeWay: ratings of 15 American television
+> ##  shows on 16 bipolar scales made by 30 students: 15x16x30 array
+> ##  in A-mode, i.e. 15x450.
+> data(TV, package="ThreeWay")
+> 
+> ## Transform to 3-way array, to pass to Parafac() and set the dimnames
+> tv <- toArray(TV[[1]], 30, 16, 15, mode="B")
+> dimnames(tv)[[1]] <- TV[[4]]
+> dimnames(tv)[[2]] <- TV[[2]]
+> dimnames(tv)[[3]] <- TV[[3]]
+> 
+> (tvt3 <- Tucker3(tv, 2, 3, 4))
+Call:
+Tucker3(X = tv, P = 2, Q = 3, R = 4)
+
+
+Tucker3 analysis with  2 x 3 x 4  components.
+Fit value: 51113.12 
+Fit percentage: 49.54 %
+> tvt3$A; tvt3$B; tvt3$C; tvt3$GA
+                    F1           F2
+Student 1  -0.17489013  0.006673778
+Student 2  -0.20459811 -0.211979439
+Student 3  -0.20870735 -0.227309447
+Student 4  -0.10086613 -0.119596915
+Student 5  -0.09320443 -0.093920739
+Student 6  -0.18186463  0.356850317
+Student 7  -0.11330372 -0.134520253
+Student 8  -0.15011494  0.230290876
+Student 9  -0.24295534  0.105938750
+Student 10 -0.24465546  0.003575873
+Student 11 -0.13277162  0.068493992
+Student 12 -0.23287101 -0.098897111
+Student 13 -0.25030772 -0.014478232
+Student 14 -0.15428421 -0.042514086
+Student 15 -0.16501151 -0.101521293
+Student 16 -0.12011044 -0.097472036
+Student 17 -0.15923782  0.295985627
+Student 18 -0.21701558  0.235239976
+Student 19 -0.19667782 -0.077835320
+Student 20 -0.15107959 -0.165933822
+Student 21 -0.19789284  0.490252017
+Student 22 -0.21793787 -0.030872260
+Student 23 -0.20673655  0.005302170
+Student 24 -0.18727701 -0.254228658
+Student 25 -0.18213842 -0.019346834
+Student 26 -0.15704424 -0.127005065
+Student 27 -0.19148413  0.156473100
+Student 28 -0.19043168  0.042035523
+Student 29 -0.15741129 -0.095847051
+Student 30 -0.15445310 -0.315882566
+                                                        F1           F2
+Thrilling-Boring                               -0.22738747  0.202434516
+Intelligent-Idiotic                            -0.35251145 -0.029094751
+Erotic-Not Erotic                               0.06633832  0.395687664
+Sensitive-Insensitive                          -0.20568351 -0.020631059
+Interesting-Uninteresting                      -0.33776282  0.120800104
+Fast-Slow                                      -0.19755152  0.175397496
+Intellectually Stimulating-Intellectually Dull -0.35976001  0.016312285
+Violent-Peaceful                               -0.04394433  0.042372009
+Caring-Callous                                 -0.18153949 -0.050429407
+Satirical-Not Satirical                        -0.01531449  0.619352846
+Informative-Uninformative                      -0.37891205 -0.060266802
+Touching-Leave Me Cold                         -0.18171262  0.072222879
+Deep-Shallow                                   -0.26248398  0.000668462
+Tasteful-Crude                                 -0.25384128 -0.150496841
+Real-Fantasy                                   -0.37249340 -0.256517155
+Funny-Not Funny                                -0.10481381  0.519923906
+                                                        F3
+Thrilling-Boring                               -0.23968215
+Intelligent-Idiotic                            -0.08609005
+Erotic-Not Erotic                              -0.01719274
+Sensitive-Insensitive                           0.38547968
+Interesting-Uninteresting                      -0.14857531
+Fast-Slow                                      -0.26248959
+Intellectually Stimulating-Intellectually Dull -0.05582925
+Violent-Peaceful                               -0.56117757
+Caring-Callous                                  0.37480050
+Satirical-Not Satirical                         0.07094593
+Informative-Uninformative                      -0.10433994
+Touching-Leave Me Cold                          0.27272891
+Deep-Shallow                                    0.15882260
+Tasteful-Crude                                  0.25276498
+Real-Fantasy                                   -0.14446844
+Funny-Not Funny                                 0.19098615
+                                      F1          F2          F3          F4
+Mash                        -0.332960400  0.34854755  0.01615412  0.26466548
+Charlie's angels             0.322064058 -0.20473971 -0.26124914  0.10011077
+All in the family           -0.087943588  0.18925842  0.03632832  0.23933144
+60 minutes                  -0.463093733 -0.07270938 -0.09390710 -0.03601467
+The tonight show            -0.142481415  0.19142250 -0.17862149  0.40727813
+Let's make a deal            0.346720906 -0.26712620 -0.15124887  0.02037712
+The waltons                 -0.004077061 -0.39349123  0.33305039  0.33935981
+Saturday night live          0.131069053  0.20857061 -0.42092667  0.31894796
+News                        -0.368595113 -0.19472333 -0.24058195 -0.22157766
+Kojak                        0.092867488 -0.14072779 -0.35017066  0.09473422
+Mork and mindy               0.072562764  0.19494559  0.02908051  0.47281363
+Jacques Cousteau            -0.424016533 -0.25247342 -0.02132971  0.03914203
+Football                    -0.053062712 -0.22852257 -0.55480479  0.03753771
+Little house on the prairie  0.060845640 -0.40561295  0.28983744  0.37988349
+Wild kingdom                -0.263534115 -0.33606887 -0.06965685  0.22202080
+            F1         F2       F3        F4        F5        F6          F7
+F1 163.1502217 18.8191209 2.804437 -11.40398 98.223149 -1.715064 -0.08806971
+F2   0.9749032  0.8012264 3.083994  33.35011 -3.722912 -4.437220 32.92701959
+          F8        F9        F10      F11       F12
+F1 -10.45981 73.289073  -2.773459 20.17811 37.423394
+F2 -18.58762 -3.778268 -55.530285 20.86814  1.756283
+> tvt3$cutoff.rd
+[1] 56.32446
+> sort(tvt3$rd)
+ Student 5  Student 4 Student 16  Student 7 Student 14 Student 20 Student 24 
+  24.92741   28.58745   28.72700   29.45604   31.46744   31.73021   33.28338 
+Student 15 Student 26 Student 29 Student 11  Student 3 Student 12  Student 9 
+  37.52909   37.65508   37.66888   38.00710   39.13542   39.16111   40.85074 
+ Student 8 Student 27 Student 10  Student 1 Student 17  Student 2 Student 22 
+  41.49881   42.33881   42.45805   43.35130   43.43189   43.74846   43.95058 
+Student 28 Student 30 Student 23 Student 19 Student 13 Student 21 Student 18 
+  44.11821   45.09728   46.42146   46.69099   48.68655   48.77251   48.83630 
+Student 25  Student 6 
+  55.09029   55.13740 
+> tvt3$cutoff.sd
+[1] 2.716203
+> sort(tvt3$sd)
+ Student 1 Student 25 Student 28 Student 15 Student 14 Student 29 Student 19 
+ 0.1175520  0.1307967  0.3702913  0.5513395  0.5728773  0.6282237  0.6497450 
+Student 23 Student 26 Student 27 Student 20 Student 22 Student 11  Student 2 
+ 0.6936727  0.7512668  0.9004137  0.9859502  1.0076335  1.2477835  1.3952361 
+Student 16 Student 24 Student 18 Student 12  Student 3  Student 8  Student 9 
+ 1.4054784  1.4117090  1.4891754  1.5147623  1.5320641  1.5777541  1.5946053 
+ Student 7 Student 10 Student 30 Student 13 Student 17  Student 4  Student 6 
+ 1.6014381  1.6181106  1.6813581  1.7734508  1.8057284  1.8668573  1.9837723 
+ Student 5 Student 21 
+ 2.0334181  2.6841938 
+> 
+> (rtvt3 <- Tucker3(tv, 2, 3, 4, robust=TRUE))
+Call:
+Tucker3(X = tv, P = 2, Q = 3, R = 4, robust = TRUE)
+
+
+Tucker3 analysis with  2 x 3 x 4  components.
+Fit value: 47736.97 
+Fit percentage: 52.87 %
+Robust> rtvt3$A; rtvt3$B; rtvt3$C; rtvt3$GA
+                   F1           F2
+Student 1  -0.1784099  0.040381078
+Student 2  -0.2095940 -0.191716995
+Student 3  -0.2142685 -0.227340409
+Student 4  -0.1026105 -0.134485162
+Student 5  -0.0950061 -0.101803916
+Student 6  -0.1728057  0.249149884
+Student 7  -0.1153179 -0.157692845
+Student 8  -0.1521154  0.289933859
+Student 9  -0.2462461  0.129065191
+Student 10 -0.2484680  0.035720296
+Student 11 -0.1351008  0.095213490
+Student 12 -0.2393829 -0.051981715
+Student 13 -0.2539285  0.009717806
+Student 14 -0.1573227 -0.025432754
+Student 15 -0.1692510 -0.084447583
+Student 16 -0.1229871 -0.096303177
+Student 17 -0.1585730  0.298585044
+Student 18 -0.2167387  0.242384877
+Student 19 -0.2008158 -0.075465912
+Student 20 -0.1548551 -0.165036057
+Student 21 -0.1964345  0.504760803
+Student 22 -0.2213127 -0.023259497
+Student 23 -0.2101631  0.018789870
+Student 24 -0.1912728 -0.275400246
+Student 25 -0.1874979  0.043061430
+Student 26 -0.1601450 -0.135381063
+Student 27 -0.1936328  0.185992406
+Student 28 -0.1938429  0.070318128
+Student 29 -0.1609695 -0.089962809
+Student 30 -0.1577199 -0.381485483
+                                                        F1          F2
+Thrilling-Boring                               -0.22666205  0.20634299
+Intelligent-Idiotic                            -0.34866814 -0.02864448
+Erotic-Not Erotic                               0.07980924  0.38834888
+Sensitive-Insensitive                          -0.19566159 -0.03502165
+Interesting-Uninteresting                      -0.34035181  0.12878297
+Fast-Slow                                      -0.19415508  0.17895929
+Intellectually Stimulating-Intellectually Dull -0.36086352  0.02723353
+Violent-Peaceful                               -0.05665074  0.06665449
+Caring-Callous                                 -0.17890390 -0.05461051
+Satirical-Not Satirical                        -0.01127112  0.62245574
+Informative-Uninformative                      -0.38338117 -0.04671221
+Touching-Leave Me Cold                         -0.18237593  0.06741000
+Deep-Shallow                                   -0.26086316  0.00461667
+Tasteful-Crude                                 -0.25074147 -0.16123752
+Real-Fantasy                                   -0.37732758 -0.25014518
+Funny-Not Funny                                -0.09880189  0.51479478
+                                                        F3
+Thrilling-Boring                               -0.23020804
+Intelligent-Idiotic                            -0.07817190
+Erotic-Not Erotic                              -0.01187755
+Sensitive-Insensitive                           0.39096587
+Interesting-Uninteresting                      -0.14837751
+Fast-Slow                                      -0.26623737
+Intellectually Stimulating-Intellectually Dull -0.04858745
+Violent-Peaceful                               -0.55386345
+Caring-Callous                                  0.37602339
+Satirical-Not Satirical                         0.10044683
+Informative-Uninformative                      -0.09941046
+Touching-Leave Me Cold                          0.27469424
+Deep-Shallow                                    0.16428992
+Tasteful-Crude                                  0.24386856
+Real-Fantasy                                   -0.13765742
+Funny-Not Funny                                 0.20889998
+                                     F1          F2          F3          F4
+Mash                        -0.32711663  0.35138729 -0.17613016  0.20324733
+Charlie's angels             0.30435144 -0.18375421  0.20590105  0.23616121
+All in the family           -0.07343327  0.17053533 -0.15890321  0.25424933
+60 minutes                  -0.46107779 -0.05739635  0.10332564  0.03711346
+The tonight show            -0.14788151  0.20547771 -0.04965087  0.41721147
+Let's make a deal            0.33402158 -0.27989441  0.16101679  0.14664829
+The waltons                 -0.01006290 -0.44169035 -0.41415049  0.19587490
+Saturday night live          0.11351933  0.27520062  0.19568588  0.42646061
+News                        -0.36773724 -0.17329331  0.33380269 -0.01576576
+Kojak                        0.08763417 -0.13388357  0.28685065  0.34746413
+Mork and mindy               0.07691915  0.16972511 -0.25363604  0.42975764
+Jacques Cousteau            -0.43223691 -0.23173627  0.00568034  0.05755011
+Football                    -0.08770329 -0.15883774  0.49856535  0.23186754
+Little house on the prairie  0.04164887 -0.43102953 -0.38107328  0.20965878
+Wild kingdom                -0.30144694 -0.27841953 -0.02441341  0.11995264
+           F1        F2        F3        F4       F5        F6        F7
+F1 160.342604 20.422309 3.2373074 -13.07578 97.76183 -6.738338 2.2894826
+F2   4.050209 -2.376177 0.5051424  26.99753 -6.21846 -4.418202 0.8917613
+          F8        F9         F10      F11       F12
+F1 -5.091781 -80.12858  -0.4600609 19.14867 0.1286844
+F2  3.720343   2.99344 -62.0221519 29.04774 4.9838569
+> rtvt3$cutoff.rd
+[1] 57.3163
+> sort(rtvt3$rd)
+ Student 5  Student 4 Student 16  Student 7 Student 14 Student 20 Student 24 
+  24.79540   28.33292   28.65696   28.94479   31.44571   31.70518   32.61760 
+Student 26 Student 15 Student 29 Student 11  Student 3 Student 12  Student 8 
+  37.48928   37.51535   37.61541   37.68008   38.96767   38.97970   39.79789 
+ Student 9 Student 27 Student 10 Student 30  Student 1 Student 28 Student 22 
+  40.67640   41.99968   42.36678   42.70388   43.10292   43.84055   43.97869 
+ Student 2 Student 17 Student 23 Student 19 Student 13 Student 18 Student 21 
+  44.19240   44.39477   46.35442   46.54289   48.74707   49.65658   50.14568 
+Student 25  Student 6 
+  54.64914   60.47808 
+> rtvt3$cutoff.sd
+[1] 2.716203
+> sort(rtvt3$sd)
+ Student 1 Student 25 Student 15 Student 14 Student 29 Student 28 Student 19 
+ 0.3276332  0.3454189  0.4009743  0.4871370  0.5224860  0.5238940  0.5974818 
+Student 23 Student 26 Student 20 Student 22 Student 27 Student 16 Student 11 
+ 0.6505343  0.7148437  0.8975646  0.9031898  1.1105617  1.2389005  1.2456635 
+ Student 2 Student 12 Student 10  Student 7  Student 3 Student 24  Student 6 
+ 1.2463328  1.3360971  1.4644444  1.4807817  1.4819776  1.4857078  1.5073664 
+Student 18  Student 9 Student 13  Student 4  Student 5 Student 17  Student 8 
+ 1.5146681  1.5222665  1.5862197  1.6922194  1.8235423  1.8831173  1.8993807 
+Student 30 Student 21 
+ 1.9822291  2.8422861 
+> 
+> ## ===============================================================
+> ##
+> ##  Compositional data and robustness
+> 
+> data(ulabor)
+> 
+> (res0 <- Tucker3(ulabor))
+Call:
+Tucker3(X = ulabor)
+
+
+Tucker3 analysis with  2 x 2 x 2  components.
+Fit value: 3094.402 
+Fit percentage: 97.68 %
+> res0$A; res0$B; res0$C; res0$GA
+            F1          F2
+Pie -0.1226452 -0.18425255
+VdA -0.1311076 -0.30919102
+Lom -0.1534299 -0.23394761
+Lig -0.1738614 -0.19015900
+Tno -0.1165526 -0.08905375
+Bol -0.1075245 -0.07925734
+Tre -0.1291363 -0.10695056
+Ven -0.1431241 -0.26219749
+Fri -0.1695501 -0.32296107
+Emi -0.1168053 -0.24930458
+Tos -0.1174516 -0.13500323
+Umb -0.1672253 -0.13873282
+Mar -0.1414540 -0.23770618
+Laz -0.2246361 -0.13884625
+Abr -0.2028981 -0.10167030
+Mol -0.2574295  0.19573327
+Cam -0.2839566 -0.06611372
+Pug -0.2505682  0.05226313
+Bas -0.2964094  0.29407648
+Cal -0.4386651  0.46809340
+Sic -0.3218117  0.20843829
+Sar -0.2497427  0.02569405
+             F1         F2
+Agri -0.6132388  0.6413230
+Man  -0.3560228 -0.4510299
+Ind  -0.2955415 -0.4087751
+Con  -0.4489799 -0.4313589
+Serv -0.4563532  0.1791908
+             F1         F2
+2001 -0.4597844 -0.7070493
+2003 -0.4073652 -0.3147995
+2005 -0.4463456  0.1104435
+2007 -0.4498652  0.4705044
+2009 -0.4701584  0.4091581
+             F1          F2        F3        F4
+F1 -344.6703143   0.2270326 -4.298777 -13.64835
+F2    0.5858949 105.7873290  3.025463 -13.99349
+> res0$cutoff.rd
+[1] 20.33457
+> sort(res0$rd)
+      Lig       VdA       Fri       Tos       Ven       Umb       Mar       Tno 
+ 5.003229  6.123990  6.626562  7.010471  7.197907  7.928168  8.372129  8.691218 
+      Pie       Emi       Sar       Bol       Tre       Pug       Mol       Sic 
+ 8.704637  8.728375  9.036189  9.757596  9.996580 11.462844 12.395193 13.073690 
+      Cal       Lom       Abr       Cam       Laz       Bas 
+13.190304 13.241743 15.095653 16.103213 18.355969 24.906672 
+> res0$cutoff.sd
+[1] 2.716203
+> sort(res0$sd)
+      Umb       Abr       Sar       Pug       Lig       Mar       Lom       Pie 
+0.3445409 0.4068142 0.6357496 0.6491657 0.7194959 0.8088864 0.8510333 0.9356225 
+      Emi       Ven       Laz       VdA       Tre       Tos       Sic       Mol 
+0.9381037 0.9776802 1.2104839 1.2289243 1.2443118 1.3072418 1.4872107 1.5179890 
+      Tno       Fri       Bas       Cam       Bol       Cal 
+1.6605976 1.8566674 1.9128369 1.9187850 1.9399920 2.8678966 
+> 
+> (res <- Tucker3(ulabor, robust=TRUE, coda.transform="ilr"))
+Call:
+Tucker3(X = ulabor, robust = TRUE, coda.transform = "ilr")
+
+
+Tucker3 analysis with  2 x 2 x 2  components.
+Fit value: 2.762726 
+Fit percentage: 99.5 %
+Robust, ilr-transformed
+> res$A; res$B; res$C; res$GA
+              F1           F2
+Pie -0.296719004  0.347578518
+VdA -1.192798116 -1.549636136
+Lom -0.387062108 -0.356114183
+Lig -0.244284726 -0.002254923
+Tno -0.150809446  0.381029644
+Bol -0.138248593  0.538163021
+Tre -0.170779495  0.246854296
+Ven -0.429262416 -0.096256336
+Fri -0.433817045 -0.091218367
+Emi -0.378173056  0.766236270
+Tos -0.295307116 -0.016866356
+Umb -0.209117765  0.044319737
+Mar -0.335644085  0.419327791
+Laz -0.177242350 -0.249547935
+Abr -0.221423992 -0.379549289
+Mol -0.009408107 -0.069102854
+Cam -0.120513080 -0.030764374
+Pug -0.088269957 -0.139297184
+Bas  0.039346574  0.048315025
+Cal  0.019370714 -0.245345213
+Sic -0.026826451 -0.184481163
+Sar -0.088002293 -0.047731244
+            F1         F2
+Z1 -0.70042350  0.1424862
+Z2 -0.57011533 -0.3420312
+Z3  0.04309928  0.8751678
+Z4  0.42722111 -0.3111169
+             F1          F2
+2001 -0.3574272  0.87849054
+2003 -0.4537314  0.07768554
+2005 -0.4830115 -0.15835135
+2007 -0.4746531 -0.40923930
+2009 -0.4558266 -0.17224219
+              F1            F2           F3         F4
+F1 -1.271457e+01 -0.0002535782 -0.003604402 0.72645909
+F2  7.424468e-04 -3.6464235172  0.167436112 0.01255162
+> res$cutoff.rd
+[1] 0.6334538
+> sort(res$rd)
+      Sar       Cal       Lig       Fri       Umb       Sic       Mar       Pie 
+0.2930165 0.3236575 0.3390816 0.3443669 0.3716360 0.3842956 0.3895519 0.4053189 
+      Mol       Ven       Pug       Bol       Abr       Tos       Lom       Bas 
+0.4304479 0.4478160 0.4490188 0.4592937 0.4625557 0.4677726 0.4858171 0.5191697 
+      Tno       Cam       Emi       Tre       Laz       VdA 
+0.6393017 0.6533840 0.8389237 1.0198847 1.1601753 7.5562402 
+> res$cutoff.sd
+[1] 2.716203
+> sort(res$sd)
+       Umb        Lig        Cam        Tre        Tos        Sar        Pug 
+0.07301333 0.34447478 0.48675668 0.66758688 0.66815739 0.68318497 0.78621999 
+       Laz        Pie        Tno        Sic        Mol        Mar        Abr 
+0.86242692 1.00623810 1.11200517 1.14785640 1.15497776 1.28840754 1.30572556 
+       Cal        Bas        Ven        Fri        Bol        Lom        Emi 
+1.45832788 1.47865730 1.57943449 1.60036135 1.60396528 1.83730636 2.25481768 
+       VdA 
+8.53104993 
+> 
+> (res1 <- Tucker3(ulabor, coda.transform="clr"))
+Call:
+Tucker3(X = ulabor, coda.transform = "clr")
+
+
+Tucker3 analysis with  2 x 2 x 2  components.
+Fit value: 16.85426 
+Fit percentage: 96.95 %
+clr-transformed
+> res1$A; res1$B; res1$C; res1$GA
+              F1           F2
+Pie -0.152704163  0.285072998
+VdA -0.796785490 -0.494582980
+Lom -0.223637632  0.054933355
+Lig -0.135164025  0.120579034
+Tno -0.070500238  0.232298013
+Bol -0.060458057  0.280366569
+Tre -0.084264099  0.196018908
+Ven -0.238480889  0.180228295
+Fri -0.239296159  0.194099066
+Emi -0.186463503  0.496993966
+Tos -0.162909466  0.136512255
+Umb -0.113113205  0.124075284
+Mar -0.171186489  0.334362601
+Laz -0.106533430 -0.005900492
+Abr -0.133879572 -0.038399226
+Mol -0.007931223 -0.030653143
+Cam -0.066911120  0.054998377
+Pug -0.053372551 -0.017374626
+Bas  0.023425253  0.001525252
+Cal  0.002010793 -0.112544520
+Sic -0.021222785 -0.061935342
+Sar -0.050961300  0.017446257
+              F1         F2
+Agri -0.51259173  0.4325186
+Man   0.13269489 -0.5050240
+Ind   0.76493417  0.4522461
+Con  -0.01875069 -0.5648706
+Serv -0.36628664  0.1851300
+             F1          F2
+2001 -0.4123064 -0.73761234
+2003 -0.4450999 -0.24975671
+2005 -0.4625729  0.02967697
+2007 -0.4623837  0.50201358
+2009 -0.4517932  0.37503502
+              F1           F2          F3         F4
+F1 -21.846926356  0.002935741 -0.04337169 -1.5283668
+F2  -0.008772333 -7.466388268 -0.53337565  0.1269328
+> res1$cutoff.rd
+[1] 1.516347
+> sort(res1$rd)
+      Sar       Mol       Lig       Cal       Umb       Sic       Bas       Pie 
+0.3310151 0.4247673 0.4649938 0.5058137 0.5071936 0.5356133 0.5370439 0.5606867 
+      Pug       Mar       Cam       Tos       Tno       Bol       Tre       Ven 
+0.5836466 0.6667466 0.6915054 0.7699214 0.7896852 1.0055087 1.0116162 1.0541766 
+      Fri       Emi       Abr       VdA       Laz       Lom 
+1.0846236 1.0966857 1.1857495 1.2813976 1.3511090 1.4377815 
+> res1$cutoff.sd
+[1] 2.716203
+> sort(res1$sd)
+      Lig       Umb       Tos       Lom       Tre       Cam       Laz       Abr 
+0.1676828 0.2009394 0.3560970 0.5137852 0.5559781 0.5677093 0.6297677 0.7076200 
+      Tno       Sar       Pug       Ven       Bol       Fri       Pie       Mol 
+0.7373928 0.8103053 0.9496281 0.9677175 0.9716804 1.0328052 1.1148091 1.2635660 
+      Bas       Sic       Mar       Cal       Emi       VdA 
+1.3231578 1.3289911 1.4421137 1.6895111 2.3755024 4.2460582 
 > 
 > proc.time()
    user  system elapsed 
-   0.98    0.06    1.06 
+   2.12    0.15    2.25 

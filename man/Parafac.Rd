@@ -12,7 +12,7 @@ Parafac(X, ncomp = 2, center = FALSE,
     center.mode = c("A", "B", "C", "AB", "AC", "BC", "ABC"),
     scale=FALSE, scale.mode=c("B", "A", "C"), 
     const="none", conv = 1e-06, start="svd", maxit=10000, 
-    robust = FALSE, coda.transform=c("none", "ilr"), 
+    robust = FALSE, coda.transform=c("none", "ilr", "clr"), 
     ncomp.rpca = 0, alpha = 0.75, robiter = 100, crit=0.975, trace = FALSE)
 }
 \arguments{
@@ -36,7 +36,7 @@ Parafac(X, ncomp = 2, center = FALSE,
     case of nonnegativity constraint), or a list containing user specified components.}
   \item{maxit}{Maximum number of iterations, default is \code{maxit=10000}.}
   \item{robust}{Whether to apply a robust estimation}
-  \item{coda.transform}{If the data are a composition, use an ilr transformation. 
+  \item{coda.transform}{If the data are a composition, use an \emph{ilr} or \emph{clr} transformation. 
     Default is non-compositional data, i.e. \code{coda.transform="none"}}
   \item{ncomp.rpca}{Number of components for robust PCA}
   \item{alpha}{Measures the fraction of outliers the algorithm should
@@ -67,15 +67,17 @@ An object of class "parafac" which is basically a list with components:
 \item{Bclr}{Orthogonal loading matrix for the B-mode, clr transformed. 
     Available only if coda.transform="ilr", otherwise NULL}
 \item{C}{Orthogonal loading matrix for the C-mode}
-\item{Xhat}{Robust reconstructed array}
+\item{Xhat}{(Robustly) reconstructed array}
 \item{const}{Optional constraints (same as the input parameter)}
 \item{iter}{Number of iterations}
-\item{RD}{Residual distances}
-\item{flag}{The observations whose residual distance \code{RD} is larger than cutoff.RD can be 
-    considered as outliers and receive a flag equal to zero. 
+\item{rd}{Residual distances}
+\item{sd}{Score distances}
+\item{flag}{The observations whose residual distance \code{rd} is larger than \code{cutoff.rd} or 
+    score distance \code{sd} is larger than \code{cutoff.sd}, can be 
+    considered outliers and receive a flag equal to zero. 
     The regular observations receive a flag 1}
 \item{robust}{The paramater \code{robust}, whether robust method is used or not}    
-\item{coda.transform}{The paramater \code{coda.transform}, whether ilr transformation is used or not}    
+\item{coda.transform}{Which coda transformation is used, can be \code{coda.transform=c("none", "ilr", "clr")}.}    
 }
 \references{
 	Harshman, R.A. (1970). Foundations of Parafac procedure: 
@@ -133,7 +135,7 @@ plot(res, which="comp", mode="A", main="Component plot, A-mode")
 ## Plot Orthonormalized B-mode component plot
 plot(res, which="comp", mode="B", main="Component plot, B-mode")
 
-## Plot Orthonormalized B-mode component plot
+## Plot Orthonormalized C-mode component plot
 plot(res, which="comp", mode="C", main="Component plot, C-mode")
 
 

@@ -2,48 +2,54 @@
 ##
 ##  VT::20.10.2019
 ##
-##  X   - threeway array or a matrix. If X is a matrix (matricised threeway array),
+##  X   - 3-way array or a matrix. If X is a matrix (matricised 3-way array),
 ##      n, m and p are number of A-, B- and C-mode entities respectively
 ##
 ##  ncomp - Number of extracted components
 ##
 ##  const - Type of constraints on A, B and C respectively
 ##      ("none" for no constraints, "orth" for orthogonality constraints,
-##      "nonneg" for nonnegativity or "zerocor" for zero correlations constraints)
+##      "nonneg" for nonnegativity or "zerocor" for zero correlations
+##          constraints)
 ##
 ##  start: svd, random or given matrices A, B and C
 ##
-##  roxygen2::roxygenise("C:/projects/statproj/R/rrcov3way")
-##
+##  roxygen2::roxygenise("c:/Users/valen/OneDrive/MyRepo/R/rrcov3way",
+##      load_code=roxygen2:::load_installed, clean=TRUE)
+
 
 #'  Alternating Least Squares (ALS) for Candecomp/Parafac (CP)
 #'
-#' @description Alternating Least Squares (ALS) algorithm with optional constraints
-#'  for the minimization of the Candecomp/Parafac (CP) loss function.
+#' @description Alternating Least Squares (ALS) algorithm with optional
+#'  constraints for the minimization of the Candecomp/Parafac (CP) loss
+#'  function.
 #'
 #' @param X A three-way array or a matrix. If \code{X} is a matrix
-#'  (matricised threeway array), \code{n}, \code{m} and \code{p} must be given and
-#'  are the number of A-, B- and C-mode entities respectively
+#'  (matricised threeway array), \code{n}, \code{m} and \code{p} must be
+#'  given and are the number of A-, B- and C-mode entities respectively
 #'
 #' @param n Number of A-mode entities
 #' @param m Number of B-mode entities
 #' @param p Number of C-mode entities
 #' @param ncomp Number of components to extract
-#' @param const Optional constraints for each mode. Can be a three element character
-#'  vector or a single character, one of \code{"none"} for no constraints (default),
-#'  \code{"orth"} for orthogonality constraints, \code{"nonneg"} for nonnegativity constraints or
-#'  \code{"zerocor"} for zero correlation between the extracted factors. For example,
-#'  \code{const="orth"} means orthogonality constraints for all modes,
-#'  while \code{const=c("orth", "none", "none")} sets the orthogonality constraint
-#'  only for mode A.
-#' @param start Initial values for the A, B and C components. Can be \code{"svd"}
-#'  for starting point of the algorithm from SVD's, \code{"random"} for random
-#'  starting point (orthonormalized component matrices or nonnegative matrices in
-#'  case of nonnegativity constraint), or a list containing user specified components.
+#' @param const Optional constraints for each mode. Can be a three element
+#'  character vector or a single character, one of \code{"none"} for no
+#'  constraints (default), \code{"orth"} for orthogonality constraints,
+#'  \code{"nonneg"} for nonnegativity constraints or
+#'  \code{"zerocor"} for zero correlation between the extracted factors.
+#'  For example, \code{const="orth"} means orthogonality constraints for
+#'  all modes, while \code{const=c("orth", "none", "none")} sets the
+#'  orthogonality constraint only for mode A.
+#' @param start Initial values for the A, B and C components. Can be
+#'  \code{"svd"} for starting point of the algorithm from SVD's,
+#'  \code{"random"} for random starting point (orthonormalized
+#'  component matrices or nonnegative matrices in case of nonnegativity
+#'  constraint), or a list containing user specified components.
 #' @param conv Convergence criterion, default is \code{conv=1e-6}.
 #' @param maxit Maximum number of iterations, default is \code{maxit=10000}.
 #' @param trace Logical, provide trace output.
-#' @return The result of the decomposition as a list with the following elements:
+#' @return The result of the decomposition as a list with the following
+#'  elements:
 #'    \itemize{
 #'    \item \code{A} Component matrix for the A-mode
 #'    \item \code{B} Component matrix for the B-mode
@@ -57,7 +63,8 @@
 #'        algorithm observed at every 10 iterations, used to inspect degeneracy
 #'    \item \code{ftiter} Matrix containing in each row the function value
 #'        and the minimal triple cosine at every 10 iterations
-#'    \item \code{const} Optional constraints (same as the input parameter \code{const})
+#'    \item \code{const} Optional constraints (same as the input parameter
+#'        \code{const})
 #'    }
 #'
 #' @references
@@ -72,16 +79,21 @@
 #'  Prentice Hall, Englewood Cliffs, NJ.
 #'
 #' @note The argument \code{const} should be a three element character vector.
-#'  Set \code{const[j]="none"} for unconstrained update in j-th mode weight matrix (the default),
+#'  Set \code{const[j]="none"} for unconstrained update in j-th mode weight
+#'  matrix (the default),
 #'  \code{const[j]="orth"} for orthogonal update in j-th mode weight matrix,
 #'  \code{const[j]="nonneg"} for non-negative constraint on j-th mode or
-#'  \code{const[j]="zerocor"} for zero correlation between the extracted factors.
+#'  \code{const[j]="zerocor"} for zero correlation between the extracted
+#'      factors.
 #'  The default is unconstrained update for all modes.
 #'
 #'  The loss function to be minimized is \eqn{sum(k)|| X(k) - A D(k) B' ||^2},
-#'  where \eqn{D(k)} is a diagonal matrix holding the \code{k}-th row of \code{C}.
+#'  where \eqn{D(k)} is a diagonal matrix holding the \code{k}-th row of
+#'  \code{C}.
 #'
 #' @examples
+#'
+#' \dontrun{
 #' ## Example with the OECD data
 #'  data(elind)
 #'  dim(elind)
@@ -93,11 +105,12 @@
 #'
 #'  res <- cp_als(elind, ncomp=3, const="nonneg")
 #'  res$A
-#'
+#' }
 #' @export
 #' @author Valentin Todorov, \email{valentin.todorov@@chello.at}
 #'
-cp_als <- function (X, n, m, p, ncomp, const="none", start="random", conv=1e-6, maxit=10000, trace=FALSE)
+cp_als <- function (X, n, m, p, ncomp, const="none", start="random",
+    conv=1e-6, maxit=10000, trace=FALSE)
 {
     if(missing(ncomp))
         stop("Number of factors to extract 'ncomp' must be provided!")
@@ -110,32 +123,30 @@ cp_als <- function (X, n, m, p, ncomp, const="none", start="random", conv=1e-6, 
         m <- dim(X)[2]
         p <- dim(X)[3]
 
-        ## Matricised as in multiway
         Xb <- matrix(aperm(X, perm=c(2,1,3)), m, n*p)
         Xc <- matrix(aperm(X, perm=c(3,1,2)), p, n*m)
     }else if(length(dim(X)) == 2)
     {
         Xa <- as.matrix(X)
         if(missing(n) | missing(m) | missing(p))
-            stop("The three dimensions of the matricisized array must be provided!")
+        stop("The three dimensions of the matricisized array must be provided!")
         if(n != dim(Xa)[1])
-            stop("'n' must be equal to the first dimension of the matrix 'X'!")
+        stop("'n' must be equal to the first dimension of the matrix 'X'!")
         if(m*p != dim(Xa)[2])
-            stop("'m*p' must be equal to the fsecond dimension of the matrix 'X'!")
+        stop("'m*p' must be equal to the second dimension of the matrix 'X'!")
 
-        ## Matricised as in multiway
         data <- toArray(Xa, n, m, p)
         Xb <- matrix(aperm(data, perm=c(2,1,3)), m, n*p)
         Xc <- matrix(aperm(data, perm=c(3,1,2)), p, n*m)
         rm(data)
     }else
-        stop("'X' must be three dimensional array or a matrix!")
+    stop("'X' must be three dimensional array or a matrix!")
 
     ## Check constraints
     if(length(const) == 1)
         const <- rep(const, 3)
     if(!all(const %in% c("none", "orth", "nonneg", "zerocor")))
-        stop("All elements of 'const' must be one of 'none', 'orth', 'nonneg' or 'zerocor'")
+    stop("All elements of 'const' must be one of 'none', 'orth', 'nonneg' or 'zerocor'")
 
     ## If length of const is less than 3, pad it with "none"
     if(length(const) < 3)
@@ -152,15 +163,16 @@ cp_als <- function (X, n, m, p, ncomp, const="none", start="random", conv=1e-6, 
     mintripcos <- 0
     ssx <- sum(Xa^2)
 
-    ## If start == "random" OR start == "svd" and n or m or p < r OR const[i]=="nonneg"
+    ## If start == "random" OR start == "svd" and n or m or p < r
+    ##      OR const[i]=="nonneg"
     ## Random start (with orthonormalized component matrices),
     ##  nonnegative if const == "nonneg"
     A <- if(const[1] == "nonneg") matrix(runif(max(n,r) * r), max(n,r))[1:n, , drop=FALSE]
-         else                     orth(matrix(rnorm(max(n,r) * r), max(n,r)))[1:n, , drop=FALSE]
+         else                     pracma::orth(matrix(rnorm(max(n,r) * r), max(n,r)))[1:n, , drop=FALSE]
     B <- if(const[2] == "nonneg") matrix(runif(max(m,r) * r), max(m,r))[1:m, , drop=FALSE]
-         else                     orth(matrix(rnorm(max(m,r) * r), max(m,r)))[1:m, , drop=FALSE]
+         else                     pracma::orth(matrix(rnorm(max(m,r) * r), max(m,r)))[1:m, , drop=FALSE]
     C <- if(const[3] == "nonneg") matrix(runif(max(p,r) * r), max(p,r))[1:p, , drop=FALSE]
-         else                     orth(matrix(rnorm(max(p,r) * r), max(p,r)))[1:p, , drop=FALSE]
+         else                     pracma::orth(matrix(rnorm(max(p,r) * r), max(p,r)))[1:p, , drop=FALSE]
 
     if(is.list(start)) {
         A <- start$A
@@ -276,21 +288,22 @@ cp_als <- function (X, n, m, p, ncomp, const="none", start="random", conv=1e-6, 
         f <- sum((Xa - tcrossprod(A, krp(C, B)))^2)
         iter <- iter + 1
 
-        if(iter%%10 == 0)
+        if(iter %% 10 == 0)
         {
             tripcos <- min(congruence(A, A) * congruence(B, B) * congruence(C, C))
             if (iter == 10)
                 mintripcos <- tripcos
             if (tripcos < mintripcos)
                 mintripcos <-  tripcos
-            if ((iter%%1000) == 0 & trace)
+            if ((iter %% 1000) == 0 & trace)
                 cat(paste("Minimal Triple cosine =", tripcos), fill = TRUE)
 
             ftiter[iter/10, ] <- c(f, tripcos)
         }
 
-        if(iter%%50 == 0 && trace) {
-            cat(paste("f=", f, "after", iter, "iters; diff.=", (fold - f), sep = " "), fill = TRUE)
+        if(iter %% 50 == 0 && trace) {
+            cat(paste("f=", f, "after", iter, "iters; diff.=", (fold - f),
+                sep = " "), fill = TRUE)
         }
     }
 
@@ -310,6 +323,7 @@ cp_als <- function (X, n, m, p, ncomp, const="none", start="random", conv=1e-6, 
         cat(paste("Fit percentage is", round(fp, 2), "%", sep = " "), fill = TRUE)
     }
 
-    out <- list(A=A, B=B, C=C, f=f, fp=fp, iter=iter, tripcos=tripcos, mintripcos=mintripcos, ftiter=ftiter, const=const)
+    out <- list(A=A, B=B, C=C, f=f, fp=fp, ss=ssx, iter=iter, tripcos=tripcos,
+            mintripcos=mintripcos, ftiter=ftiter, const=const)
     out
 }

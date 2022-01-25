@@ -3,19 +3,19 @@ importFrom("graphics", "abline", "arrows", "axis", "box", "hist",
          "strwidth", "text", "title")
 importFrom("grDevices", "dev.interactive", "palette")
 importFrom("stats", "runif", "median", "mad", "qnorm", "sd", "mahalanobis", "qchisq")
-importFrom("robustbase", "doScale")
 importFrom("stats", "weights")
 importFrom("stats", "na.omit")
 importFrom("stats", "coef")
 importFrom("stats", "rnorm")
-
+importFrom("robustbase", "doScale", "Qn", "Sn")
+importFrom("rrcov", "PcaHubert", "PcaClassic", "CovClassic", "getCenter", "getCov", "getLoadings")
+importFrom("ThreeWay", "T3funcrep", "varimcoco")
 importFrom("nnls", "nnls")
+importFrom("pracma", "pinv", "orth")
 ##importFrom("pracma", "subspace")
 
 ## Import all packages listed as Imports or Depends
-import(
-    rrcov
-)
+##import(rrcov)
 
 export(
     Parafac,
@@ -29,11 +29,9 @@ export(
     krp,
     congruence,
     mtrace,
-    orth,
     permute,
     toArray,
-    unfold,
-    cp_als
+    unfold
 )
 
 ##S3 generics

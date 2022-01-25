@@ -1,4 +1,5 @@
 \name{Kojima}
+\alias{Kojima}
 \alias{Kojima.boys}
 \alias{Kojima.girls}
 \docType{data}
@@ -64,7 +65,7 @@ per lateral slice i.e. per scale over all sons/daughters x judges combinations.
 For details see Kroonenberg (2008), Chapter 13.
 }
 \source{
-The data sets are available from the Pieter Kroonenberg's web site at \url{http://three-mode.leidenuniv.nl/}.
+The data sets are available from the Pieter Kroonenberg's web site at \url{https://three-mode.leidenuniv.nl/}.
 }
 \references{
 

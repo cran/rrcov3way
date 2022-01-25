@@ -4,9 +4,6 @@
 ##  - mtrace:       The trace of a square numeric matrix
 ##  - krp:          The Khatri-Rao product of two matrices
 ##  - congruence:   Tuker's congruence coefficient
-##  - orth:
-##  - orthmax2:
-##  - .pinv:        Moore-Penrose pseudoinverse
 ##
 ##  roxygen2::roxygenise("C:/projects/statproj/R/rrcov3way")
 ##
@@ -131,6 +128,9 @@ krp <- function (A, B)
 #'      L.R Tucker (1951). A method for synthesis of factor analysis studies. Personnel Research Section Report No. 984. Department of the Army, Washington, DC.
 #'
 #' @examples
+#'  require(rrcov)
+#'
+#'  data(delivery, package="robustbase")
 #'  X <- getLoadings(PcaClassic(delivery))
 #'  Y <- getLoadings(PcaHubert(delivery, k=3))
 #'  round(congruence(X,Y),3)
@@ -152,154 +152,4 @@ congruence <- function(x, y = NULL)
     colnames(ret) <- colnames(y)
     rownames(ret) <- colnames(x)
     ret
-}
-
-## Moore-Penrose pseudoinverse
-##
-.pinv <- function(X, tol=.Machine$double.eps)
-{
-    X <- as.matrix(X)
-    xsvd <- svd(X)
-    nze <- sum( xsvd$d > (tol*xsvd$d[1]) )
-
-    return (if(nze > 1L) xsvd$v[,1:nze] %*% diag(1/xsvd$d[1:nze]) %*% t(xsvd$u[,1:nze])
-            else        outer(xsvd$v[,1],xsvd$u[,1]) / xsvd$d[1]
-            )
-}
-
-#'  Orthonormal basis for the column space of matrix
-#'
-#' @description Computes orthonormal basis for the column space of matrix (range space, image of a matrix)
-#'
-#' @param A A numeric matrix.
-#' @return B orthonormal basis for the column space of \code{A}.
-#'
-#' @details \code{orth(A)} returns an orthonormal basis for the column space of \code{A}.
-#'  The columns of the result matrix \code{B} span the same space as the columns of \code{A},
-#'  and the columns of \code{B} are orthogonal to each other, i.e. \code{t(B) %*% B == I}. The number of columns
-#'  in \code{B} is equal to the rank of \code{A}. The orthonormal basis is obtained
-#'  from \code{U} in the singular value decomposition. If \code{r = rank(A)},
-#'  the first \code{r} columns of \code{U} form an orthonormal basis
-#'  for the column space of \code{A}.
-#'
-#' @examples
-#'  hilbert <- function(n) { i <- seq_len(n); 1/outer(i - 1L, i, "+") }
-#'  H12 <- hilbert(12)
-#'  rankMM(H12)             # -> 11 - numerically more realistic
-#'  rankMM(H12, tol=0)      # -> 12
-#'  B <- orth(H12)
-#'
-#'  t(B) %*% B
-#'  ## pracma::subspace(H12, B)
-#'
-orth <- function (A)
-{
-    if(length(A) == 0)
-        return(c())
-    if(!is.numeric(A))
-        stop("Argument 'A' must be a numeric matrix.")
-    if (is.vector(A))
-        A <- matrix(c(A), nrow=length(A))
-
-    svd <- svd(A)
-    U <- svd$u
-    s <- svd$d
-    tol <- max(dim(A)) * max(s) * .Machine$double.eps
-    r <- sum(s > tol)
-
-    U[, 1:r, drop = FALSE]
-}
-
-#'  Orthomax Rotation
-#'
-#' @description Performs simultaneous orthomax rotation of two matrices
-#'  (using one rotation matrix).
-#'
-#' @details The function to be maximized is
-#'  \code{sum((A1^2) - 1/nrow(A1) * gamma1 * sum((sum(A1^2))^2))^2 + sum((A2^2) - 1/nrow(A2) * gamma2 * sum((sum(A2^2))^2))^2}.
-#' @param A1 A numeric matrix.
-#' @param A2 A numeric matrix, with the same number of columns as \code{A1}
-#' @param gamma1 orthmax parameter for A1
-#' @param gamma2 orthmax parameter for A1
-#' @param conv Convergence criterion (default is \code{conv=1e-6})
-#' @return  A list with the following elements will be returned:
-#'
-#'    \itemize{
-#'    \item \code{B1} rotated version of \code{A1}
-#'    \item \code{B2} rotated version of \code{A2}
-#'    \item \code{T} rotation matrix
-#'    \item \code{f} orthomax function value
-#'    }
-#'
-
-orthmax2 <- function(A1, A2, gamma1, gamma2, conv=1e-6)
-{				
-
-    m1 <- nrow(A1)
-    m2 <- nrow(A2)
-    r <- ncol(A1)
-    if(r != ncol(A2))
-    	stop("Column orders of A1 and A2 must be equal!")
-
-    T <- diag(r)
-    B1 <- A1
-    B2 <- A2
-    f <- sum(B1^4) - gamma1/m1 * sum((colSums(B1^2))^2) + sum(B2^4) - gamma2/m2 * sum((colSums(B2^2))^2)
-
-    if(r>1)
-    {
-    	fold <- f - 2*conv*abs(f)
-    	if(f == 0)
-    		fold <- -conv
-    	iter <- 0
-	
-        while(f-fold > abs(f)*conv)
-        {
-    		fold=f
-    		iter=iter+1
-    		for (i in 1:(r-1)){
-    			for (j in (i+1):r){
-    		
-    				# Jennrich & Clarkson
-    				xx=T[,i]
-    				yy=T[,j]
-    				a=0
-    				b=0
-    			
-    				# for A1
-    				x=B1[,i]
-    				y=B1[,j]
-    				x2=x^2
-    				y2=y^2
-    				a=a+(-gamma1/m1)*(.25*(sum(x2-y2))^2 - (sum(x*y))^2) + .25*sum(x2^2 + y2^2 - 6*x2*y2)
-    				b=b+(-gamma1/m1)*sum(x*y)*sum(x2-y2) + sum((x^3)*y - x*(y^3))
-
-    				# for A2
-    				x=B2[,i]
-    				y=B2[,j]
-    				x2=x^2
-    				y2=y^2
-    				a=a+(-gamma2/m2)*(.25*(sum(x2-y2))^2 - (sum(x*y))^2) + .25*sum(x2^2 + y2^2 - 6*x2*y2)
-    				b=b+(-gamma2/m2)*sum(x*y)*sum(x2-y2) + sum((x^3)*y - x*(y^3))
-    				theta=0.25*atan2(b,a)
-    				cs=cos(theta)
-    				sn=sin(theta)
-    				x=B1[,i]
-    				y=B1[,j]
-    				B1[,i]=cs*x+sn*y
-    				B1[,j]=cs*y-sn*x
-    				x=B2[,i]
-    				y=B2[,j]
-    				B2[,i]=cs*x+sn*y
-    				B2[,j]=cs*y-sn*x
-    				T[,i]=cs*xx+sn*yy
-    				T[,j]=cs*yy-sn*xx
-    			}
-    		}	
-
-    		f <- sum(B1^4) - gamma1/m1 * sum((colSums(B1^2))^2) + sum(B2^4) - gamma2/m2 * sum((colSums(B2^2))^2)
-    	}
-    }
-
-    list(B1=B1, B2=B2, T=T, f=f)
 }

@@ -2,7 +2,8 @@
 \alias{permute}
 \title{Permutation of a matricized array}
 \description{
- Permutes the matricized (\code{n} \code{x} \code{m} \code{x} \code{p}) array \code{X} to the matricized array \code{Y} of order (\code{m} \code{x} \code{p} \code{x} \code{n}).
+ Permutes the matricized (\code{n} \code{x} \code{m} \code{x} \code{p}) array \code{X} to the 
+    matricized array \code{Y} of order (\code{m} \code{x} \code{p} \code{x} \code{n}).
 } 
 \usage{
  permute(X,n,m,p)
@@ -21,10 +22,8 @@
 X <- array(1:24, c(4,3,2))
 dim(X)
 
-## matricize the array
-
-##matricized X with the A-mode entities in its rows
-Xa <- unfold(X)
+##  matricize the array
+Xa <- unfold(X)     # matricized X with the A-mode entities in its rows
 dim(Xa)
 Xa
 
