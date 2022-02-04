@@ -184,6 +184,7 @@ is.orthogonal <- function(a)
     ret <- all.equal(ata, diag(ncol(a)), check.attributes=FALSE)
     is.logical(ret) && ret
 }
+
 is.orthonormal <- function(a)
 {
     ret <- all.equal(t(a) %*% a, diag(ncol(a)), check.attributes=FALSE)
@@ -310,12 +311,13 @@ do3Scale.default <- function(x, center=FALSE, scale=FALSE, center.mode=c("A", "B
     ret
 }
 
-#' @param weights A numeric vector with length 3: relative weights (greater or equal 0)
-#'  for the simplicity of the compoent matrices \code{A}, \code{B} and \code{C} respectively.
+#' @param weights A numeric vector with length 3: relative weights (greater or
+#'  equal 0) for the simplicity of the component matrices \code{A}, \code{B}
+#'  and \code{C} respectively.
 #' @param rotate Within which mode to rotate the Tucker3 solution:
 #'  \code{rotate="A"} means to rotate the component matrix \code{A} of mode A;
-#'  \code{rotate=c("A", "B")} means to rotate the component matrices \code{A} and
-#'  \code{B} of modes A and B respectively. Default is to rotate all modes,
+#'  \code{rotate=c("A", "B")} means to rotate the component matrices \code{A}
+#'  and \code{B} of modes A and B respectively. Default is to rotate all modes,
 #'  i.e. \code{rotate=c("A", "B", "C")}.
 #'
 #' @rdname do3Rotate
@@ -332,10 +334,15 @@ do3Rotate.tucker3 <- function(x, weights=c(0, 0, 0), rotate=c("A", "B", "C"), ..
     dn2 <- dimnames(x$B)
     dn3 <- dimnames(x$C)
     dn <- dimnames(x$GA)
-    x$A <- rot$AS; dimnames(x$A) <- dn1
-    x$B <- rot$BT; dimnames(x$B) <- dn2
-    x$C <- rot$CU; dimnames(x$C) <- dn3
-    x$GA <- rot$K; dimnames(x$GA) <- dn
+    x$A <- rot$AS
+    dimnames(x$A) <- dn1
+    x$B <- rot$BT
+    dimnames(x$B) <- dn2
+    x$C <- rot$CU
+    dimnames(x$C) <- dn3
+    x$GA <- rot$K
+    dimnames(x$GA) <- dn
+
     vvalue <- rep(0, 4)
     names(vvalue) <- c("GA", "A", "B", "C")
     vvalue[1] <- rot$f1
@@ -387,10 +394,6 @@ coordinates.tucker3 <- function(x, mode=c("A", "B", "C"), type=c("normalized", "
             "C"=x$C)
     ncomp <- ncol(a)
     nelem <- nrow(a)
-
-    eq <- all.equal(sum(colSums(a^2)), ncomp)
-    if(!is.logical(eq) || !eq)
-        stop("Solution is not normalized for mode ", mode)
 
     switch(type,
         "normalized"=       # normalized coordinates - what is returned by renormalize()
@@ -498,7 +501,9 @@ reflect.parafac <- function(x, mode=c("A", "B", "C"), rsign=1, ...)
 weights.parafac <- function(object, ...)
 {
     if(!is.orthogonal(object$A) && !is.orthogonal(object$B) && !is.orthogonal(object$C))
-        warning("It is not possible to obtain a partitioning of the total variability by components since none of the modes has orthogonal components!")
+        warning(paste0("It is not possible to obtain a partitioning of the ",
+                       "total variability by components since none of the ",
+                       "modes has orthogonal components!"))
 
     object$GA^2/object$ss
 }
@@ -537,7 +542,7 @@ reorder.parafac <- function(x, order=TRUE, ...)
     {
         ## Order the components in decreasing order of the
         ##  explained variance (standardized weights). Note that the
-        ##  std.weights can be extracted only if at least one of the
+        ##  standardized weights can be extracted only if at least one of the
         ##  modes has orthonormal components (i.e. the model was
         ##  estimated with orthogonality constraint).
         if(order)

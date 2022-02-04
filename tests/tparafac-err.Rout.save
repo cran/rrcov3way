@@ -18,6 +18,8 @@ Type 'q()' to quit R.
 > ## this will render the output independent from the version of the package
 > suppressPackageStartupMessages(library(rrcov3way))
 > 
+> set.seed(123456)
+> 
 > ## Example with the UNIDO Manufacturing value added data
 > data(va3way)
 > dim(va3way)
@@ -25,6 +27,8 @@ Type 'q()' to quit R.
 > 
 > ## Treat quickly and dirty the zeros in the data set (if any)
 > va3way[va3way==0] <- 0.001
+> 
+> ## IGNORE_RDIFF_BEGIN
 > res <- Parafac(va3way, trace=TRUE)              # tracing
 Candecomp/Parafac function value at Start is  3.39457362294427e+24
 f= 1.97957920221784e+23 after 50 iters; diff.= 8945743210706108416
@@ -37,6 +41,7 @@ f= 1.97526160802808e+23 after 350 iters; diff.= 242856346825785344
 
 Candecomp/Parafac function value is 1.97517430216866e+23 after 390 iterations
 Fit percentage is 94.18 %
+> ## IGNORE_RDIFF_END
 > 
 > ## Using robustness with clr transformation
 > try(res <- Parafac(va3way, robust=TRUE, coda.transform="clr"))
@@ -53,6 +58,7 @@ Error in Parafac(va3way, crit = -1) :
 > try(res <- Parafac(va3way, crit=2))             # crit >= 1
 Error in Parafac(va3way, crit = 2) : 
   'crit' has to be a single positive number less than 1!
+> 
 > res <- Parafac(va3way, crit=0.2)                # crit < 0.5 --> crit=1-crit
 > 
 > ## Test cp_als(): the input array
@@ -1122,4 +1128,4 @@ Error in cp_als(X, ncomp = ncomp, const = const, conv = conv, start = start,  :
 > 
 > proc.time()
    user  system elapsed 
-   2.25    0.28    2.51 
+   2.21    0.28    2.48 

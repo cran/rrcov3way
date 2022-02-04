@@ -14,13 +14,14 @@ do3Rotate(x, ...)
 
 \item{\dots}{Potential further arguments passed to called functions.}
 
-\item{weights}{A numeric vector with length 3: relative weights (greater or equal 0)
-for the simplicity of the compoent matrices \code{A}, \code{B} and \code{C} respectively.}
+\item{weights}{A numeric vector with length 3: relative weights (greater or
+equal 0) for the simplicity of the component matrices \code{A}, \code{B}
+and \code{C} respectively.}
 
 \item{rotate}{Within which mode to rotate the Tucker3 solution:
 \code{rotate="A"} means to rotate the component matrix \code{A} of mode A;
-\code{rotate=c("A", "B")} means to rotate the component matrices \code{A} and
-\code{B} of modes A and B respectively. Default is to rotate all modes,
+\code{rotate=c("A", "B")} means to rotate the component matrices \code{A}
+and \code{B} of modes A and B respectively. Default is to rotate all modes,
 i.e. \code{rotate=c("A", "B", "C")}.}
 }
 \value{

@@ -1,0 +1,282 @@
+
+R Under development (unstable) (2021-10-11 r81035) -- "Unsuffered Consequences"
+Copyright (C) 2021 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> ## this will render the output independent from the version of the package
+> suppressPackageStartupMessages(library(rrcov3way))
+> set.seed(123456)
+> 
+> #############
+> ##
+> ## Example with the UNIDO Manufacturing value added data
+> 
+> data(va3way)
+> dim(va3way)
+[1] 49  5 14
+> 
+> ## Treat quickly and dirty the zeros in the data set (if any)
+> va3way[va3way==0] <- 0.001
+> 
+> ##  Tucker 3 =====================================================
+> ##
+> 
+> ## IGNORE_RDIFF_BEGIN
+> (res <- Tucker3(va3way))
+Call:
+Tucker3(X = va3way)
+
+
+Tucker3 analysis with  2 x 2 x 2  components.
+Fit value: 1.974345e+23 
+Fit percentage: 94.18 %
+> print(res$fit)
+[1] 1.974345e+23
+> print(res$A)
+               F1            F2
+ALB -0.0003310730 -0.0015296015
+AUT -0.0589195107 -0.0206760326
+BEL -0.0647859111 -0.0108706112
+BRA -0.3110746305 -0.5068889013
+BGR -0.0045948657 -0.0107521298
+CAN -0.1784012445 -0.2445107471
+TWN -0.0939132032 -0.0017314378
+COL -0.0272454487 -0.0821043868
+CRI -0.0032369665 -0.0115083914
+CYP -0.0012305272 -0.0045944560
+CZE -0.0364919010 -0.0092347519
+DNK -0.0344809816  0.0043610721
+ECU -0.0062152476 -0.0270673351
+EST -0.0021290032 -0.0055453949
+FIN -0.0335052019 -0.0219569179
+FRA -0.2640350990 -0.0554740448
+GEO -0.0004369033 -0.0018410383
+PSE -0.0006994085 -0.0034281402
+DEU -0.6643470323  0.6038659475
+HUN -0.0237330498  0.0065020226
+IND -0.1339971351 -0.1637943899
+IDN -0.0736425685 -0.1606070153
+IRN -0.0501743854 -0.0296351891
+ISR -0.0190292381 -0.0130245405
+ITA -0.2715864444 -0.1742254268
+JOR -0.0037184965 -0.0097469278
+KOR -0.3245169734  0.0353153492
+LVA -0.0016431084 -0.0057684665
+LTU -0.0027757750 -0.0078446274
+MUS -0.0009205097 -0.0053359855
+OMN -0.0055581698 -0.0089249676
+NLD -0.0760287130 -0.0219193902
+NOR -0.0256030657 -0.0213293776
+PER -0.0157542517 -0.0634158136
+POL -0.0621045487 -0.0823885646
+PRT -0.0205307521 -0.0454840227
+QAT -0.0108524890 -0.0064857361
+ROU -0.0144704234 -0.0253263348
+RUS -0.1650878309 -0.4009387023
+SEN -0.0005625359 -0.0017050402
+SGP -0.0331260077  0.0562184311
+SVK -0.0097251498 -0.0067076285
+SVN -0.0084705156 -0.0002203505
+ESP -0.1451780458 -0.1496026467
+SWE -0.0652439910  0.0160676426
+CHE -0.0884866313  0.0658286105
+TUR -0.0605608138 -0.1126946726
+GBR -0.2383160881 -0.0528453870
+YEM -0.0014638760 -0.0092073079
+> 
+> res1 <- reflect(res, mode="C", rsign=-1)
+> print(res1$C)
+            F1          F2
+2000 0.1667372  0.25484542
+2001 0.1614775  0.27549493
+2002 0.1670184  0.29876550
+2003 0.2001312  0.37493068
+2004 0.2315310  0.38891119
+2005 0.2445439  0.23844311
+2006 0.2689131  0.16618390
+2007 0.3077868  0.11028381
+2008 0.3189441 -0.09243492
+2009 0.2577133 -0.05566284
+2010 0.3088144 -0.22873570
+2011 0.3456967 -0.31043574
+2012 0.3223007 -0.35412981
+2013 0.3329100 -0.30934612
+> ## IGNORE_RDIFF_END
+> 
+> ## Distance-distance plot
+> plot(res, which="dd", main="Distance-distance plot")
+> 
+> ## Paired component plot, mode A
+> plot(res, which="comp", main="Paired component plot (mode A)")
+> 
+> ## choices must be of length 2 (warning)
+> plot(res, which="comp", choices=1:3, main="Paired component plot (mode A)")
+Warning message:
+In .compplot.tucker3(x, ...) :
+  Wrong components choosen! Components 1 and 2 will be used.
+> 
+> ## Paired component plot, mode B
+> plot(res, which="comp", mode="B", main="Paired component plot (mode B)")
+> 
+> ## Paired component plot, mode C
+> plot(res, which="comp", mode="C", main="Paired component plot (mode C)")
+> 
+> ## All component plot - mode C (default)
+> plot(res, which="allcomp", main="All component plot")
+> 
+> ## All component plot - mode A
+> plot(res, which="allcomp", mode="A", main="All component plot, mode A")
+> 
+> ## All component plot - mode B
+> plot(res, which="allcomp", mode="B", main="All component plot, mode B")
+> 
+> ## Joint biplot
+> plot(res, which="jbplot", main="Joint biplot")
+> plot(res1, which="jbplot", main="Joint biplot")             # reflected C
+> 
+> ## Trajectory
+> plot(res, which="tjplot", main="Trajectory biplot")
+Warning messages:
+1: In arrows(0, 0, Bco[, 1], Bco[, 2], code = 2, length = 0.09) :
+  zero-length arrow is of indeterminate angle and so skipped
+2: In arrows(0, 0, Bco[, 1], Bco[, 2], code = 2, length = 0.09) :
+  zero-length arrow is of indeterminate angle and so skipped
+3: In arrows(0, 0, Bco[, 1], Bco[, 2], code = 2, length = 0.09) :
+  zero-length arrow is of indeterminate angle and so skipped
+4: In arrows(0, 0, Bco[, 1], Bco[, 2], code = 2, length = 0.09) :
+  zero-length arrow is of indeterminate angle and so skipped
+5: In arrows(0, 0, Bco[, 1], Bco[, 2], code = 2, length = 0.09) :
+  zero-length arrow is of indeterminate angle and so skipped
+> plot(res, which="tjplot", choices=c(1:4), arrows=FALSE, main="Trajectory biplot")
+> plot(res1, which="tjplot", main="Trajectory biplot")        # reflected C
+Warning messages:
+1: In arrows(0, 0, Bco[, 1], Bco[, 2], code = 2, length = 0.09) :
+  zero-length arrow is of indeterminate angle and so skipped
+2: In arrows(0, 0, Bco[, 1], Bco[, 2], code = 2, length = 0.09) :
+  zero-length arrow is of indeterminate angle and so skipped
+3: In arrows(0, 0, Bco[, 1], Bco[, 2], code = 2, length = 0.09) :
+  zero-length arrow is of indeterminate angle and so skipped
+4: In arrows(0, 0, Bco[, 1], Bco[, 2], code = 2, length = 0.09) :
+  zero-length arrow is of indeterminate angle and so skipped
+5: In arrows(0, 0, Bco[, 1], Bco[, 2], code = 2, length = 0.09) :
+  zero-length arrow is of indeterminate angle and so skipped
+> 
+> ## Parafac =======================================================
+> ##
+> 
+> ## IGNORE_RDIFF_BEGIN
+> (res <- Parafac(va3way))
+Call:
+Parafac(X = va3way)
+
+
+PARAFAC analysis with  2  components.
+Fit value: 1.975174e+23 
+Fit percentage: 94.18 %
+ 
+> print(res$fit)
+[1] 1.975174e+23
+> print(res$A)
+               F1            F2
+ALB    -902018571    -482040759
+AUT   98493949125    1843116667
+BEL  120131489068    6021626063
+BRA  110723351715 -128731150956
+BGR   -1725424351   -3038300858
+CAN  110358962978  -58000053813
+TWN  191307490443   14538814942
+COL  -29137395627  -24411767514
+CRI   -5250286694   -3505188657
+CYP   -2205671769   -1402806712
+CZE   64651432568    2376871721
+DNK   74661471982    6837998962
+ECU  -15216882298   -8467267503
+EST   -1361076185   -1597419767
+FIN   45716081016   -2433135394
+FRA  479085145468   20981683652
+GEO   -1008836124    -574825749
+PSE   -2104516510   -1085575307
+DEU 1967262545398  310462217202
+HUN   54919306659    5898973896
+IND  103753178408  -36486104268
+IDN  -15237038603  -44492524975
+IRN   71304108103   -2685525581
+ISR   25506415325   -1541927367
+ITA  372972323463  -18908016725
+JOR   -2473795308   -2823354664
+KOR  699167196711   63129387980
+LVA   -2576100740   -1748677555
+LTU   -2399229232   -2293735330
+MUS   -3600697742   -1709252471
+OMN    2171465511   -2232465857
+NLD  132065387126    4059709231
+NOR   30328276815   -3416689572
+PER  -33222057490  -19655063344
+POL   41650905927  -19080231237
+PRT   -4914374675  -12625510723
+QAT   15519539977    -542197110
+ROU    3489406966   -6546289048
+RUS  -77524419811 -114428281021
+SEN    -610558600    -507013174
+SGP  125741893009   24835042296
+SVK   12904388462    -829183806
+SVN   16969810438    1215470659
+ESP  141163893653  -29795191608
+SWE  148841617606   15483416876
+CHE  248060161299   36636089080
+TUR    7206450504  -29911604682
+GBR  430353262910   18248399707
+YEM   -6508548624   -2984102864
+> ## IGNORE_RDIFF_END
+> 
+> ## Distance-distance plot
+> plot(res, which="dd", main="Distance-distance plot")
+> 
+> ## Plot Orthonormalized A-mode component plot
+> plot(res, which="comp", mode="A", main="Component plot, A-mode")
+> 
+> ## choices must be of length 2 (warning)
+> plot(res, which="comp", choices=1:3, main="Component plot, A-mode")
+Warning message:
+In .compplot.parafac(x, ...) :
+  Wrong components choosen! Components 1 and 2 will be used.
+> 
+> ## Plot Orthonormalized B-mode component plot
+> plot(res, which="comp", mode="B", main="Component plot, B-mode")
+> 
+> ## Plot Orthonormalized C-mode component plot
+> plot(res, which="comp", mode="C", main="Component plot, C-mode")
+> 
+> ## Per component plot
+> plot(res, which="percomp", main="Per component plot")
+> 
+> ## All component plot
+> plot(res, which="allcomp", main="All component plot")
+> 
+> ## .ddplot =======================================================
+> data(elind)
+> cp <- Parafac(elind)
+> rcp <- Parafac(elind, robust=TRUE)
+> rrcov3way:::.ddplot(cp)                     # non-robust
+> rrcov3way:::.ddplot(rcp)                    # robust
+> 
+> rrcov3way:::.ddplot(rcp, labs=NULL)         # the labels will be 1:n
+> rrcov3way:::.ddplot(cp, id.n=5)             # id.n is specified
+> try(rrcov3way:::.ddplot(cp, id.n=-1))       # id.n must be between 1 and n
+Error in rrcov3way:::.ddplot(cp, id.n = -1) : 'id.n' must be in {1,..,23}
+> 
+> proc.time()
+   user  system elapsed 
+   1.54    0.25    1.84 

@@ -1,4 +1,4 @@
-t3_als1 <- function(X, I, J, K, P, Q, R, start, conv=1e-10)
+t3_als <- function(X, I, J, K, P, Q, R, start, conv=1e-10)
 {
 
     ssx <- sum(X^2)
@@ -8,6 +8,13 @@ t3_als1 <- function(X, I, J, K, P, Q, R, start, conv=1e-10)
 
     if(!is.list(start) && !(start %in% c("random", "svd")))
         stop("'start' must be either a list with elements A, B, C and GA, or one of 'random' or 'svd'!")
+
+    if(is.list(start)) {
+        if(length(start) != 4 | sum(names(start) %in% c("A", "B", "C", "GA")) != 4)
+            stop("'start' must be a list with elements A, B, C and GA!")
+        if(!all(unlist(lapply(start, is.numeric))))
+            stop("'start' must be a list containing 4 numeric matrices!")
+    }
 
     tt <- if(is.list(start))
               ThreeWay::T3funcrep(X, I, J, K, P, Q, R, start=2, conv=conv, A=start$A, B=start$B, C=start$C, H=start$GA)

@@ -1,9 +1,25 @@
 ## this will render the output independent from the version of the package
 suppressPackageStartupMessages(library(rrcov3way))
 
+## t3_als() ======================================================
+data(elind)
+a <- unfold(elind)
+try(rrcov3way:::t3_als(a, 23, 6, 7, 2, 2, 2, start=c(1, 2, 3)))  # not a list, length != 1
+try(rrcov3way:::t3_als(a, 23, 6, 7, 2, 2, 2, start=0))           # not a list, must be "random" or "svd"
+try(rrcov3way:::t3_als(a, 23, 6, 7, 2, 2, 2, start="rand"))      # not a list, must be "random" or "svd"
+try(rrcov3way:::t3_als(a, 23, 6, 7, 2, 2, 2,                     # if list, elements must be in (A, B, C, GA)
+    start=list(A="A", B="B", C="C", D="GA")))
+try(rrcov3way:::t3_als(a, 23, 6, 7, 2, 2, 2,                     # if list, elements must be numeric matrices
+    start=list(A="A", B="B", C="C", GA="GA")))
+
+set.seed(98765)
+
 ## Example with rotation
 data(elind)
 t3 <- Tucker3(elind, 3, 2, 2)
+
+## IGNORE_RDIFF_BEGIN
+
 xout <- do3Rotate(t3, c(3, 3, 3), rotate=c("A", "B", "C"))
 xout$vvalue
 
@@ -21,6 +37,9 @@ for(i in seq_along(w))
 
     res[i, 4:7] <- round(x$vvalue,3)
 }
+
+## IGNORE_RDIFF_END
+
 colnames(res) <- c("A", "B", "C", "Core", "A", "B", "C")
 rownames(res) <- seq_len(nrow(res))
 res
@@ -32,7 +51,19 @@ dim(va3way)
 ## Treat quickly and dirty the zeros in the data set (if any)
 va3way[va3way==0] <- 0.001
 
-(res <- Tucker3(va3way))
+set.seed(123456)
+
+## Using robustness with clr transformation
+try(res <- Tucker3(va3way, robust=TRUE, coda.transform="clr"))
+
+## Rejected values of parameter 'crit'
+try(res <- Tucker3(va3way, crit=c(1:10)))       # length different than 1
+try(res <- Tucker3(va3way, crit=-1))            # crit non-positive
+try(res <- Tucker3(va3way, crit=2))             # crit >= 1
+res <- Tucker3(va3way, crit=0.2)                # crit < 0.5 --> crit=1-crit
+
+##  Standard Tucker 3
+(res <- Tucker3(va3way, center=TRUE, scale=TRUE))
 print(res$fit)
 print(res$A)
 print(res$B)
@@ -40,7 +71,9 @@ print(res$C)
 print(res$rd)
 print(res$cutoff.rd)
 
-(res.r <- Tucker3(va3way, robust=TRUE))
+## Robust Tucker 3
+(res.r <- Tucker3(va3way, robust=TRUE, center=TRUE,
+    scale=TRUE, trace=TRUE))
 print(res.r$fit)
 print(res.r$A)
 print(res.r$B)
@@ -50,6 +83,7 @@ print(res$cutoff.rd)
 print(res.r$Hset)
 print(res.r$flag)
 
+## Compositional  Tucker 3
 (res.c <- Tucker3(va3way, coda.transform="ilr"))
 print(res.c$fit)
 print(res.c$A)
@@ -59,7 +93,9 @@ print(res.c$C)
 print(res.c$rd)
 print(res$cutoff.rd)
 
-(res.rc <- Tucker3(va3way, robust=TRUE, coda.transform="ilr"))
+## Robust, compositional Tucker 3
+(res.rc <- Tucker3(va3way, robust=TRUE, coda.transform="ilr",
+    center=TRUE, scale=TRUE, trace=TRUE))
 print(res.rc$fit)
 print(res.rc$A)
 print(res.rc$B)

@@ -24,24 +24,26 @@ Parafac <- function(X, ncomp=2,
 
     stopifnot(alpha <= 1 & alpha >= 0.5)
 
-    if(robust & ilr)
-    {
-        ret <- .Parafac.rob.ilr(X=X, ncomp=ncomp, center=center, center.mode=center.mode, scale=scale, scale.mode=scale.mode, const=const, conv=conv, start=start, maxit=maxit, coda.transform=coda.transform, ncomp.rpca=ncomp.rpca, alpha=alpha, robiter=robiter, crit=crit, trace=trace)
-    }
-    else if(!robust & !ilr)
-    {
-        ret <- .Parafac(X=X, ncomp=ncomp, center=center, center.mode=center.mode, scale=scale, scale.mode=scale.mode, const=const, conv=conv, start=start, maxit=maxit, crit=crit, trace=trace)
-    }
-    else if(!robust & ilr)                  # classical for compositional data
-    {
-        ret <- .Parafac.ilr(X=X, ncomp=ncomp, center=center, center.mode=center.mode, scale=scale, scale.mode=scale.mode, const=const, conv=conv, start=start, maxit=maxit, coda.transform=coda.transform, crit=crit, trace=trace)
-    }
-    else if(robust & !ilr)                  # robust, for non-compositional data
-    {
-        ret <- .Parafac.rob(X=X, ncomp=ncomp, center=center, center.mode=center.mode, scale=scale, scale.mode=scale.mode, const=const, conv=conv, start=start, maxit=maxit, ncomp.rpca=ncomp.rpca, alpha=alpha, robiter=robiter, crit=crit, trace=trace)
-    }
-    else
-        stop("Not yet implemented!")
+    ret <- if(robust & ilr) .Parafac.rob.ilr(X=X, ncomp=ncomp,
+            center=center, center.mode=center.mode,
+            scale=scale, scale.mode=scale.mode, const=const, conv=conv,
+            start=start, maxit=maxit, coda.transform=coda.transform,
+            ncomp.rpca=ncomp.rpca, alpha=alpha, robiter=robiter, crit=crit,
+            trace=trace)
+           else if(!robust & !ilr) .Parafac(X=X, ncomp=ncomp,
+            center=center, center.mode=center.mode, scale=scale,
+            scale.mode=scale.mode, const=const, conv=conv,
+            start=start, maxit=maxit, crit=crit, trace=trace)
+           else if(!robust & ilr) .Parafac.ilr(X=X, ncomp=ncomp,
+            center=center, center.mode=center.mode,
+            scale=scale, scale.mode=scale.mode, const=const, conv=conv,
+            start=start, maxit=maxit, coda.transform=coda.transform, crit=crit,
+            trace=trace)
+           else if(robust & !ilr) .Parafac.rob(X=X, ncomp=ncomp,
+            center=center, center.mode=center.mode,
+            scale=scale, scale.mode=scale.mode, const=const, conv=conv,
+            start=start, maxit=maxit, ncomp.rpca=ncomp.rpca, alpha=alpha,
+            robiter=robiter, crit=crit, trace=trace)
 
     ## Total sum of squares, PARAFAC fit and fit percentage:
     ## ret$ss <- sum(X^2)

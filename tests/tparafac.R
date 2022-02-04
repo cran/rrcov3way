@@ -23,7 +23,10 @@ print(res$C)
 print(res$rd)
 print(res$cutoff.rd)
 
-(res.r <- Parafac(va3way, robust=TRUE))
+## IGNORE_RDIFF_BEGIN
+(res.r <- Parafac(va3way, robust=TRUE, center=TRUE, scale=TRUE, trace=TRUE))
+## IGNORE_RDIFF_END
+
 print(res.r$fit)
 ## IGNORE_RDIFF_BEGIN
 print(res.r$A)
@@ -46,7 +49,8 @@ print(res.c$C)
 print(res.c$rd)
 print(res$cutoff.rd)
 
-(res.rc <- Parafac(va3way, robust=TRUE, coda.transform="ilr"))
+(res.rc <- Parafac(va3way, robust=TRUE, coda.transform="ilr", center=TRUE,
+    scale=TRUE))
 print(res.rc$fit)
 ## IGNORE_RDIFF_BEGIN
 print(res.rc$A)
@@ -73,14 +77,20 @@ dimnames(tv)[[2]] <- TV[[2]]
 dimnames(tv)[[3]] <- TV[[3]]
 
 (tvcp <- Parafac(tv, 2))
+
+## IGNORE_RDIFF_BEGIN
 tvcp$A; tvcp$B; tvcp$C; tvcp$GA
+## IGNORE_RDIFF_END
+
 tvcp$cutoff.rd
 sort(tvcp$rd)
 tvcp$cutoff.sd
 sort(tvcp$sd)
 
 (rtvcp <- Parafac(tv, 2, robust=TRUE))
+## IGNORE_RDIFF_BEGIN
 rtvcp$A; rtvcp$B; rtvcp$C; rtvcp$GA
+## IGNORE_RDIFF_END
 rtvcp$cutoff.rd
 sort(rtvcp$rd)
 rtvcp$cutoff.sd
@@ -93,21 +103,33 @@ sort(rtvcp$sd)
 data(ulabor)
 
 (res0 <- Parafac(ulabor))
+
+## IGNORE_RDIFF_BEGIN
 res0$A; res0$B; res0$C; res0$GA
+## IGNORE_RDIFF_END
+
 res0$cutoff.rd
 sort(res0$rd)
 res0$cutoff.sd
 sort(res0$sd)
 
 (res <- Parafac(ulabor, robust=TRUE, coda.transform="ilr"))
+
+## IGNORE_RDIFF_BEGIN
 res$A; res$B; res$C; res$GA
+## IGNORE_RDIFF_END
+
 res$cutoff.rd
 sort(res$rd)
 res$cutoff.sd
 sort(res$sd)
 
 (res1 <- Parafac(ulabor, coda.transform="clr"))
+
+## IGNORE_RDIFF_BEGIN
 res1$A; res1$B; res1$C; res1$GA
+## IGNORE_RDIFF_END
+
 res1$cutoff.rd
 sort(res1$rd)
 res1$cutoff.sd

@@ -1,13 +1,18 @@
 ## this will render the output independent from the version of the package
 suppressPackageStartupMessages(library(rrcov3way))
 
+set.seed(123456)
+
 ## Example with the UNIDO Manufacturing value added data
 data(va3way)
 dim(va3way)
 
 ## Treat quickly and dirty the zeros in the data set (if any)
 va3way[va3way==0] <- 0.001
+
+## IGNORE_RDIFF_BEGIN
 res <- Parafac(va3way, trace=TRUE)              # tracing
+## IGNORE_RDIFF_END
 
 ## Using robustness with clr transformation
 try(res <- Parafac(va3way, robust=TRUE, coda.transform="clr"))
@@ -16,6 +21,7 @@ try(res <- Parafac(va3way, robust=TRUE, coda.transform="clr"))
 try(res <- Parafac(va3way, crit=c(1:10)))       # length different than 1
 try(res <- Parafac(va3way, crit=-1))            # crit non-positive
 try(res <- Parafac(va3way, crit=2))             # crit >= 1
+
 res <- Parafac(va3way, crit=0.2)                # crit < 0.5 --> crit=1-crit
 
 ## Test cp_als(): the input array

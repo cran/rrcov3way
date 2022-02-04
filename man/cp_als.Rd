@@ -19,8 +19,8 @@ cp_als(
 }
 \arguments{
 \item{X}{A three-way array or a matrix. If \code{X} is a matrix
-(matricised threeway array), \code{n}, \code{m} and \code{p} must be given and
-are the number of A-, B- and C-mode entities respectively}
+(matricised threeway array), \code{n}, \code{m} and \code{p} must be
+given and are the number of A-, B- and C-mode entities respectively}
 
 \item{n}{Number of A-mode entities}
 
@@ -30,18 +30,20 @@ are the number of A-, B- and C-mode entities respectively}
 
 \item{ncomp}{Number of components to extract}
 
-\item{const}{Optional constraints for each mode. Can be a three element character
-vector or a single character, one of \code{"none"} for no constraints (default),
-\code{"orth"} for orthogonality constraints, \code{"nonneg"} for nonnegativity constraints or
-\code{"zerocor"} for zero correlation between the extracted factors. For example,
-\code{const="orth"} means orthogonality constraints for all modes,
-while \code{const=c("orth", "none", "none")} sets the orthogonality constraint
-only for mode A.}
+\item{const}{Optional constraints for each mode. Can be a three element
+character vector or a single character, one of \code{"none"} for no
+constraints (default), \code{"orth"} for orthogonality constraints,
+\code{"nonneg"} for nonnegativity constraints or
+\code{"zerocor"} for zero correlation between the extracted factors.
+For example, \code{const="orth"} means orthogonality constraints for
+all modes, while \code{const=c("orth", "none", "none")} sets the
+orthogonality constraint only for mode A.}
 
-\item{start}{Initial values for the A, B and C components. Can be \code{"svd"}
-for starting point of the algorithm from SVD's, \code{"random"} for random
-starting point (orthonormalized component matrices or nonnegative matrices in
-case of nonnegativity constraint), or a list containing user specified components.}
+\item{start}{Initial values for the A, B and C components. Can be
+\code{"svd"} for starting point of the algorithm from SVD's,
+\code{"random"} for random starting point (orthonormalized
+component matrices or nonnegative matrices in case of nonnegativity
+constraint), or a list containing user specified components.}
 
 \item{conv}{Convergence criterion, default is \code{conv=1e-6}.}
 
@@ -50,7 +52,8 @@ case of nonnegativity constraint), or a list containing user specified component
 \item{trace}{Logical, provide trace output.}
 }
 \value{
-The result of the decomposition as a list with the following elements:
+The result of the decomposition as a list with the following
+ elements:
    \itemize{
    \item \code{A} Component matrix for the A-mode
    \item \code{B} Component matrix for the B-mode
@@ -64,23 +67,28 @@ The result of the decomposition as a list with the following elements:
        algorithm observed at every 10 iterations, used to inspect degeneracy
    \item \code{ftiter} Matrix containing in each row the function value
        and the minimal triple cosine at every 10 iterations
-   \item \code{const} Optional constraints (same as the input parameter \code{const})
+   \item \code{const} Optional constraints (same as the input parameter
+       \code{const})
    }
 }
 \description{
-Alternating Least Squares (ALS) algorithm with optional constraints
- for the minimization of the Candecomp/Parafac (CP) loss function.
+Alternating Least Squares (ALS) algorithm with optional
+ constraints for the minimization of the Candecomp/Parafac (CP) loss
+ function.
 }
 \note{
 The argument \code{const} should be a three element character vector.
- Set \code{const[j]="none"} for unconstrained update in j-th mode weight matrix (the default),
+ Set \code{const[j]="none"} for unconstrained update in j-th mode weight
+ matrix (the default),
  \code{const[j]="orth"} for orthogonal update in j-th mode weight matrix,
  \code{const[j]="nonneg"} for non-negative constraint on j-th mode or
- \code{const[j]="zerocor"} for zero correlation between the extracted factors.
+ \code{const[j]="zerocor"} for zero correlation between the extracted
+     factors.
  The default is unconstrained update for all modes.
 
  The loss function to be minimized is \eqn{sum(k)|| X(k) - A D(k) B' ||^2},
- where \eqn{D(k)} is a diagonal matrix holding the \code{k}-th row of \code{C}.
+ where \eqn{D(k)} is a diagonal matrix holding the \code{k}-th row of
+ \code{C}.
 }
 \examples{
 

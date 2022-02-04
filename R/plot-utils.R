@@ -1,13 +1,14 @@
-## Plot RD against SD (outlier map) for a tucker 3 object
+## Plot RD against SD (outlier map) for a paradac or a tucker 3 object
 ##
-## it is assumed that the object has list elements A (A-mode loadings)
-##    and RD (residual distances).
+## it is assumed that the object has list elements A (A-mode loadings),
+##     RD (residual distances) and SD (score distances).
+##
 ## - robust=TRUE generates the robust outlier map, otherwise classical
 ## - crit is the quantile of the reference distribution
 ##
 ##  Distance-Distance Plot:
 ##  Plot the vector y=RD (residual distances) against
-##  x=sd (score distances). Identify by a label the id.n
+##  x=SD (score distances). Identify by a label the id.n
 ##  observations with largest RD. If id.n is not supplied, calculate
 ##  it as the number of observations larger than cutoff. Use cutoff
 ##  to draw a horisontal and a vertical line. Draw also a dotted line
@@ -56,14 +57,14 @@
         labs <- rownames(A)
     if(is.null(labs))
         labs <- seq_len(nrow(A))
-    xlim <- c(0,max(SD, critSD))
-    xlim[2] <- xlim[2] + 0.1*xlim[2]
+    xlim <- c(0, max(SD, critSD))
+    xlim[2] <- xlim[2] + 0.1 * xlim[2]
     plot(SD, RD, xlab=xl, ylab=yl, xlim=xlim, ylim=c(0,max(RD, critRD)), cex.lab=1, type="p", ...)
     .label(SD, RD, id.n=id.n, labs=labs, cex=0.8, ...)
     abline(h=critRD, lty=2)
     abline(v=critSD, lty=2)
 
-    list(SD=SD, RD=RD, critSD=critSD, critRD=critRD)
+    return(invisible(list(SD=SD, RD=RD, critSD=critSD, critRD=critRD)))
 }
 
 ##
@@ -313,17 +314,17 @@
 }
 
 
-## Joint biplot
+## Joint biplot (for Tucker 3)
 .JBPlot <- function (x, alfa=.5, comp=1, ...)
 {
-    ## A is loadings matrix for first mode .
-    ## Bclr is loadings matrix for second mode only two components (clr transformation).
+    ## A is loadings matrix for first mode
+    ## Bclr is loadings matrix for second mode only two components (clr transformation)
     ## C is loadings matrix for third mode
-    ## G is wide unfolded core array.
+    ## G is wide unfolded core array
 
     ## alfa is a number [0,1]
     ## comp is the frontal slice of core array (1 is first frontal
-    ##  slice of core array, 2 second , rth ...)
+    ##  slice of core array, 2 second , r-th ...)
     ##
     ## Warning if all elements of first C loading are negative we
     ##  need to change the sign of all the elements of first B loading
@@ -382,6 +383,7 @@
     return(invisible(x))
 }
 
+## Trajectory biplot (for Tucker 3)
 .TJPlot <- function (x, choices, arrows=TRUE, ...)
 {
     ## A is loadings matrix for first mode .

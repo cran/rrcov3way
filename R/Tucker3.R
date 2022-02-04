@@ -21,25 +21,22 @@ Tucker3 <- function(X, P=2, Q=2, R=2,
 
     stopifnot(alpha <=1 & alpha >= 0.5)
 
-    if(robust & ilr)
-    {
-        ret <- .Tucker3.rob.ilr(X=X, P=P, Q=Q, R=R, conv=conv, start=start,
-            center=center, center.mode=center.mode, scale=scale, scale.mode=scale.mode, coda.transform=coda.transform, ncomp.rpca=ncomp.rpca, alpha=alpha, robiter=robiter, crit=crit, trace=trace)
-    }
-    else if(!robust & !ilr)
-    {
-        ret <- .Tucker3(X=X, P=P, Q=Q, R=R, conv=conv, start=start, center=center, center.mode=center.mode, scale=scale, scale.mode=scale.mode, crit=crit, trace=trace)
-    }
-    else if(!robust & ilr)                  # classical for compositional data
-    {
-        ret <- .Tucker3.ilr(X=X, P=P, Q=Q, R=R, conv=conv, start=start, center=center, center.mode=center.mode, scale=scale, scale.mode=scale.mode, coda.transform=coda.transform, crit=crit, trace=trace)
-    }
-    else if(robust & !ilr)                  # robust, non-compositional data
-    {
-        ret <- .Tucker3.rob(X=X, P=P, Q=Q, R=R, conv=conv, start=start, center=center, center.mode=center.mode, scale=scale, scale.mode=scale.mode, ncomp.rpca=ncomp.rpca, alpha=alpha, robiter=robiter, crit=crit, trace=trace)
-    }
-    else
-        stop("Not yet implemented!")
+    ret <- if(robust & ilr) .Tucker3.rob.ilr(X=X, P=P, Q=Q, R=R, conv=conv,
+            start=start, center=center, center.mode=center.mode,
+            scale=scale, scale.mode=scale.mode, coda.transform=coda.transform,
+            ncomp.rpca=ncomp.rpca, alpha=alpha, robiter=robiter, crit=crit,
+            trace=trace)
+           else if(!robust & !ilr) .Tucker3(X=X, P=P, Q=Q, R=R, conv=conv,
+            start=start, center=center, center.mode=center.mode,
+            scale=scale, scale.mode=scale.mode, crit=crit, trace=trace)
+           else if(!robust & ilr) .Tucker3.ilr(X=X, P=P, Q=Q, R=R, conv=conv,
+            start=start, center=center, center.mode=center.mode,
+            scale=scale, scale.mode=scale.mode, coda.transform=coda.transform,
+            crit=crit, trace=trace)
+           else if(robust & !ilr) .Tucker3.rob(X=X, P=P, Q=Q, R=R, conv=conv,
+            start=start, center=center, center.mode=center.mode,
+            scale=scale, scale.mode=scale.mode, ncomp.rpca=ncomp.rpca,
+            alpha=alpha, robiter=robiter, crit=crit, trace=trace)
 
     ## Total sum of squares, TUCKER3 fit and fit percentage:
     ## ret$ss <- sum(X^2)
@@ -69,7 +66,7 @@ Tucker3 <- function(X, P=2, Q=2, R=2,
     X <- do3Scale(X, center=center, center.mode=center.mode, scale=scale, scale.mode=scale.mode)
     Xwide <- unfold(X)
 
-    ret <- t3_als1(Xwide, I, J, K, P=P, Q=Q, R=R, start=start, conv=conv)
+    ret <- t3_als(Xwide, I, J, K, P=P, Q=Q, R=R, start=start, conv=conv)
     A <- ret$A
     B <- ret$B
     C <- ret$C
@@ -154,7 +151,7 @@ Tucker3 <- function(X, P=2, Q=2, R=2,
         iter <- iter+1
 
         ## Step 2 - TUCKER3 analysis
-        ret <- t3_als1(Xhat, h, J, K, P=P, Q=Q, R=R, start=start, conv=conv)
+        ret <- t3_als(Xhat, h, J, K, P=P, Q=Q, R=R, start=start, conv=conv)
 
         Ah <- ret$A        # hxP
         Bh <- ret$B        # JxQ
@@ -183,7 +180,7 @@ Tucker3 <- function(X, P=2, Q=2, R=2,
     Xflag_wide <- unfold(Xflag)
 
     ## run Tucker on weighted dataset
-    ret <- t3_als1(Xflag_wide, nrow(Xflag_wide), J, K, P, Q, R, start=start, conv=1e-10)
+    ret <- t3_als(Xflag_wide, nrow(Xflag_wide), J, K, P, Q, R, start=start, conv=1e-10)
     Arew <- ret$A
     Brew <- ret$B
     Crew <- ret$C
@@ -260,7 +257,7 @@ Tucker3 <- function(X, P=2, Q=2, R=2,
     Xilr <- do3Scale(Xilr, center=center, center.mode=center.mode, scale=scale, scale.mode=scale.mode)
     Xwide <- unfold(Xilr)
 
-    ret <- t3_als1(Xwide, I, J, K, P=P, Q=Q, R=R, start=start, conv=conv)
+    ret <- t3_als(Xwide, I, J, K, P=P, Q=Q, R=R, start=start, conv=conv)
 
     A <- ret$A
     B <- ret$B
@@ -372,7 +369,7 @@ Tucker3 <- function(X, P=2, Q=2, R=2,
         iter <- iter + 1
 
         ## Step 2 - PARAFAC analysis
-        ret <- t3_als1(Xhat, h, J, K, P=P, Q=Q, R=R, start=start, conv=conv)
+        ret <- t3_als(Xhat, h, J, K, P=P, Q=Q, R=R, start=start, conv=conv)
 
         Ah <- ret$A        # hxP
         Bh <- ret$B        # JxQ
@@ -401,7 +398,7 @@ Tucker3 <- function(X, P=2, Q=2, R=2,
     Xflag_wide <- unfold(Xflag)
 
     ## run Tucker on weighted dataset
-    ret <- t3_als1(Xflag_wide, nrow(Xflag_wide), J, K, P, Q, R, start=start, conv=1e-10)
+    ret <- t3_als(Xflag_wide, nrow(Xflag_wide), J, K, P, Q, R, start=start, conv=1e-10)
     Arew <- ret$A
     Brew <- ret$B
     Crew <- ret$C
