@@ -1,5 +1,5 @@
-369cdf1802c62b390b90ba8fca910991 *ChangeLog
-31ae97771765c9bbb6ad0e1e818f5d5c *DESCRIPTION
+f24ca399ae974e6c1651ad50e3c74734 *ChangeLog
+c34ffefabad6afbdc123d87abdc409b8 *DESCRIPTION
 6de2583d780b261c9dcc71cfcfa75dcd *NAMESPACE
 d599894acca13af232dea8e660779eee *R/Parafac.R
 19b50d59473907034b165ff5d48693c3 *R/Tucker3.R
@@ -35,7 +35,7 @@ e066469d6a0d292272cf9cb9cb211658 *man/krp.Rd
 24fe714ff6a9908ba903e86533a392d7 *man/permute.Rd
 4ac2d47ff2bac4f01ed67a0e2d1713cd *man/plot-methods.Rd
 6da5840c957f8ccca15e04020ace6584 *man/toArray.Rd
-302eba1d7dd62a156bb63ea8315e44be *man/ulabor.Rd
+258ad18c662b14981644c1f33dc0f351 *man/ulabor.Rd
 cef108f1e816de86b3f3c4ecf053381e *man/unfold.Rd
 2b32137815a608508155f9f9cf26c589 *man/utils.Rd
 be39cc72d015b4b62910e5bb1d09ac8a *man/va3way.Rd
@@ -46,7 +46,7 @@ eb4668fd7b2fe6ef6d2c418cdf47a226 *tests/tparafac-err.Rout.save
 e4e6de959f8038b9edc49452c621b9b7 *tests/tparafac.Rout.save
 4a6cde8ec76c9d73705006d149da0b3d *tests/tplots.R
 78d22443baa3a422ff2a40df71cacaeb *tests/tplots.Rout.save
-b15494bcb940de7bce42f6e8ca805c20 *tests/ttucker3.R
-d0c469b3b70ad8bf840a1d00d07f2a0e *tests/ttucker3.Rout.save
-5b60048a80d877408e71f84b87607db7 *tests/tutils.R
-ad81aae61281294497700ddadb944508 *tests/tutils.Rout.save
+c1c6dcc9043baf0d14dcc25d33821e3f *tests/ttucker3.R
+5ea973a2677c971cb1114c6ad11adc56 *tests/ttucker3.Rout.save
+a858b628b3f6b45c43919dc60ab8e499 *tests/tutils.R
+2dcb0dfdca0804569add4660be7ab3c0 *tests/tutils.Rout.save

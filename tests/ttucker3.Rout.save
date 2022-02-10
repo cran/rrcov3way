@@ -325,45 +325,9 @@ HIGH  -0.3775807  0.89665979
 > 
 > ## Robust Tucker 3
 > (res.r <- Tucker3(va3way, robust=TRUE, center=TRUE,
-+     scale=TRUE, trace=TRUE))
-
-Step 1. Perform robust PCA on the unfolded matrix.
-Applying the projection method of Hubert: skew= FALSE 
-
-Eigenvalues of S0:  810.6531 179.2591 46.65612 27.2674 6.567302 3.158557 2.254428 1.622986 0.4777452 0.3685458 0.2603778 0.1868374 0.1638754 0.1493551 0.115993 0.1025762 0.06928851 0.04001834 0.03484661 0.03108238 0.02687282 0.0171684 0.01601002 0.0136659 0.009830492 0.007668458 0.007497556 0.005700837 0.005273998 0.003578925 0.002509835 0.002080959 0.001619895 0.001036512 0.0007941593 0.0004706881 0.0002431724 0.0002164335 0.000103942 7.447594e-05 4.972661e-05 3.301644e-05 2.673773e-05 1.789167e-05 1.238335e-05 6.694486e-06 3.020284e-06 1.26007e-06 
-Total variance:  1079.562 
-Explained variance:  0.7509092 0.9169572 0.9601748 0.9854326 0.9915159 0.9944417 0.99653 0.9980334 0.9984759 0.9988173 0.9990585 0.9992315 0.9993833 0.9995217 0.9996291 0.9997241 0.9997883 0.9998254 0.9998577 0.9998865 0.9999114 0.9999273 0.9999421 0.9999547 0.9999639 0.999971 0.9999779 0.9999832 0.9999881 0.9999914 0.9999937 0.9999956 0.9999971 0.9999981 0.9999988 0.9999993 0.9999995 0.9999997 0.9999998 0.9999999 0.9999999 0.9999999 1 1 1 1 1 1 
-The number of principal components is set by the algorithm. It is set to 2.
-
-Xsvd$rank, Xh.svd$rank, k and kmax:  48 48 2 48 
-
-Perform extra reweighting step (k != rank) 2
-Cutoff for the orthogonal distances:
-.........:  19.79509
-umcd.....:  19.79509 
-
-medmad...:  4.60457 
-
-skewed...:  30.44867 
-
-classic..:  19.79509 
-
-Perform extra reweighting step (k != rank) 2 ...Ready.
-Iter= 1  h= 49  k= 2  obj= 60697.25 
-
-Iter= 2  h= 49  k= 2  obj= 139992.9 
-
-Iter= 3  h= 49  k= 2  obj= 139992.9 
-
-MCD crit= 4.644589  and C-Step obj function= 139992.9  Abs difference= 139988.3 
-
-Final step - PC of MCD cov used.
-
-Eigenvalues of X2:
-[1] 81.164791  2.754883
++     scale=TRUE))
 Call:
-Tucker3(X = va3way, center = TRUE, scale = TRUE, robust = TRUE, 
-    trace = TRUE)
+Tucker3(X = va3way, center = TRUE, scale = TRUE, robust = TRUE)
 
 
 Tucker3 analysis with  2 x 2 x 2  components.
@@ -587,11 +551,10 @@ HIGH   0.7762709  0.2769340
 > 
 > ## Robust, compositional Tucker 3
 > (res.rc <- Tucker3(va3way, robust=TRUE, coda.transform="ilr",
-+     center=TRUE, scale=TRUE, trace=TRUE))
-
-Step 1. Perform robust PCA on the unfolded matrix.Call:
++     center=TRUE, scale=TRUE))
+Call:
 Tucker3(X = va3way, center = TRUE, scale = TRUE, robust = TRUE, 
-    coda.transform = "ilr", trace = TRUE)
+    coda.transform = "ilr")
 
 
 Tucker3 analysis with  2 x 2 x 2  components.
@@ -1178,4 +1141,4 @@ F2  -0.008772333 -7.466388268 -0.53337565  0.1269328
 > 
 > proc.time()
    user  system elapsed 
-   2.32    0.12    2.48 
+   4.21    0.37    4.81 

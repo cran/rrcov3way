@@ -1,6 +1,6 @@
 Package: rrcov3way
-Version: 0.2-2
-VersionNote: Released 0.2-1 on 2022-01-25 on CRAN
+Version: 0.2-3
+VersionNote: Released 0.2-1 on 2022-02-04 on CRAN
 Title: Robust Methods for Multiway Data Analysis, Applicable also for
         Compositional Data
 Authors@R: c(person("Valentin", "Todorov", role = c("aut", "cre"), email = "valentin.todorov@chello.at", comment=c(ORCID = "0000-0003-4215-0245"))
@@ -18,11 +18,11 @@ License: GPL (>= 3)
 URL: https://github.com/valentint/rrcov3way
 BugReports: https://github.com/valentint/rrcov3way/issues
 Repository: CRAN
-Packaged: 2022-02-02 16:36:22 UTC; valen
+Packaged: 2022-02-09 09:27:41 UTC; valen
 NeedsCompilation: no
 RoxygenNote: 7.1.2
 Author: Valentin Todorov [aut, cre] (<https://orcid.org/0000-0003-4215-0245>),
   Maria Anna Di Palma [aut],
   Michele Gallo [aut]
 Suggests: covr
-Date/Publication: 2022-02-04 16:50:02 UTC
+Date/Publication: 2022-02-10 12:10:02 UTC

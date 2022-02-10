@@ -1,3 +1,10 @@
+2022-02-08  Valentin Todorov  <valentin.todorov@chello.at>
+    *
+    * DESCRIPTION (Version): 0.2-3
+    *
+    *   Fixed a problem with test results on some platforms
+    *
+
 2022-02-02  Valentin Todorov  <valentin.todorov@chello.at>
     *
     * DESCRIPTION (Version): 0.2-2
@@ -5,8 +12,8 @@
     *
     *   Added unit tests, improved Readme and improved documentation
     *   Fixed a problem with test results on some platforms
-    *   
-    
+    *
+
 2022-01-24  Valentin Todorov  <valentin.todorov@chello.at>
     *
     * DESCRIPTION (Version): 0.2-0

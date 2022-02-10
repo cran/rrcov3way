@@ -66,23 +66,28 @@ try(coordinates(cp))
 try(weights(cp))
 
 cp_a <- Parafac(elind, const=c("orth", "none", "none"))
+## IGNORE_RDIFF_BEGIN
 coordinates(cp_a, mode="A")
 coordinates(cp_a, mode="A", type="unit")
 coordinates(cp_a, mode="A", type="principal")
 weights(cp_a, mode="A")
+## IGNORE_RDIFF_END
 
 cp_b <- Parafac(elind, const=c("none", "orth", "none"))
+## IGNORE_RDIFF_BEGIN
 coordinates(cp_b, mode="B")
 coordinates(cp_b, mode="B", type="unit")
 coordinates(cp_b, mode="B", type="principal")
 weights(cp_b, mode="B")
+## IGNORE_RDIFF_END
 
 cp_c <- Parafac(elind, const=c("none", "none", "orth"))
+## IGNORE_RDIFF_BEGIN
 coordinates(cp_c, mode="C")
 coordinates(cp_c, mode="C", type="unit")
 coordinates(cp_c, mode="C", type="principal")
 weights(cp_c, mode="C")
-
+## IGNORE_RDIFF_END
 
 t3 <- Tucker3(elind)
 coordinates(t3, mode="A")

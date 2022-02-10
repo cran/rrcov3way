@@ -482,6 +482,7 @@ In weights.parafac(cp) :
   It is not possible to obtain a partitioning of the total variability by components since none of the modes has orthogonal components!
 > 
 > cp_a <- Parafac(elind, const=c("orth", "none", "none"))
+> ## IGNORE_RDIFF_BEGIN
 > coordinates(cp_a, mode="A")
            F1           F2
 CA 0.17069233 -0.023461375
@@ -560,8 +561,10 @@ YU 0.9510374  0.08180894
 > weights(cp_a, mode="A")
        F1        F2 
 0.6060262 0.1444047 
+> ## IGNORE_RDIFF_END
 > 
 > cp_b <- Parafac(elind, const=c("none", "orth", "none"))
+> ## IGNORE_RDIFF_BEGIN
 > coordinates(cp_b, mode="B")
              F1          F2
 INFO -0.2406480  0.09976494
@@ -589,8 +592,10 @@ COMP -0.6193697 -0.10683381
 > weights(cp_b, mode="B")
        F1        F2 
 0.5936248 0.1581342 
+> ## IGNORE_RDIFF_END
 > 
 > cp_c <- Parafac(elind, const=c("none", "none", "orth"))
+> ## IGNORE_RDIFF_BEGIN
 > coordinates(cp_c, mode="C")
            F1          F2
 78 -0.3418322  0.01048521
@@ -621,7 +626,7 @@ COMP -0.6193697 -0.10683381
 > weights(cp_c, mode="C")
         F1         F2 
 0.65254597 0.04697695 
-> 
+> ## IGNORE_RDIFF_END
 > 
 > t3 <- Tucker3(elind)
 > coordinates(t3, mode="A")
@@ -848,7 +853,7 @@ Error in krp(a, c) : A and B must have same number of columns.
 > require(rrcov)
 Loading required package: rrcov
 Loading required package: robustbase
-Scalable Robust Estimators with High Breakdown Point (version 1.6-1)
+Scalable Robust Estimators with High Breakdown Point (version 1.6-2)
 
 > ## IGNORE_RDIFF_END
 > 
@@ -866,4 +871,4 @@ Error in congruence(X, Y[1:2, ]) :
 > 
 > proc.time()
    user  system elapsed 
-   1.03    0.23    1.23 
+   1.96    0.29    2.29 

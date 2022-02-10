@@ -19,14 +19,17 @@ the years in the period 2001-2009.
 }
 %\details{}
 \source{
-\url{http://www.istat.it/it/archivio/39522}
+    ISTAT (2011). Note metodologiche, la misura dell'occupazione non 
+    regolare nelle stime di contabilita nazionale [online]. Roma. 
+    %%%Available at: \url{http://www.istat.it/it/archivio/39522}.
 }
 \references{
     ISTAT (2011). Note metodologiche, la misura dell'occupazione non 
     regolare nelle stime di contabilita nazionale [online]. Roma. 
-    Available at: \url{http://www.istat.it/it/archivio/39522}.
+    %%%Available at: \url{http://www.istat.it/it/archivio/39522}.
     
-Di Palma M.A., Filzmoser P., Gallo M. and Hron, K. (2016). A robust CP model for compositional data, submitted.
+    Di Palma M.A., Filzmoser P., Gallo M. and Hron, K. (2016). 
+        A robust CP model for compositional data, submitted.
 }
 \examples{
 

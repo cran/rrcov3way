@@ -73,7 +73,7 @@ print(res$cutoff.rd)
 
 ## Robust Tucker 3
 (res.r <- Tucker3(va3way, robust=TRUE, center=TRUE,
-    scale=TRUE, trace=TRUE))
+    scale=TRUE))
 print(res.r$fit)
 print(res.r$A)
 print(res.r$B)
@@ -95,7 +95,7 @@ print(res$cutoff.rd)
 
 ## Robust, compositional Tucker 3
 (res.rc <- Tucker3(va3way, robust=TRUE, coda.transform="ilr",
-    center=TRUE, scale=TRUE, trace=TRUE))
+    center=TRUE, scale=TRUE))
 print(res.rc$fit)
 print(res.rc$A)
 print(res.rc$B)
