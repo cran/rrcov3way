@@ -1,5 +1,5 @@
-0a80dffe82add302331a953718ce5e12 *ChangeLog
-6754f86520e65b2b662ffd8fafc90e6c *DESCRIPTION
+5645ca9c758f55b1f0d45fbaa711be30 *ChangeLog
+8d2e08a9244df60123c013d9e4629a6d *DESCRIPTION
 6de2583d780b261c9dcc71cfcfa75dcd *NAMESPACE
 d599894acca13af232dea8e660779eee *R/Parafac.R
 19b50d59473907034b165ff5d48693c3 *R/Tucker3.R
@@ -19,9 +19,9 @@ b4118bde4809b56750f7e98d1b61d2e4 *R/plot-utils.R
 06612c19d427d3fbef8c49405282d595 *data/ulabor.rda
 7f254925262e9612caa665ad185ae3c3 *data/va3way.rda
 3e65516c2a978596287d02cb8e98ba80 *data/waterquality.rda
-a2192c5bc851dadfb42535fc7288d812 *inst/doc/rrcov3way.R
+086ddb808361f7349e5ff126e3e0ac71 *inst/doc/rrcov3way.R
 018336697c18a0431366ec050643325f *inst/doc/rrcov3way.Rnw
-2718b60cbd41e46d7b775966d82fd0c4 *inst/doc/rrcov3way.pdf
+df0ed8ba6aaa2d30cfd3c3f526100203 *inst/doc/rrcov3way.pdf
 19f2319977caa83d468871f23d9767cb *man/Arno.Rd
 de2aa6814c9124183fda2653873c01d7 *man/Kojima.Rd
 cf168178007756291e7f26d8186cfebd *man/Parafac.Rd
@@ -56,7 +56,7 @@ a858b628b3f6b45c43919dc60ab8e499 *tests/tutils.R
 0e4a859abf9fce726a33b0896ed2c4fa *vignettes/images/matricization.jpg
 0e4a859abf9fce726a33b0896ed2c4fa *vignettes/matricization.jpg
 71cde09ab7898415237cd6fe2bfc68f6 *vignettes/references.bib
-a2192c5bc851dadfb42535fc7288d812 *vignettes/rrcov3way.R
+086ddb808361f7349e5ff126e3e0ac71 *vignettes/rrcov3way.R
 018336697c18a0431366ec050643325f *vignettes/rrcov3way.Rnw
-2718b60cbd41e46d7b775966d82fd0c4 *vignettes/rrcov3way.pdf
+df0ed8ba6aaa2d30cfd3c3f526100203 *vignettes/rrcov3way.pdf
 58686c570bb96547b53c5de1271ebc5f *vignettes/rrcov3way.tex

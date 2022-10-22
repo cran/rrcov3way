@@ -1,7 +1,7 @@
 ### R code from vignette source 'rrcov3way.Rnw'
 
 ###################################################
-### code chunk number 1: rrcov3way.Rnw:441-442
+### code chunk number 1: rrcov3way.Rnw:445-446
 ###################################################
 options(prompt = "R> ", continue = "+  ", width = 70, useFancyQuotes = FALSE)
 
@@ -157,7 +157,7 @@ colSums(cp.norm$C ^ 2)
 
 
 ###################################################
-### code chunk number 21: rrcov3way.Rnw:864-868
+### code chunk number 21: rrcov3way.Rnw:868-872
 ###################################################
 data("elind")
 t3 <- Tucker3(elind, 3, 2, 2)
@@ -166,13 +166,13 @@ xout$vvalue
 
 
 ###################################################
-### code chunk number 22: rrcov3way.Rnw:871-872
+### code chunk number 22: rrcov3way.Rnw:875-876
 ###################################################
 xout$vvalue
 
 
 ###################################################
-### code chunk number 23: rrcov3way.Rnw:875-891
+### code chunk number 23: rrcov3way.Rnw:879-895
 ###################################################
 w <- c(NA, 0, 0.5, 1, 2.5, 3, 3.5, 4, 5, 10, Inf)
 res <- matrix(NA, nrow = length(w), ncol = 7)
@@ -193,7 +193,7 @@ rownames(res) <- 1:nrow(res)
 
 
 ###################################################
-### code chunk number 24: rrcov3way.Rnw:901-906
+### code chunk number 24: rrcov3way.Rnw:905-910
 ###################################################
 library("xtable")
 print(xtable(res, label="tab:varimax", caption = "Varimax values for
@@ -203,13 +203,13 @@ of the OECD data"), table.placement = "H")
 
 
 ###################################################
-### code chunk number 25: rrcov3way.Rnw:913-914
+### code chunk number 25: rrcov3way.Rnw:917-918
 ###################################################
 x2=do3Rotate(t3, rep(3, 3), rotate = c("A", "B", "C"))
 
 
 ###################################################
-### code chunk number 26: rrcov3way.Rnw:916-920
+### code chunk number 26: rrcov3way.Rnw:920-924
 ###################################################
 print(xtable(cbind(t3$A, x2$x$A), label = "tab:varimax-A",
     caption = "Component matrix A from the unrotated and
@@ -218,7 +218,7 @@ print(xtable(cbind(t3$A, x2$x$A), label = "tab:varimax-A",
 
 
 ###################################################
-### code chunk number 27: rrcov3way.Rnw:923-927
+### code chunk number 27: rrcov3way.Rnw:927-931
 ###################################################
 print(xtable(cbind(t3$B, x2$x$B), label = "tab:varimax-B",
     caption = "Component matrix B from the unrotated and
@@ -227,7 +227,7 @@ print(xtable(cbind(t3$B, x2$x$B), label = "tab:varimax-B",
 
 
 ###################################################
-### code chunk number 28: rrcov3way.Rnw:930-934
+### code chunk number 28: rrcov3way.Rnw:934-938
 ###################################################
 print(xtable(cbind(t3$C, x2$x$C), label = "tab:varimax-C",
     caption = "Component matrix C from the unrotated and
@@ -236,7 +236,7 @@ print(xtable(cbind(t3$C, x2$x$C), label = "tab:varimax-C",
 
 
 ###################################################
-### code chunk number 29: rrcov3way.Rnw:937-942
+### code chunk number 29: rrcov3way.Rnw:941-946
 ###################################################
 print(xtable(rbind(t3$GA, rep(NA, 4), x2$x$GA),
     label = "tab:varimax-core",
@@ -457,7 +457,7 @@ round(congruence(cp3$A, cp3$A), 2)
 
 
 ###################################################
-### code chunk number 52: rrcov3way.Rnw:1539-1540
+### code chunk number 52: rrcov3way.Rnw:1543-1544
 ###################################################
 options(width = 120)
 
@@ -470,7 +470,7 @@ Arno[, , 1]
 
 
 ###################################################
-### code chunk number 54: rrcov3way.Rnw:1546-1547
+### code chunk number 54: rrcov3way.Rnw:1550-1551
 ###################################################
 options(width = 60)
 
