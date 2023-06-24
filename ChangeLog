@@ -1,10 +1,21 @@
+2023-03-16  Valentin Todorov  <valentin.todorov@chello.at>
+    *
+    * DESCRIPTION (Version): 0.3-0
+    *
+    *   data/dorrit. rd: Added data set dorrit
+    *   R/cp_atld.R, cp_int2.R: added functions for CP with alternative 
+    *       optimization techniques 
+    *   R/Parafac.R: added option 'optim=c("als", "atld", "int2")' for using
+    *       alternative optimization techniques
+    *   tests/tparafac.Rout.save: Follow up to changes in robustbase 0.99-0
+
 2022-10-15  Valentin Todorov  <valentin.todorov@chello.at>
     *
     * DESCRIPTION (Version): 0.2-5
     *
     *   Fixed the references in the vignette
     *
-    
+
 2022-10-12  Valentin Todorov  <valentin.todorov@chello.at>
     *
     * DESCRIPTION (Version): 0.2-4

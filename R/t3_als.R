@@ -21,7 +21,7 @@ t3_als <- function(X, I, J, K, P, Q, R, start, conv=1e-10)
           else
               ThreeWay::T3funcrep(X, I, J, K, P, Q, R, start=if(start=="svd") 0 else 1, conv=conv)
 
-    ret <- list(f=tt$f, fp=tt$fp, ss=ssx,
+    ret <- list(fit=tt$f, fp=tt$fp, ss=ssx,
                 A=tt$A, B=tt$B, C=tt$C, GA=tt$H,
                 La=tt$La, Lb=tt$Lb, Lc=tt$Lc,
                 iter=tt$iter)

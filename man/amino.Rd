@@ -5,12 +5,13 @@
 \alias{amino}
 \title{Amino acids fluorescence data.}
 \format{
-A three-way array with dimension 5x201x61.
- The first dimension refers to the 5 samples. The second dimension refers to the emission measurements (250-450nm, 1nm intervals).
+A three-way array with dimension \code{5x201x61}.
+ The first dimension refers to the 5 samples. The second dimension
+ refers to the emission measurements (250-450nm, 1nm intervals).
  The third dimension refers to the excitation (240-300 nm, 1nm intervals).
 }
 \source{
-\url{http://www.models.life.ku.dk/Amino_Acid_fluo}.
+\url{https://ucphchemometrics.com/datasets/}.
 }
 \usage{
 data(amino)
@@ -33,7 +34,7 @@ A data set containing five simple laboratory-made samples where each sample cont
  matplot(t(amino[,,5]), type="l",
      xlab="Wavelength/nm", ylab="Intensity",
      main="Fluorescence emission spectra")
- par <- oldpar
+ par(oldpar)
 
  ##  Plotting excitation spectra
  oldpar <- par(mfrow=c(2,1))
@@ -43,7 +44,7 @@ A data set containing five simple laboratory-made samples where each sample cont
  matplot(t(amino[,30,]), type="l",
      xlab="Wavelength/nm", ylab="Intensity",
      main="Fluorescence excitation spectra")
- par <- oldpar
+ par(oldpar)
 
 }
 }

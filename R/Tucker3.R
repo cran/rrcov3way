@@ -98,7 +98,7 @@ Tucker3 <- function(X, P=2, Q=2, R=2,
     dimnames(Lb) <- list(paste("F", 1:Q, sep=""), paste("F", 1:Q, sep=""))
     dimnames(Lc) <- list(paste("F", 1:R, sep=""), paste("F", 1:R, sep=""))
 
-    ret <- list(fit=ret$f, fp=ret$fp, ss=ret$ss, A=A, B=B, C=C, GA=GA,
+    ret <- list(fit=ret$fit, fp=ret$fp, ss=ret$ss, A=A, B=B, C=C, GA=GA,
         La=La, Lb=Lb, Lc=Lc, Xhat=Xfit, flag=flag, const=ret$const, iter=ret$iter,
         rd=rd, cutoff.rd=cutoff.rd, sd=sd$sd, cutoff.sd=sd$cutoff.sd,
         robust=FALSE, coda.transform="none")
@@ -309,7 +309,7 @@ Tucker3 <- function(X, P=2, Q=2, R=2,
     dimnames(Lb) <- list(paste("F", 1:Q, sep=""), paste("F", 1:Q, sep=""))
     dimnames(Lc) <- list(paste("F", 1:R, sep=""), paste("F", 1:R, sep=""))
 
-    ret <- list(fit=ret$f, fp=ret$fp, ss=ret$ss,
+    ret <- list(fit=ret$fit, fp=ret$fp, ss=ret$ss,
             A=A, B=B, Bclr=Bclr, C=C, GA=GA,
             La=La, Lb=Lb, Lc=Lc, Xhat=Xfit, flag=flag, iter=ret$iter,
             rd=rd, cutoff.rd=cutoff.rd, sd=sd$sd, cutoff.sd=sd$cutoff.sd,

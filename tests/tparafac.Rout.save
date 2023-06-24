@@ -1,7 +1,7 @@
 
-R Under development (unstable) (2021-10-11 r81035) -- "Unsuffered Consequences"
-Copyright (C) 2021 The R Foundation for Statistical Computing
-Platform: x86_64-w64-mingw32/x64 (64-bit)
+R Under development (unstable) (2023-06-12 r84534 ucrt) -- "Unsuffered Consequences"
+Copyright (C) 2023 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -159,6 +159,8 @@ Cutoff for the orthogonal distances:
 umcd.....:  19.79509 
 
 medmad...:  4.60457 
+The default of 'doScale' is FALSE now for stability;
+  set options(mc_doScale_quiet=TRUE) to suppress this (once per session) message
 
 skewed...:  30.44867 
 
@@ -176,20 +178,29 @@ MCD crit= 4.644589  and C-Step obj function= 139992.9  Abs difference= 139988.3
 Final step - PC of MCD cov used.
 
 Eigenvalues of X2:
-[1] 81.164791  2.754883
-Candecomp/Parafac function value at Start is  6378.86027001727
+[1] 46.691223  1.584786
+
+Candecomp/Parafac function value at Start is  6393.62804653566
 f= 235.163056855737 after 50 iters; diff.= 0.00250072376849175
 
 Candecomp/Parafac function value is 235.127228132407 after 90 iterations
 Fit percentage is 96.23 %
+
+--- ALS 1 Fit, Fitprev, changeFit, iter 231.8375 0 1.000001 90
 Candecomp/Parafac function value at Start is  5911.45975358161
 
 Candecomp/Parafac function value is 217.775356654239 after 36 iterations
 Fit percentage is 96.22 %
+
+--- ALS 2 Fit, Fitprev, changeFit, iter 217.7753 231.8375 0.06065564 36
 Candecomp/Parafac function value at Start is  5911.45975358161
 
 Candecomp/Parafac function value is 217.775356654239 after 36 iterations
 Fit percentage is 96.22 %
+
+--- ALS 3 Fit, Fitprev, changeFit, iter 217.7753 217.7753 0 36
+--- ---
+
 Candecomp/Parafac function value at Start is  5911.45975358161
 
 Candecomp/Parafac function value is 217.775356654239 after 36 iterations
@@ -202,7 +213,8 @@ Parafac(X = va3way, center = TRUE, scale = TRUE, robust = TRUE,
 PARAFAC analysis with  2  components.
 Fit value: 217.7753 
 Fit percentage: 99.64 %
-Robust 
+Robust
+ 
 > ## IGNORE_RDIFF_END
 > 
 > print(res.r$fit)
@@ -311,7 +323,7 @@ HIGH  -0.4125084  0.96414578
   KOR   LVA   LTU   MUS   OMN   NLD   NOR   PER   POL   PRT   QAT   ROU   RUS 
 FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE FALSE 
   SEN   SGP   SVK   SVN   ESP   SWE   CHE   TUR   GBR   YEM 
- TRUE FALSE  TRUE  TRUE FALSE  TRUE FALSE  TRUE FALSE  TRUE 
+ TRUE FALSE  TRUE  TRUE FALSE FALSE FALSE  TRUE FALSE  TRUE 
 > 
 > (res.c <- Parafac(va3way, coda.transform="ilr"))
 Call:
@@ -679,57 +691,58 @@ Parafac(X = tv, ncomp = 2, robust = TRUE)
 PARAFAC analysis with  2  components.
 Fit value: 51923.43 
 Fit percentage: 48.74 %
-Robust 
+Robust
+ 
 > ## IGNORE_RDIFF_BEGIN
 > rtvcp$A; rtvcp$B; rtvcp$C; rtvcp$GA
-                 F1       F2
-Student 1  46.84802 42.89640
-Student 2  56.42061 67.98367
-Student 3  59.80159 53.10888
-Student 4  30.00484 23.83426
-Student 5  29.06700 14.89055
-Student 6  37.39741 41.70353
-Student 7  26.28416 29.91106
-Student 8  33.95092 43.95949
-Student 9  64.27747 60.50079
-Student 10 65.83294 59.68509
-Student 11 34.61253 25.17244
-Student 12 65.53037 57.88567
-Student 13 59.56152 77.38860
-Student 14 44.58896 31.13668
-Student 15 48.33613 30.64320
-Student 16 32.15910 28.21699
-Student 17 37.31297 48.45842
-Student 18 58.88227 49.90525
-Student 19 63.98412 30.68405
-Student 20 43.64888 36.18670
-Student 21 48.09545 40.58983
-Student 22 51.53073 54.83762
-Student 23 56.54323 50.71547
-Student 24 56.20098 42.85436
-Student 25 44.72421 57.56234
-Student 26 47.59041 26.27620
-Student 27 49.98963 42.44759
-Student 28 54.58411 34.34173
-Student 29 38.40799 44.95037
-Student 30 47.78716 29.07781
+                  F1       F2
+Student 1  -46.84802 42.89640
+Student 2  -56.42061 67.98367
+Student 3  -59.80159 53.10888
+Student 4  -30.00484 23.83426
+Student 5  -29.06700 14.89055
+Student 6  -37.39741 41.70353
+Student 7  -26.28416 29.91106
+Student 8  -33.95092 43.95949
+Student 9  -64.27747 60.50079
+Student 10 -65.83294 59.68509
+Student 11 -34.61253 25.17244
+Student 12 -65.53037 57.88567
+Student 13 -59.56152 77.38860
+Student 14 -44.58896 31.13668
+Student 15 -48.33613 30.64320
+Student 16 -32.15910 28.21699
+Student 17 -37.31297 48.45842
+Student 18 -58.88227 49.90525
+Student 19 -63.98412 30.68405
+Student 20 -43.64888 36.18670
+Student 21 -48.09545 40.58983
+Student 22 -51.53073 54.83762
+Student 23 -56.54323 50.71547
+Student 24 -56.20098 42.85436
+Student 25 -44.72421 57.56234
+Student 26 -47.59041 26.27620
+Student 27 -49.98963 42.44759
+Student 28 -54.58411 34.34173
+Student 29 -38.40799 44.95037
+Student 30 -47.78716 29.07781
                                                         F1           F2
-Thrilling-Boring                               -0.19082201 -0.287776452
-Intelligent-Idiotic                            -0.35944898 -0.347321139
-Erotic-Not Erotic                               0.15632434  0.001522933
-Sensitive-Insensitive                          -0.18875096 -0.128336084
-Interesting-Uninteresting                      -0.32996281 -0.392339913
-Fast-Slow                                      -0.15823208 -0.237307022
-Intellectually Stimulating-Intellectually Dull -0.34893495 -0.351146608
-Violent-Peaceful                               -0.02859044 -0.086748475
-Caring-Callous                                 -0.17405227 -0.103663176
-Satirical-Not Satirical                         0.08073304 -0.188653110
-Informative-Uninformative                      -0.38490133 -0.365057383
-Touching-Leave Me Cold                         -0.16063761 -0.158676198
-Deep-Shallow                                   -0.25006231 -0.230891436
-Tasteful-Crude                                 -0.27634395 -0.180999842
-Real-Fantasy                                   -0.40946526 -0.312820128
-Funny-Not Funny                                -0.02255823 -0.224268795
+Thrilling-Boring                                0.19082201 -0.287776452
+Intelligent-Idiotic                             0.35944898 -0.347321139
+Erotic-Not Erotic                              -0.15632434  0.001522933
+Sensitive-Insensitive                           0.18875096 -0.128336084
+Interesting-Uninteresting                       0.32996281 -0.392339913
+Fast-Slow                                       0.15823208 -0.237307022
+Intellectually Stimulating-Intellectually Dull  0.34893495 -0.351146608
+Violent-Peaceful                                0.02859044 -0.086748475
+Caring-Callous                                  0.17405227 -0.103663176
+Satirical-Not Satirical                        -0.08073304 -0.188653110
+Informative-Uninformative                       0.38490133 -0.365057383
+Touching-Leave Me Cold                          0.16063761 -0.158676198
+Deep-Shallow                                    0.25006231 -0.230891436
+Tasteful-Crude                                  0.27634395 -0.180999842
+Real-Fantasy                                    0.40946526 -0.312820128
+Funny-Not Funny                                 0.02255823 -0.224268795
                                       F1           F2
 Mash                        -0.062396541  0.316511307
 Charlie's angels            -0.051565807 -0.156465570
@@ -916,13 +929,13 @@ Z4 -0.5204826 -0.03712866
 [1] 2.716203
 > sort(res$sd)
        Umb        Lig        Cam        Tre        Tos        Sar        Pug 
-0.07303589 0.34451085 0.48680418 0.66770220 0.66803870 0.68316692 0.78639056 
+0.07525481 0.35497752 0.50159389 0.68798782 0.68833454 0.70392237 0.81028208 
        Laz        Pie        Tno        Sic        Mol        Mar        Abr 
-0.86311503 1.00624704 1.11211488 1.14779785 1.15494455 1.28786403 1.30579300 
+0.88933753 1.03681806 1.14590230 1.18266936 1.19003319 1.32699093 1.34546460 
        Cal        Bas        Ven        Fri        Bol        Lom        Emi 
-1.45819150 1.47862824 1.57936896 1.60035486 1.60395365 1.83701829 2.25514580 
+1.50249316 1.52355079 1.62735214 1.64897562 1.65268374 1.89282917 2.32365991 
        VdA 
-8.53277110 
+8.79200721 
 > 
 > (res1 <- Parafac(ulabor, coda.transform="clr"))
 Call:
@@ -997,4 +1010,4 @@ Serv  0.1371751 -0.7890863
 > 
 > proc.time()
    user  system elapsed 
-   3.76    0.26    4.03 
+   2.18    0.23    6.23 

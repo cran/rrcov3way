@@ -1,7 +1,7 @@
 
-R Under development (unstable) (2021-10-11 r81035) -- "Unsuffered Consequences"
-Copyright (C) 2021 The R Foundation for Statistical Computing
-Platform: x86_64-w64-mingw32/x64 (64-bit)
+R Under development (unstable) (2023-06-12 r84534 ucrt) -- "Unsuffered Consequences"
+Copyright (C) 2023 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -166,8 +166,8 @@ These simplicity values are based on 'natural' weights and therefore comparable 
 When multiplied by the relative weights, they give the contribution to the overall simplicity value
 (they are I^2/p, J^2/q or K^2/r, resp., times the sum of the variances of squared values)
 Results from  1  random starts
-Run no.  1  f =  10104550598230312960 (core:  1.652 ; A:  5996973441771404288 ; B:  2573883441686829056 ; C:  1533693714772079872 ),  2  iters
-Three-way orthomax function value for best solution is  10104550598230312960
+Run no.  1  f =  10104550598230306816 (core:  1.652 ; A:  5996973441771396096 ; B:  2573883441686830080 ; C:  1533693714772080384 ),  2  iters
+Three-way orthomax function value for best solution is  10104550598230306816
 Varimax values of core and AS, BT and CU (all based on natural weights)
                 Core             A               B               C 
                1.652            5.997           2.574            1.534
@@ -437,7 +437,7 @@ HIGH  -0.4211188  0.8761747
   KOR   LVA   LTU   MUS   OMN   NLD   NOR   PER   POL   PRT   QAT   ROU   RUS 
 FALSE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE FALSE 
   SEN   SGP   SVK   SVN   ESP   SWE   CHE   TUR   GBR   YEM 
- TRUE FALSE  TRUE  TRUE FALSE  TRUE FALSE  TRUE FALSE  TRUE 
+ TRUE FALSE  TRUE  TRUE FALSE FALSE FALSE  TRUE FALSE  TRUE 
 > 
 > ## Compositional  Tucker 3
 > (res.c <- Tucker3(va3way, coda.transform="ilr"))
@@ -922,15 +922,15 @@ Student 25  Student 6
 [1] 2.716203
 > sort(rtvt3$sd)
  Student 1 Student 25 Student 15 Student 14 Student 29 Student 28 Student 19 
- 0.3276332  0.3454189  0.4009743  0.4871370  0.5224860  0.5238940  0.5974818 
+ 0.3318184  0.3498314  0.4060964  0.4933598  0.5291604  0.5305863  0.6051141 
 Student 23 Student 26 Student 20 Student 22 Student 27 Student 16 Student 11 
- 0.6505343  0.7148437  0.8975646  0.9031898  1.1105617  1.2389005  1.2456635 
+ 0.6588443  0.7239753  0.9090302  0.9147273  1.1247482  1.2547264  1.2615758 
  Student 2 Student 12 Student 10  Student 7  Student 3 Student 24  Student 6 
- 1.2463328  1.3360971  1.4644444  1.4807817  1.4819776  1.4857078  1.5073664 
+ 1.2622537  1.3531647  1.4831515  1.4996974  1.5009087  1.5046865  1.5266218 
 Student 18  Student 9 Student 13  Student 4  Student 5 Student 17  Student 8 
- 1.5146681  1.5222665  1.5862197  1.6922194  1.8235423  1.8831173  1.8993807 
+ 1.5340167  1.5417122  1.6064823  1.7138361  1.8468365  1.9071725  1.9236437 
 Student 30 Student 21 
- 1.9822291  2.8422861 
+ 2.0075504  2.8785939 
 > 
 > ## ===============================================================
 > ##
@@ -1064,13 +1064,13 @@ F2  7.424468e-04 -3.6464235172  0.167436112 0.01255162
 [1] 2.716203
 > sort(res$sd)
        Umb        Lig        Cam        Tre        Tos        Sar        Pug 
-0.07301333 0.34447478 0.48675668 0.66758688 0.66815739 0.68318497 0.78621999 
+0.07523157 0.35494035 0.50154495 0.68786900 0.68845683 0.70394097 0.81010632 
        Laz        Pie        Tno        Sic        Mol        Mar        Abr 
-0.86242692 1.00623810 1.11200517 1.14785640 1.15497776 1.28840754 1.30572556 
+0.88862852 1.03680886 1.14578926 1.18272969 1.19006741 1.32755095 1.34539511 
        Cal        Bas        Ven        Fri        Bol        Lom        Emi 
-1.45832788 1.47865730 1.57943449 1.60036135 1.60396528 1.83730636 2.25481768 
+1.50263368 1.52358074 1.62741966 1.64898230 1.65269573 1.89312599 2.32332183 
        VdA 
-8.53104993 
+8.79023375 
 > 
 > (res1 <- Tucker3(ulabor, coda.transform="clr"))
 Call:
@@ -1141,4 +1141,4 @@ F2  -0.008772333 -7.466388268 -0.53337565  0.1269328
 > 
 > proc.time()
    user  system elapsed 
-   4.21    0.37    4.81 
+   1.76    0.17    3.37 

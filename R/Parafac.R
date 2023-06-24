@@ -2,6 +2,7 @@ Parafac <- function(X, ncomp=2,
     center=FALSE, center.mode=c("A", "B", "C", "AB", "AC", "BC", "ABC"),
     scale=FALSE, scale.mode=c("B", "A", "C"),
     const="none", conv=1e-6, start="svd", maxit=10000,
+    optim=c("als", "atld", "int2"),
     robust=FALSE, coda.transform=c("none", "ilr", "clr"),
     ncomp.rpca=0, alpha=0.75, robiter=100, crit=0.975,      # arguments for the robust parafac
     trace=FALSE)
@@ -10,6 +11,9 @@ Parafac <- function(X, ncomp=2,
 
     center.mode <- match.arg(center.mode)
     scale.mode <- match.arg(scale.mode)
+    optim <- match.arg(optim)
+    if(optim == "atld" && robust)
+        stop("The robust option is not possible with 'atld' optimization. Please use 'als' or 'int2'.")
 
     coda.transform <- match.arg(coda.transform)
     ilr <- coda.transform != "none"
@@ -24,26 +28,29 @@ Parafac <- function(X, ncomp=2,
 
     stopifnot(alpha <= 1 & alpha >= 0.5)
 
-    ret <- if(robust & ilr) .Parafac.rob.ilr(X=X, ncomp=ncomp,
+    ret <- if(robust & ilr) .Parafac.rob.ilr(X=X, ncomp=ncomp,              # robust, compositional
             center=center, center.mode=center.mode,
             scale=scale, scale.mode=scale.mode, const=const, conv=conv,
-            start=start, maxit=maxit, coda.transform=coda.transform,
-            ncomp.rpca=ncomp.rpca, alpha=alpha, robiter=robiter, crit=crit,
+            start=start, maxit=maxit, crit=crit,
+            coda.transform=coda.transform,
+            ncomp.rpca=ncomp.rpca, alpha=alpha, robiter=robiter,
             trace=trace)
-           else if(!robust & !ilr) .Parafac(X=X, ncomp=ncomp,
+           else if(!robust & !ilr) .Parafac(X=X, ncomp=ncomp,               #
             center=center, center.mode=center.mode, scale=scale,
             scale.mode=scale.mode, const=const, conv=conv,
-            start=start, maxit=maxit, crit=crit, trace=trace)
-           else if(!robust & ilr) .Parafac.ilr(X=X, ncomp=ncomp,
+            start=start, maxit=maxit, crit=crit, optim=optim, trace=trace)
+           else if(!robust & ilr) .Parafac.ilr(X=X, ncomp=ncomp,            # compositional
             center=center, center.mode=center.mode,
             scale=scale, scale.mode=scale.mode, const=const, conv=conv,
-            start=start, maxit=maxit, coda.transform=coda.transform, crit=crit,
+            start=start, maxit=maxit, crit=crit,
+            coda.transform=coda.transform,
             trace=trace)
-           else if(robust & !ilr) .Parafac.rob(X=X, ncomp=ncomp,
+           else if(robust & !ilr) .Parafac.rob(X=X, ncomp=ncomp,            # robust
             center=center, center.mode=center.mode,
             scale=scale, scale.mode=scale.mode, const=const, conv=conv,
-            start=start, maxit=maxit, ncomp.rpca=ncomp.rpca, alpha=alpha,
-            robiter=robiter, crit=crit, trace=trace)
+            start=start, maxit=maxit, crit=crit, optim=optim,
+            ncomp.rpca=ncomp.rpca, alpha=alpha, robiter=robiter,
+            trace=trace)
 
     ## Total sum of squares, PARAFAC fit and fit percentage:
     ## ret$ss <- sum(X^2)
@@ -55,6 +62,7 @@ Parafac <- function(X, ncomp=2,
     names(ret$GA) <- colnames(ret$A)
 
     ret$ncomp <- ncomp
+    ret$optim <- optim
     ret$call <- call
     ret
 }
@@ -116,11 +124,13 @@ Parafac <- function(X, ncomp=2,
 .Parafac <- function (X, ncomp,
     center=FALSE, center.mode=c("A", "B", "C", "AB", "AC", "BC", "ABC"),
     scale=FALSE, scale.mode=c("B", "A", "C"),
-    const="none", conv=1e-6, start="svd", maxit=10000,
-    crit=0.975, trace=FALSE)
+    const="none", conv=1e-6, start="svd", maxit=10000, crit=0.975,
+    optim=c("als", "atld", "int2"),
+    trace=FALSE)
 {
     center.mode <- match.arg(center.mode)
     scale.mode <- match.arg(scale.mode)
+    optim <- match.arg(optim)
 
     di <- dim(X)
     I <- di[1]
@@ -131,7 +141,12 @@ Parafac <- function(X, ncomp=2,
     X <- do3Scale(X, center=center, center.mode=center.mode, scale=scale, scale.mode=scale.mode)
     Xwide <- unfold(X)
 
-    ret <- cp_als(X, ncomp=ncomp, const=const, conv=conv, start=start, maxit=maxit, trace=trace)
+    ret <- if(optim == "als") cp_als(X, ncomp=ncomp, const=const, conv=conv, start=start, maxit=maxit, trace=trace)
+           else if(optim == "atld") cp_atld(X, ncomp=ncomp, conv=conv, start=start, maxit=maxit, trace=trace)
+           else if(optim == "int2") cp_int2(X, ncomp=ncomp, const=const, conv=conv, start=start, maxit=maxit, trace=trace)
+           else
+            stop(paste("Unknown optimization method:", optim, "!"))
+
     A <- ret$A
     B <- ret$B
     C <- ret$C
@@ -153,8 +168,8 @@ Parafac <- function(X, ncomp=2,
     dimnames(Xfit) <- dn
     names(rd) <- names(sd$sd) <- names(flag) <- dn[[1]]
 
-    ret <- list(fit=ret$f, fp=ret$fp, ss=ret$ss, A=A, B=B, C=C, Xhat=Xfit, const=ret$const, iter=ret$iter,
-        rd=rd, cutoff.rd=cutoff.rd, sd=sd$sd, cutoff.sd=sd$cutoff.sd,
+    ret <- list(fit=ret$fit, fp=ret$fp, ss=ret$ss, A=A, B=B, C=C, iter=ret$iter, const=ret$const,
+        Xhat=Xfit, rd=rd, cutoff.rd=cutoff.rd, sd=sd$sd, cutoff.sd=sd$cutoff.sd,
         robust=FALSE, coda.transform="none")
 
     class(ret) <- "parafac"
@@ -165,10 +180,12 @@ Parafac <- function(X, ncomp=2,
 .Parafac.rob <- function (X, ncomp, center=FALSE, center.mode=c("A", "B", "C", "AB", "AC", "BC", "ABC"),
     scale=FALSE, scale.mode=c("B", "A", "C"),
     const="none", conv=1e-6, start="svd", maxit=10000,
+    optim=c("als", "int2"),
     ncomp.rpca, alpha=0.75, robiter=100, crit=0.975, trace=FALSE)
 {
     center.mode <- match.arg(center.mode)
     scale.mode <- match.arg(scale.mode)
+    optim <- match.arg(optim)
 
     di <- dim(X)
     I <- di[1]
@@ -201,14 +218,23 @@ Parafac <- function(X, ncomp=2,
     Xhat <- Xwide[Hset,]
     fitprev <- 0
     changeFit <- 1 + conv
-    iter <- 0
+    xiter <- iter <- 0
 
     while (changeFit > conv & iter <= robiter)
     {
         iter <- iter + 1
 
         ##  Step 2 - PARAFAC analysis
-        ret <- cp_als(Xhat, h, J, K, ncomp=ncomp, const=const, conv=conv, start=start, maxit=maxit, trace=trace)
+        ##  ret <- cp_als(Xhat, h, J, K, ncomp=ncomp, const=const, conv=conv, start=start, maxit=maxit, trace=trace)
+
+        ret <- if(optim == "als") cp_als(Xhat, h, J, K, ncomp=ncomp, const=const, conv=conv, start=start, maxit=maxit, trace=trace)
+               ##   else if(optim == "atld") cp_atld(Xhat, h, J, K, ncomp=ncomp, conv=conv, start=start, maxit=maxit, trace=trace)
+               else if(optim == "int2") cp_int2(Xhat, h, J, K, ncomp=ncomp, const=const, conv=conv, start=start, maxit=maxit, trace=trace)
+               else
+                stop(paste("Unknown optimization method:", optim, "!"))
+
+        xiter <- xiter + ret$iter
+
         Ah <- ret$A
         Bh <- ret$B
         Ch <- ret$C
@@ -234,15 +260,30 @@ Parafac <- function(X, ncomp=2,
 
         ##  Step 5  Fit of the model
         changeFit <- if(fitprev == 0) 1 + conv else abs(fit-fitprev)/fitprev
+        if(trace)
+            cat("\n---", toupper(optim), iter, "Fit, Fitprev, changeFit, iter", fit, fitprev, changeFit, ret$iter)
         fitprev <- fit
     }
+
+     if(trace)
+        cat("\n--- ---\n")
 
     ## Reweighting
     cutoff.rd <- .cutoff.rd(rd, crit=crit, h)
     flag <- rd <= cutoff.rd
     Xflag <- X[flag,,]
     Xflag_wide <- unfold(Xflag)
-    ret <- cp_als(Xflag_wide, nrow(Xflag_wide), J, K, ncomp=ncomp, const=const, conv=conv, start=start, maxit=maxit, trace=trace)
+
+    ##  ret <- cp_als(Xflag_wide, nrow(Xflag_wide), J, K, ncomp=ncomp, const=const, conv=conv, start=start, maxit=maxit, trace=trace)
+
+    ret <- if(optim == "als") cp_als(Xflag_wide, nrow(Xflag_wide), J, K, ncomp=ncomp, const=const, conv=conv, start=start, maxit=maxit, trace=trace)
+           ##   else if(optim == "atld") cp_atld(Xflag_wide, nrow(Xflag_wide), J, K, ncomp=ncomp, conv=conv, start=start, maxit=maxit, trace=trace)
+           else if(optim == "int2") cp_int2(Xflag_wide, nrow(Xflag_wide), J, K, ncomp=ncomp, const=const, conv=conv, start=start, maxit=maxit, trace=trace)
+           else
+            stop(paste("Unknown optimization method:", optim, "!"))
+
+    xiter <- xiter + ret$iter
+
     Arew <- ret$A
     Brew <- ret$B
     Crew <- ret$C
@@ -283,10 +324,10 @@ Parafac <- function(X, ncomp=2,
     dimnames(Xfit) <- dn
     names(rd) <- names(sd$sd) <- names(flag) <- dn[[1]]
 
-    res <- list(fit=fit, fp=fp, ss=ssx, A=Arew, B=Brew, C=Crew, Xhat=Xfit, const=ret$const,
-                flag=flag, Hset=Hset, iter=iter, alpha=alpha,
-                rd=rd, cutoff.rd=cutoff.rd, sd=sd$sd, cutoff.sd=sd$cutoff.sd,
-                pcaobj=outrobpca, robust=TRUE, coda.transform="none")
+    res <- list(fit=fit, fp=fp, ss=ssx, A=Arew, B=Brew, C=Crew, iter=xiter, const=ret$const,
+                flag=flag, Hset=Hset, alpha=alpha,
+                Xhat=Xfit, rd=rd, cutoff.rd=cutoff.rd, sd=sd$sd, cutoff.sd=sd$cutoff.sd,
+                pcaobj=outrobpca, robiter=iter, robust=TRUE, coda.transform="none")
 
     class(res) <- "parafac"
     res
@@ -295,11 +336,14 @@ Parafac <- function(X, ncomp=2,
 ## Classical PARAFAC for compositional data
 .Parafac.ilr <- function (X, ncomp, center=FALSE, center.mode=c("A", "B", "C", "AB", "AC", "BC", "ABC"),
         scale=FALSE, scale.mode=c("B", "A", "C"),
-        const="none", conv=1e-6, start="svd", maxit=10000, coda.transform=c("ilr", "clr"),
+        const="none", conv=1e-6, start="svd", maxit=10000,
+        optim=c("als", "atld", "int2"),
+        coda.transform=c("ilr", "clr"),
         crit=0.975, trace=FALSE)
 {
     center.mode <- match.arg(center.mode)
     scale.mode <- match.arg(scale.mode)
+    optim <- match.arg(optim)
     coda.transform <- match.arg(coda.transform)
 
     ## ncomp is the number of components
@@ -320,7 +364,12 @@ Parafac <- function(X, ncomp=2,
     Xilr <- do3Scale(Xilr, center=center, center.mode=center.mode, scale=scale, scale.mode=scale.mode)
     Xwide <- unfold(Xilr)
 
-    ret <- cp_als(Xwide, I, J, K, ncomp, const=const, conv=conv, start=start, maxit=maxit, trace=trace)
+    ret <- if(optim == "als") cp_als(Xwide, I, J, K, ncomp, const=const, conv=conv, start=start, maxit=maxit, trace=trace)
+           else if(optim == "atld") cp_atld(Xwide, I, J, K, ncomp=ncomp, conv=conv, start=start, maxit=maxit, trace=trace)
+           else if(optim == "int2") cp_int2(Xwide, I, J, K, ncomp=ncomp, const=const, conv=conv, start=start, maxit=maxit, trace=trace)
+           else
+            stop(paste("Unknown optimization method:", optim, "!"))
+
     A <- ret$A
     B <- ret$B
     C <- ret$C
@@ -361,8 +410,8 @@ Parafac <- function(X, ncomp=2,
     dimnames(Xfit) <- list(dn[[1]], znames, dn[[3]])
     names(rd) <- names(sd$sd) <- names(flag) <- dn[[1]]
 
-    res <- list(fit=ret$f, fp=ret$fp, ss=ret$ss, A=A, B=B, Bclr=Bclr, C=C, Xhat=Xfit, const=ret$const, iter=ret$iter,
-        rd=rd, cutoff.rd=cutoff.rd, sd=sd$sd, cutoff.sd=sd$cutoff.sd,
+    res <- list(fit=ret$fit, fp=ret$fp, ss=ret$ss, A=A, B=B, Bclr=Bclr, C=C, iter=ret$iter, const=ret$const,
+        Xhat=Xfit, rd=rd, cutoff.rd=cutoff.rd, sd=sd$sd, cutoff.sd=sd$cutoff.sd,
         robust=FALSE, coda.transform=coda.transform)
 
     class(res) <- "parafac"
@@ -372,11 +421,14 @@ Parafac <- function(X, ncomp=2,
 ## Robust PARAFAC for compositional data
 .Parafac.rob.ilr <- function (X, ncomp, center=FALSE, center.mode=c("A", "B", "C", "AB", "AC", "BC", "ABC"),
         scale=FALSE, scale.mode=c("B", "A", "C"),
-        const="none", conv=1e-6, start="svd", maxit=10000, coda.transform=c("ilr"),
+        const="none", conv=1e-6, start="svd", maxit=10000,
+        optim=c("als", "int2"),
+        coda.transform=c("ilr"),
         ncomp.rpca, alpha=0.75, robiter=100, crit=0.975, trace=FALSE)
 {
     center.mode <- match.arg(center.mode)
     scale.mode <- match.arg(scale.mode)
+    optim <- match.arg(optim)
     coda.transform <- match.arg(coda.transform)
 
     di <- dim(X)
@@ -416,7 +468,14 @@ Parafac <- function(X, ncomp=2,
         iter <- iter+1
 
         ## Step 2 - PARAFAC analysis
-        ret <- cp_als(Xhat, h, J, K, ncomp, const=const, conv=conv, start=start, maxit=maxit, trace=trace)
+        ##  ret <- cp_als(Xhat, h, J, K, ncomp, const=const, conv=conv, start=start, maxit=maxit, trace=trace)
+
+        ret <- if(optim == "als") cp_als(Xhat, h, J, K, ncomp=ncomp, const=const, conv=conv, start=start, maxit=maxit, trace=trace)
+               ##   else if(optim == "atld") cp_atld(Xhat, h, J, K, ncomp=ncomp, conv=conv, start=start, maxit=maxit, trace=trace)
+               else if(optim == "int2") cp_int2(Xhat, h, J, K, ncomp=ncomp, const=const, conv=conv, start=start, maxit=maxit, trace=trace)
+               else
+                stop(paste("Unknown optimization method:", optim, "!"))
+
         Ah <- ret$A
         Bh <- ret$B
         Ch <- ret$C
@@ -445,7 +504,15 @@ Parafac <- function(X, ncomp=2,
     flag <- rd <= cutoff.rd
     Xflag <- Xilr[flag,,]
     Xflag_wide <- unfold(Xflag)
-    ret <- cp_als(Xflag_wide, nrow(Xflag_wide), J, K, ncomp, const=const, conv=conv, start=start, maxit=maxit, trace=trace)
+
+    ##  ret <- cp_als(Xflag_wide, nrow(Xflag_wide), J, K, ncomp, const=const, conv=conv, start=start, maxit=maxit, trace=trace)
+
+    ret <- if(optim == "als") cp_als(Xflag_wide, nrow(Xflag_wide), J, K, ncomp=ncomp, const=const, conv=conv, start=start, maxit=maxit, trace=trace)
+           ##   else if(optim == "atld") cp_atld(Xflag_wide, nrow(Xflag_wide), J, K, ncomp=ncomp, conv=conv, start=start, maxit=maxit, trace=trace)
+           else if(optim == "int2") cp_int2(Xflag_wide, nrow(Xflag_wide), J, K, ncomp=ncomp, const=const, conv=conv, start=start, maxit=maxit, trace=trace)
+           else
+            stop(paste("Unknown optimization method:", optim, "!"))
+
     Arew <- ret$A
     Brew <- ret$B
     Crew <- ret$C
@@ -492,9 +559,9 @@ Parafac <- function(X, ncomp=2,
     dimnames(Xfit) <- list(dn[[1]], znames, dn[[3]])
     names(rd) <- names(sd$sd) <- names(flag) <- dn[[1]]
 
-    res <- list(fit=fit, fp=fp, ss=ssx, A=Arew, B=Brew, Bclr=Bclr, C=Crew, Xhat=Xfit, const=ret$const,
-            flag=flag, Hset=Hset, iter=iter, alpha=alpha,
-            rd=rd, cutoff.rd=cutoff.rd, sd=sd$sd, cutoff.sd=sd$cutoff.sd,
+    res <- list(fit=fit, fp=fp, ss=ssx, A=Arew, B=Brew, Bclr=Bclr, C=Crew, iter=iter, const=ret$const,
+            flag=flag, Hset=Hset, alpha=alpha,
+            Xhat=Xfit, rd=rd, cutoff.rd=cutoff.rd, sd=sd$sd, cutoff.sd=sd$cutoff.sd,
             pcaobj=outrobpca, robust=TRUE, coda.transform=coda.transform)
 
     class(res) <- "parafac"
@@ -544,13 +611,19 @@ print.parafac <- function(x, ...)
     cat("\nPARAFAC analysis with ", ncomp, " components.\nFit value:", x$fit,
         "\nFit percentage:", round(x$fp,2), "%\n")
     msg <- ""
-    if(x$robust)
+    if(x$robust) {
         msg <- paste0(msg, "Robust")
+        if(x$coda.transform == "none")
+            msg <- paste0(msg, "\n")
+    }
     if(x$coda.transform != "none"){
         if(nchar(msg) > 0)
             msg <- paste0(msg, ", ")
         tr <- if(x$coda.transform == "clr") "clr-transformed" else "ilr-transformed"
         msg <- paste0(msg, tr, "\n")
+    }
+    if(!is.null(x$optim) && x$optim != "als") {
+        msg <- paste0(msg, "Optimized with ", toupper(x$optim), ".\n")
     }
     cat(msg, "\n")
 

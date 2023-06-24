@@ -1,7 +1,7 @@
 ######
 ##  VT::16.09.2019
 ##
-##  roxygen2::roxygenise("C:/projects/statproj/R/rrcov3way")
+##  roxygen2::roxygenise("C:/users/valen/onedrive/myrepo/R/rrcov3way", load_code=roxygen2:::load_installed)
 ##
 
 do3Scale <- function (x, ...) UseMethod("do3Scale")

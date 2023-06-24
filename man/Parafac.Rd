@@ -12,6 +12,7 @@ Parafac(X, ncomp = 2, center = FALSE,
     center.mode = c("A", "B", "C", "AB", "AC", "BC", "ABC"),
     scale=FALSE, scale.mode=c("B", "A", "C"), 
     const="none", conv = 1e-06, start="svd", maxit=10000, 
+    optim=c("als", "atld", "int2"),
     robust = FALSE, coda.transform=c("none", "ilr", "clr"), 
     ncomp.rpca = 0, alpha = 0.75, robiter = 100, crit=0.975, trace = FALSE)
 }
@@ -35,6 +36,9 @@ Parafac(X, ncomp = 2, center = FALSE,
     starting point (orthonormalized component matrices or nonnegative matrices in
     case of nonnegativity constraint), or a list containing user specified components.}
   \item{maxit}{Maximum number of iterations, default is \code{maxit=10000}.}
+  \item{optim}{How to optimize the CP loss function, default is to use ALS, i.e. 
+    \code{optim="als"}. Other optins are ATLD (\code{optim="atld"}) and INT2 (\code{optim="INT2"}).
+    Please note that ATLD cannot be used with the robust option.}
   \item{robust}{Whether to apply a robust estimation}
   \item{coda.transform}{If the data are a composition, use an \emph{ilr} or \emph{clr} transformation. 
     Default is non-compositional data, i.e. \code{coda.transform="none"}}
@@ -62,6 +66,7 @@ This is controlled though the paramters \code{robust=TRUE} and coda.transform=c(
 An object of class "parafac" which is basically a list with components:
 \item{fit}{Fit value}
 \item{fp}{Fit percentage}
+\item{ss}{Sum of squares}
 \item{A }{Orthogonal loading matrix for the A-mode}
 \item{B}{Orthogonal loading matrix for the A-mode}
 \item{Bclr}{Orthogonal loading matrix for the B-mode, clr transformed. 

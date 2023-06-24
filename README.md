@@ -11,6 +11,7 @@ version](https://www.r-pkg.org/badges/version/rrcov3way)](https://cran.r-project
 [![Codecov test
 coverage](https://codecov.io/gh/valentint/rrcov3way/branch/master/graph/badge.svg)](https://app.codecov.io/gh/valentint/rrcov3way?branch=master)
 [![downloads](https://cranlogs.r-pkg.org/badges/rrcov3way)](https://cran.r-project.org/package=rrcov3way)
+[![downloads](https://cranlogs.r-pkg.org/badges/grand-total/rrcov3way)](https://cran.r-project.org/package=rrcov3way)
 [![license](https://img.shields.io/badge/license-GPL--3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0.en.html)
 <!-- badges: end -->
 
@@ -21,6 +22,12 @@ Robust versions for compositional data are also provided (Gallo (2015)
 [doi:10.1080/03610926.2013.798664](https://doi.org/10.1080/03610926.2013.798664),
 Di Palma et al. (2018)
 [doi:10.1080/02664763.2017.1381669](https://doi.org/10.1080/02664763.2017.1381669)).
+
+Several optimization methods alternative to ALS are available (Simonacci
+and Gallo (2019)
+[doi:10.1016/j.chemolab.2019.103822](https://doi.org/10.1016/j.chemolab.2019.103822),
+Simonacci and Gallo (2020)
+[doi:10.1007/s00500-019-04320-9](https://doi.org/10.1007/s00500-019-04320-9)).
 
 ## Installation
 
@@ -51,6 +58,7 @@ value of manufactured goods of a country compared to the similar
 proportion for the world as a whole.
 
 ``` r
+
 ## Load the package 'rrcov3way' and the data set
 ##  to be used in the examples:
 ##
@@ -58,7 +66,7 @@ proportion for the world as a whole.
 ##  23 countries x 6 industries x 7 years
 library(rrcov3way)
 #> Robust Methods for Multiway Data Analysis, Applicable also for
-#> Compositional Data (version 0.2-1)
+#> Compositional Data (version 0.2-5)
 #> 
 #> Attaching package: 'rrcov3way'
 #> The following object is masked from 'package:stats':
