@@ -33,7 +33,7 @@ For details see Kroonenberg (2008), Chapters 6 and 15.
 }
 \source{
 	The data sets are available from Pieter Kroonenberg's web site at:
-    \url{https://web.universiteitleiden.nl/fsw/three-mode/data/girlsgrowthcurvesinfo.htm}
+	"three-mode.leidenuniv.nl/data/girlsgrowthcurvesinfo.htm"
 }
 \references{
     Sempe, M. (1987). Multivariate and longitudinal data on growing children: 

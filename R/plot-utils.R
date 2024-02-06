@@ -85,8 +85,7 @@
 
     p <- if(mode=="A") P else if(mode=="B") Q else R
 
-    if(length(choices) != 2 || min(choices) < 1 || max(choices) > p || choices[1] == choices[2])
-    {
+    if(length(choices) != 2 || min(choices) < 1 || max(choices) > p || choices[1] == choices[2]) {
         warning("Wrong components choosen! Components 1 and 2 will be used.")
         choices <- 1L:2L
     }
@@ -96,24 +95,21 @@
     ## Unfold the core array for B and C mode
     GG <- toArray(GA, P, Q, R)
 
-    if(mode == "A")
-    {
+    if(mode == "A") {
         GGG <- unfold(GG, mode="A")
         Fx <- kronecker(C,B) %*% t(GGG)
         qrB <- qr(Fx)                # The QR Decomposition of a Matrix B == Q %*% R
         Tx <- qr.R(qrB)
         tilde <- A %*% solve(Tx)
         lab <- rownames(A)
-    } else if(mode == "B")
-    {
+    } else if(mode == "B") {
         GGG <- unfold(GG, mode="B")
         Fx <- kronecker(C,A) %*% t(GGG)
         qrB <- qr(Fx)                # The QR Decomposition of a Matrix B == Q %*% R
         Tx <- qr.R(qrB)
         tilde <- B %*% solve(Tx)
         lab <- rownames(B)
-    } else
-    {
+    } else {
         GGG <- unfold(GG, mode="C")
         Fx <- kronecker(B,A) %*% t(GGG)
         qrB <- qr(Fx)                # The QR Decomposition of a Matrix B == Q %*% R
@@ -123,16 +119,14 @@
     }
 
     eps <- 0.1
-    if(missing(xlim))
-    {
+    if(missing(xlim)) {
         xlim <- c(min(tilde[,comp1]), max(tilde[,comp1]))
         xlim[1] <- xlim[1] - abs(eps*xlim[1])
         xlim[2] <- xlim[2] + abs(eps*xlim[2])
         if(xlim[1] > 0) xlim[1] <- 0
         if(xlim[2] < 0) xlim[2] <- 0
     }
-    if(missing(ylim))
-    {
+    if(missing(ylim)) {
         ylim <- c(min(tilde[,comp2]), max(tilde[,comp2]))
         ylim[1] <- ylim[1] - abs(eps*ylim[1])
         ylim[2] <- ylim[2] + abs(eps*ylim[2])
@@ -142,12 +136,12 @@
 
     plot(tilde[,choices], type="n", xlab=paste("Axis", comp1), ylab=paste("Axis", comp2), xlim=xlim, ylim=ylim, cex=1.2, ...)
     abline(v=0, h=0, lty=2)
-    text(tilde[,comp1], tilde[,comp2], lab, cex=0.8, ...)
 
-    if(mode == "B" & arrows)
-    {
+    if(mode == "B" & arrows) {
         arrows(0, 0, tilde[,comp1], tilde[,comp2], code = 2, length = 0.09)
-    }
+        text(tilde[,comp1], tilde[,comp2], lab, cex=0.8, pos=1, ...)
+    }else
+        text(tilde[,comp1], tilde[,comp2], lab, cex=0.8, ...)
 
     return(invisible(x))
 }
@@ -164,8 +158,7 @@
     C <- x$C
     ncomp <- x$ncomp
 
-    if(length(choices) != 2 || min(choices) < 1 || max(choices) > ncomp || choices[1] == choices[2])
-    {
+    if(length(choices) != 2 || min(choices) < 1 || max(choices) > ncomp || choices[1] == choices[2]) {
         warning("Wrong components choosen! Components 1 and 2 will be used.")
         choices <- 1L:2L
     }
@@ -176,15 +169,13 @@
     ## create a long, matricized array of diagonal matrices of size 'ncomp'
     D <- do.call(rbind, lapply(1:ncomp, function(x) diag(ncomp)))
 
-    if(mode == "A")
-    {
+    if(mode == "A") {
         ## orthonormalization MODE A
         WA <- kronecker(C, B) %*% D
         qrstr <- qr(WA)
         R <- qr.R(qrstr)                # T transformation matrix
         tilde  <- (A %*% R)
-    } else if(mode == "B")
-    {
+    } else if(mode == "B") {
         ## orthonormalization MODE B
         WB <- kronecker(C, A) %*% D
         qrstr <- qr(WB)
@@ -192,8 +183,7 @@
         tilde <- B %*% R
         obl_B <- R
         coordB <- as.vector(obl_B)      # oblique original axes
-    } else
-    {
+    } else {
         ## orthonormalization MODE C
         WC <- kronecker(B, A) %*% D
         qrstr <- qr(WC)
@@ -202,16 +192,14 @@
     }
 
     eps <- 0.1
-    if(missing(xlim))
-    {
+    if(missing(xlim)) {
         xlim <- c(min(tilde[,comp1]), max(tilde[,comp1]))
         xlim[1] <- xlim[1] - abs(eps*xlim[1])
         xlim[2] <- xlim[2] + abs(eps*xlim[2])
         if(xlim[1] > 0) xlim[1] <- 0
         if(xlim[2] < 0) xlim[2] <- 0
     }
-    if(missing(ylim))
-    {
+    if(missing(ylim)) {
         ylim <- c(min(tilde[,comp2]), max(tilde[,comp2]))
         ylim[1] <- ylim[1] - abs(eps*ylim[1])
         ylim[2] <- ylim[2] + abs(eps*ylim[2])
@@ -221,20 +209,12 @@
 
     plot(tilde[,choices], type="n", xlim=xlim, ylim=ylim, xlab="First component", ylab="Second component", cex=0.8, ...)
     abline(v=0, h=0, lty = 2)
-    text(tilde[, comp1], tilde[, comp2], labels=rownames(tilde), cex=0.8, ...)
-
-    if(mode == "B" & arrows)
-    {
+    
+    if(mode == "B" & arrows) {
         arrows(0, 0, tilde[,comp1], tilde[,comp2], code = 2, length = 0.09)
-    }
-
-    if(mode == "B")
-    {
-##        arrows(0, 0, coordB[1],coordB[2], code=2, length=0.09, col="red")     #scale factors because not visible in the plot
-##        arrows(0,0, coordB[3],coordB[4], code=2, length=0.09, col="red")
-##        text(-0.2, -0.18, labels="second axis", cex=0.8, srt=61, pos=2)
-##        text(0.8, 0.01, labels="first axis", cex=0.8, pos=2)
-    }
+        text(tilde[, comp1], tilde[, comp2], labels=rownames(tilde), cex=0.8, pos=1, ...)
+    }else
+        text(tilde[, comp1], tilde[, comp2], labels=rownames(tilde), cex=0.8, ...)
 
     return(invisible(x))
 }
@@ -359,23 +339,22 @@
 
     ## plot
     ## Warning
+    ## VT::09.01.2024 - reduce Btilde[,2] a bit, because the text of the arrows will be written below
     aa <- sum(sign(C[,1]))
-    if(K == -aa)
-    {
+    if(K == -aa) {
         plot(c(min(Atilde[,1],-Btilde[,1]), max(Atilde[,1],-Btilde[,1])),
-             c(min(Atilde[,2],Btilde[,2]), max(Atilde[,2],Btilde[,2])),
+             c(min(Atilde[,2], Btilde[,2]), max(Atilde[,2], Btilde[,2])),
                 type="n", xlab="First axis", ylab="Second axis", cex=1.2, ...)
         abline(v=0, h=0, lty=2)
-        text(-Btilde[,1], Btilde[,2], rownames(B), col=1, cex=0.8)
+        text(-Btilde[,1], Btilde[,2], rownames(B), col=1, cex=0.8, pos=1)
         arrows(0, 0, -Btilde[,1], Btilde[,2], code=2, length=0.09)
         text(Atilde[,1], Atilde[,2], rownames(A), col=4, cex=0.8)
-    } else
-    {
+    } else {
         plot(c(min(Atilde[,1], Btilde[,1]), max(Atilde[,1], Btilde[,1])),
-             c(min(Atilde[,2],Btilde[,2]), max(Atilde[,2],Btilde[,2])),
+             c(min(Atilde[,2], Btilde[,2]-0.1), max(Atilde[,2],Btilde[,2])),
                 type="n", xlab="First axis", ylab="Second axis", cex=1.2, ...)
         abline(v=0, h=0, lty=2)
-        text(Btilde[,1], Btilde[,2], rownames(B), col=1, cex=0.8)
+        text(Btilde[,1], Btilde[,2], rownames(B), col=1, cex=0.8, pos=1)
         arrows(0, 0, Btilde[,1], Btilde[,2], code=2, length=0.09)
         text(Atilde[,1], Atilde[,2], rownames(A), col=4, cex=0.8)
     }
@@ -384,7 +363,7 @@
 }
 
 ## Trajectory biplot (for Tucker 3)
-.TJPlot <- function (x, choices, arrows=TRUE, ...)
+.TJPlot <- function (x, choices, arrows=TRUE, longnames=TRUE, ...)
 {
     ## A is loadings matrix for first mode .
     ## Bclr is loadings matrix for second mode only two components (clr transformation).
@@ -406,17 +385,21 @@
     if(missing(choices))
         choices <- 1:I
 
+    ssa <- (I/J)^(.25)
+    ssb <- (J/I)^(.25)
+
     ## Make unfolded core array for B and C mode
     GG <- toArray(GA, P, Q, R)
     GB <- unfold(GG, mode="B")
 
     ## Make unfolded A x C label
     labA <- matrix(0, I, K)
-    for(k in 1:K)
-    {
-        for(i in 1:I)
-        {
-            labA[i, k] <- paste(rownames(A)[i], rownames(C)[k], sep="x")
+    for(k in 1:K) {
+        for(i in 1:I) {
+            if(longnames)
+                labA[i, k] <- paste(rownames(A)[i], rownames(C)[k], sep="x")
+            else
+                labA[i, k] <- paste(i, k, sep="-")
         }
     }
     rowlabACco <- as.vector(labA)
@@ -437,33 +420,37 @@
 
     ACco <- kronecker(C,A) %*% t(GB) %*% solve(Tx)
 
+    ## Here I try to rescale the arrows - otherwise they are not visible
+    Bco <- 0.8 * max(ACco)/max(Bco) * Bco
+    
     ## collect the selected points for the choices objects
     cx <- c()
     for(j in choices) cx <- c(cx, seq(j, I*K, I))
 
     #PLOT
-    if(arrows)
-    {
+    
+    ## VT::09.01.2024 - reduce Bco[,2] a bit, because the text of the arrows will be written below
+    if(arrows) {
         x <- c(min(0, ACco[cx, 1], Bco[,1]), max(0, ACco[cx, 1], Bco[,1]))
-        y <- c(min(0, ACco[cx, 2], Bco[,2]), max(0, ACco[cx, 2], Bco[,2]))
-    } else
-    {
+        y <- c(min(0, ACco[cx, 2], Bco[,2]-0.15), max(0, ACco[cx, 2], Bco[,2]))
+    } else {
         x <- c(min(ACco[cx, 1]), max(ACco[cx, 1]))
         y <- c(min(ACco[cx, 2]), max(ACco[cx, 2]))
     }
     plot(x, y, xlab="First trajectory axis", ylab="Second trajectory axis", type="n", cex=1.2, ...)
     abline(v=0, h=0, lty = 2)
 
-    if(arrows)
-    {
+    if(arrows) {
         arrows(0, 0, Bco[,1], Bco[,2], code = 2, length = 0.09)
-        text(Bco[,1], Bco[,2], rownames(B), col=1, cex=0.8)
+        text(Bco[,1], Bco[,2], rownames(B), col=1, cex=0.8, pos=1)
     }
 
-    for(i in choices)
-    {
+    for(i in choices) {
         aa <- seq(i, I*K, I)
+##        print(i)
+##        print(aa)
         lines(c(ACco[aa,1]), c(ACco[aa,2]), col=2, lty = 3, type = "o", cex=0.5)
+##        text(ACco[aa[c(1:K)],1], ACco[aa[c(1:K)],2], rowlabACco[aa[c(1:K)]], col=1, cex=0.6)
         text(ACco[aa[c(1,K)],1], ACco[aa[c(1,K)],2], rowlabACco[aa[c(1,K)]], col=1, cex=0.6)
     }
 

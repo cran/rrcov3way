@@ -1,7 +1,7 @@
 
-R Under development (unstable) (2021-10-11 r81035) -- "Unsuffered Consequences"
-Copyright (C) 2021 The R Foundation for Statistical Computing
-Platform: x86_64-w64-mingw32/x64 (64-bit)
+R Under development (unstable) (2023-12-02 r85657 ucrt) -- "Unsuffered Consequences"
+Copyright (C) 2023 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -148,30 +148,8 @@ In .compplot.tucker3(x, ...) :
 > 
 > ## Trajectory
 > plot(res, which="tjplot", main="Trajectory biplot")
-Warning messages:
-1: In arrows(0, 0, Bco[, 1], Bco[, 2], code = 2, length = 0.09) :
-  zero-length arrow is of indeterminate angle and so skipped
-2: In arrows(0, 0, Bco[, 1], Bco[, 2], code = 2, length = 0.09) :
-  zero-length arrow is of indeterminate angle and so skipped
-3: In arrows(0, 0, Bco[, 1], Bco[, 2], code = 2, length = 0.09) :
-  zero-length arrow is of indeterminate angle and so skipped
-4: In arrows(0, 0, Bco[, 1], Bco[, 2], code = 2, length = 0.09) :
-  zero-length arrow is of indeterminate angle and so skipped
-5: In arrows(0, 0, Bco[, 1], Bco[, 2], code = 2, length = 0.09) :
-  zero-length arrow is of indeterminate angle and so skipped
 > plot(res, which="tjplot", choices=c(1:4), arrows=FALSE, main="Trajectory biplot")
 > plot(res1, which="tjplot", main="Trajectory biplot")        # reflected C
-Warning messages:
-1: In arrows(0, 0, Bco[, 1], Bco[, 2], code = 2, length = 0.09) :
-  zero-length arrow is of indeterminate angle and so skipped
-2: In arrows(0, 0, Bco[, 1], Bco[, 2], code = 2, length = 0.09) :
-  zero-length arrow is of indeterminate angle and so skipped
-3: In arrows(0, 0, Bco[, 1], Bco[, 2], code = 2, length = 0.09) :
-  zero-length arrow is of indeterminate angle and so skipped
-4: In arrows(0, 0, Bco[, 1], Bco[, 2], code = 2, length = 0.09) :
-  zero-length arrow is of indeterminate angle and so skipped
-5: In arrows(0, 0, Bco[, 1], Bco[, 2], code = 2, length = 0.09) :
-  zero-length arrow is of indeterminate angle and so skipped
 > 
 > ## Parafac =======================================================
 > ##
@@ -279,4 +257,4 @@ Error in rrcov3way:::.ddplot(cp, id.n = -1) : 'id.n' must be in {1,..,23}
 > 
 > proc.time()
    user  system elapsed 
-   1.54    0.25    1.84 
+   0.26    0.03    0.81 

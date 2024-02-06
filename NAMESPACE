@@ -34,7 +34,8 @@ export(
     unfold,
     cp_als,
     cp_atld,
-    cp_int2
+    cp_int2,
+    cp_gen
 )
 
 ##S3 generics

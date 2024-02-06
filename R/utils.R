@@ -434,6 +434,8 @@ reflect.tucker3 <- function(x, mode=c("A", "B", "C"), rsign=1, ...)
     } else if(mode=="B")
     {
         x$B <- x$B %*% rdiag
+        if(!is.null(x$Bclr))
+            x$Bclr <- x$Bclr %*% rdiag
         x$GA <- permute(x$GA, P, Q, R)
         x$GA <- rdiag %*% x$GA
         x$GA <- permute(x$GA, Q, R, P)

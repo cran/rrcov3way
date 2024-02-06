@@ -1,3 +1,9 @@
+2024-01-12  Valentin Todorov  <valentin.todorov@chello.at>
+    *
+    * DESCRIPTION (Version): 0.5-0
+    *
+    *   R/cp_gen.R: added function for simulation of PARAFAC data sets
+
 2023-03-16  Valentin Todorov  <valentin.todorov@chello.at>
     *
     * DESCRIPTION (Version): 0.3-0

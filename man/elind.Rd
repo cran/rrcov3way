@@ -34,7 +34,7 @@ The third dimension refers to the years in the period 1978--1985.
 }
 \source{
 	The data set is available from Pieter Kroonenberg's web site at: 
-    \url{https://three-mode.leidenuniv.nl/data/electronicindustriesinfo.htm}
+    	"three-mode.leidenuniv.nl/data/electronicindustriesinfo.htm"
 }
 \references{
     D'Ambra, L. (1985). Alcune estensione dell'analisi in componenti principali 

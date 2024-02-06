@@ -61,9 +61,9 @@
 #' Simonacci, V. and Gallo, M. (2020). An ATLD--ALS method for the trilinear decomposition
 #'  of large third-order tensors, \emph{Soft Computing} 24 13535--13546.
 #'
-#' Todorov, V. and Simonacci, V. and Gallo, M. and Trendafilov, N. (2023). A novel
-#'  estimation procedure for robust CANDECOMP/PARAFAC model fitting,
-#'  submitted for publication.
+#' Todorov, V. and Simonacci, V. and Gallo, M. and Trendafilov, N. (2023). A novel 
+#'  estimation procedure for robust CANDECOMP/PARAFAC model fitting. 
+#'  \emph{Econometrics and Statistics}. In press.
 #'
 #' @note The argument \code{const} should be a three element character vector.
 #'  Set \code{const[j]="none"} for unconstrained update in j-th mode weight

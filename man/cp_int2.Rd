@@ -117,9 +117,9 @@ H.-L. Wu, M. Shibukawa, K. Oguma, An alternating trilinear decomposition
 Simonacci, V. and Gallo, M. (2020). An ATLD--ALS method for the trilinear decomposition
  of large third-order tensors, \emph{Soft Computing} 24 13535--13546.
 
-Todorov, V. and Simonacci, V. and Gallo, M. and Trendafilov, N. (2023). A novel
- estimation procedure for robust CANDECOMP/PARAFAC model fitting,
- submitted for publication.
+Todorov, V. and Simonacci, V. and Gallo, M. and Trendafilov, N. (2023). A novel 
+ estimation procedure for robust CANDECOMP/PARAFAC model fitting. 
+ \emph{Econometrics and Statistics}. In press.
 }
 \author{
 Valentin Todorov, \email{valentin.todorov@chello.at}; Violetta Simonacci, \email{violetta.simonacci@unina.it}
