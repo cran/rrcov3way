@@ -191,6 +191,7 @@ is.orthonormal <- function(a)
     is.logical(ret) && ret
 }
 
+#' @export
 do3Scale.tucker3 <- function(x, renorm.mode=c("A", "B", "C"), ...)
 {
     renorm.mode <- match.arg(renorm.mode)
@@ -226,6 +227,7 @@ do3Scale.tucker3 <- function(x, renorm.mode=c("A", "B", "C"), ...)
     x
 }
 
+#' @export
 do3Scale.parafac <- function(x, renorm.mode=c("A", "B", "C"), ...)
 {
     renorm.mode <- match.arg(renorm.mode)
@@ -259,6 +261,7 @@ do3Scale.parafac <- function(x, renorm.mode=c("A", "B", "C"), ...)
     x
 }
 
+#' @export
 do3Scale.default <- function(x, center=FALSE, scale=FALSE, center.mode=c("A", "B", "C", "AB", "AC", "BC", "ABC"), scale.mode=c("B", "A", "C"), only.data=TRUE, ...)
 {
     ss <- function(x) sqrt(sum(x^2))
@@ -356,6 +359,7 @@ do3Rotate.tucker3 <- function(x, weights=c(0, 0, 0), rotate=c("A", "B", "C"), ..
     ans
 }
 
+#' @export
 coordinates.parafac <- function(x, mode=c("A", "B", "C"), type=c("normalized", "unit", "principal"), ...)
 {
     mode <- match.arg(mode)
@@ -384,6 +388,7 @@ coordinates.parafac <- function(x, mode=c("A", "B", "C"), type=c("normalized", "
         })
 }
 
+#' @export
 coordinates.tucker3 <- function(x, mode=c("A", "B", "C"), type=c("normalized", "unit", "principal"), ...)
 {
     mode <- match.arg(mode)
@@ -408,6 +413,7 @@ coordinates.tucker3 <- function(x, mode=c("A", "B", "C"), type=c("normalized", "
         })
 }
 
+#' @export
 reflect.tucker3 <- function(x, mode=c("A", "B", "C"), rsign=1, ...)
 {
     mode <- match.arg(mode)
@@ -456,6 +462,7 @@ reflect.tucker3 <- function(x, mode=c("A", "B", "C"), rsign=1, ...)
     x
 }
 
+#' @export
 reflect.parafac <- function(x, mode=c("A", "B", "C"), rsign=1, ...)
 {
     mode <- match.arg(mode)
@@ -500,6 +507,7 @@ reflect.parafac <- function(x, mode=c("A", "B", "C"), rsign=1, ...)
 ##  Note that the stdandard weights can be extracted only if at least one of the
 ##  modes has orthogonal components (i.e. the model was
 ##  estimated with orthogonality constraint).
+#' @export
 weights.parafac <- function(object, ...)
 {
     if(!is.orthogonal(object$A) && !is.orthogonal(object$B) && !is.orthogonal(object$C))
@@ -513,6 +521,7 @@ weights.parafac <- function(object, ...)
 ##  Calculate the explained variance (standardized weights)
 ##  by component for a TUCKER 3 model.
 ##
+#' @export
 weights.tucker3 <- function(object, mode=c("A", "B", "C"), ...)
 {
     mode <- match.arg(mode)
@@ -537,6 +546,7 @@ weights.tucker3 <- function(object, mode=c("A", "B", "C"), ...)
 
 ## Reorder the components of a PARAFAC model
 ##
+#' @export
 reorder.parafac <- function(x, order=TRUE, ...)
 {
     ncomp <- x$ncomp
@@ -566,6 +576,7 @@ reorder.parafac <- function(x, order=TRUE, ...)
 
 ## Reorder the components of a Tucker 3 model
 ##
+#' @export
 reorder.tucker3 <- function(x, mode=c("A", "B", "C"), order=TRUE, ...)
 {
     mode <- match.arg(mode)
@@ -617,6 +628,7 @@ reorder.tucker3 <- function(x, mode=c("A", "B", "C"), order=TRUE, ...)
     x
 }
 
+#' @export
 do3Postprocess.tucker3 <- function(x, reflectA, reflectB, reflectC, reorderA, reorderB, reorderC, ...)
 {
     if(!missing(reflectA))
@@ -635,6 +647,7 @@ do3Postprocess.tucker3 <- function(x, reflectA, reflectB, reflectC, reorderA, re
     x
 }
 
+#' @export
 do3Postprocess.parafac <- function(x, reflectA, reflectB, reflectC, reorder, ...)
 {
     if(!missing(reflectA))

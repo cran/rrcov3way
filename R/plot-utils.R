@@ -70,7 +70,8 @@
 ##
 ##  Loadings plot for modes A, B and C of Tucker3 model
 ##
-.compplot.tucker3 <- function (x, mode=c("A", "B", "C"), choices=1L:2L, xlim, ylim, arrows=TRUE, ...)
+.compplot.tucker3 <- function (x, mode=c("A", "B", "C"), choices=1L:2L, xlim, ylim, arrows=TRUE, 
+    cex.text.A=0.8, cex.text.B=0.8, x.off, y.off, ...)
 {
 
     mode <- match.arg(mode)
@@ -136,12 +137,18 @@
 
     plot(tilde[,choices], type="n", xlab=paste("Axis", comp1), ylab=paste("Axis", comp2), xlim=xlim, ylim=ylim, cex=1.2, ...)
     abline(v=0, h=0, lty=2)
-
+    
+    tilde.text <- matrix(0, nrow=nrow(tilde), ncol=ncol(tilde))
+    if(!missing(x.off))
+        tilde.text[, 1] <- tilde.text[, 1] + x.off 
+    if(!missing(y.off))
+        tilde.text[, 2] <- tilde.text[, 2] + y.off 
+        
     if(mode == "B" & arrows) {
         arrows(0, 0, tilde[,comp1], tilde[,comp2], code = 2, length = 0.09)
-        text(tilde[,comp1], tilde[,comp2], lab, cex=0.8, pos=1, ...)
+        text(tilde[,comp1] + tilde.text[, 1], tilde[,comp2] + tilde.text[, 2], lab, cex=cex.text.B, pos=1, ...)
     }else
-        text(tilde[,comp1], tilde[,comp2], lab, cex=0.8, ...)
+        text(tilde[,comp1] + tilde.text[, 1], tilde[,comp2] + tilde.text[, 2], lab, cex=cex.text.A, col=4, ...)
 
     return(invisible(x))
 }
@@ -295,8 +302,13 @@
 
 
 ## Joint biplot (for Tucker 3)
-.JBPlot <- function (x, alfa=.5, comp=1, ...)
+.JBPlot <- function (x, alfa=.5, comp=1, cex.text.A=1.0, cex.text.B=1.0, rotate=c(1,1,1,1), A.x.off, A.y.off, B.x.off, B.y.off, ...)
 {
+    ##  cex.text.A and cex.text.B - text size of the A-mode and B-mode labels respectively
+    ##  rotate <- c(A.x, A.y, B.x, B.y) - a vector with 4 elements which are 1 or -1
+    ##  A.x.off, A.y.off: x- and y-offset of the labels of mode A
+    ##  B.x.off, B.y.off: x- and y-offset of the labels of mode B (labels of the arrows)
+     
     ## A is loadings matrix for first mode
     ## Bclr is loadings matrix for second mode only two components (clr transformation)
     ## C is loadings matrix for third mode
@@ -337,6 +349,22 @@
     Atilde <- ssa*(A %*% SVDG$u %*% singv^(k))
     Btilde <- ssb*(B %*% SVDG$v %*% singv^((1-k)))
 
+    Atilde[, 1] <- rotate[1] * Atilde[, 1]
+    Atilde[, 2] <- rotate[2] * Atilde[, 2]
+    Btilde[, 1] <- rotate[3] * Btilde[, 1]
+    Btilde[, 2] <- rotate[4] * Btilde[, 2]
+
+    if(!missing(A.x.off))
+        Atilde[, 1] <- Atilde[, 1] + A.x.off 
+    if(!missing(A.y.off))
+        Atilde[, 2] <- Atilde[, 2] + A.y.off 
+
+    Btilde.text <- matrix(0, nrow=nrow(Btilde), ncol=ncol(Btilde))
+    if(!missing(B.x.off))
+        Btilde.text[, 1] <- Btilde.text[, 1] + B.x.off 
+    if(!missing(B.y.off))
+        Btilde.text[, 2] <- Btilde.text[, 2] + B.y.off 
+
     ## plot
     ## Warning
     ## VT::09.01.2024 - reduce Btilde[,2] a bit, because the text of the arrows will be written below
@@ -344,27 +372,33 @@
     if(K == -aa) {
         plot(c(min(Atilde[,1],-Btilde[,1]), max(Atilde[,1],-Btilde[,1])),
              c(min(Atilde[,2], Btilde[,2]), max(Atilde[,2], Btilde[,2])),
-                type="n", xlab="First axis", ylab="Second axis", cex=1.2, ...)
-        abline(v=0, h=0, lty=2)
-        text(-Btilde[,1], Btilde[,2], rownames(B), col=1, cex=0.8, pos=1)
+                type="n", xlab="First axis", ylab="Second axis", ...)
+        abline(v=0, h=0, lty=1)
+        text(-Btilde[,1] + Btilde.text[,1], Btilde[,2] + Btilde.text[, 2], rownames(B), col=1, cex=cex.text.B, pos=1)
         arrows(0, 0, -Btilde[,1], Btilde[,2], code=2, length=0.09)
-        text(Atilde[,1], Atilde[,2], rownames(A), col=4, cex=0.8)
+        text(Atilde[,1], Atilde[,2], rownames(A), col=4, cex=cex.text.A)
     } else {
         plot(c(min(Atilde[,1], Btilde[,1]), max(Atilde[,1], Btilde[,1])),
              c(min(Atilde[,2], Btilde[,2]-0.1), max(Atilde[,2],Btilde[,2])),
-                type="n", xlab="First axis", ylab="Second axis", cex=1.2, ...)
-        abline(v=0, h=0, lty=2)
-        text(Btilde[,1], Btilde[,2], rownames(B), col=1, cex=0.8, pos=1)
+                type="n", xlab="First axis", ylab="Second axis", ...)
+        abline(v=0, h=0, lty=1)
+        text(Btilde[,1] + Btilde.text[,1], Btilde[,2] + Btilde.text[, 2], rownames(B), col=1, cex=cex.text.B, pos=1)
         arrows(0, 0, Btilde[,1], Btilde[,2], code=2, length=0.09)
-        text(Atilde[,1], Atilde[,2], rownames(A), col=4, cex=0.8)
+        text(Atilde[,1], Atilde[,2], rownames(A), col=4, cex=cex.text.A)
     }
 
     return(invisible(x))
 }
 
 ## Trajectory biplot (for Tucker 3)
-.TJPlot <- function (x, choices, arrows=TRUE, longnames=TRUE, ...)
+.TJPlot <- function (x, choices, arrows=TRUE, longnames=TRUE, 
+    cex.line=0.5, cex.text=0.6, cex.text.arrow=0.8, ...)
 {
+    
+    ##  cex.line         <- 0.5      # trajectory line symbols
+    ##  cex.text         <- 0.6      # trajectory text
+    ##  cex.text.arrow   <- 0.8      # arrow text
+    
     ## A is loadings matrix for first mode .
     ## Bclr is loadings matrix for second mode only two components (clr transformation).
     ## C is loadings matrix for third mode
@@ -437,21 +471,20 @@
         x <- c(min(ACco[cx, 1]), max(ACco[cx, 1]))
         y <- c(min(ACco[cx, 2]), max(ACco[cx, 2]))
     }
-    plot(x, y, xlab="First trajectory axis", ylab="Second trajectory axis", type="n", cex=1.2, ...)
+    plot(x, y, xlab="First trajectory axis", ylab="Second trajectory axis", type="n", ...)
     abline(v=0, h=0, lty = 2)
 
     if(arrows) {
         arrows(0, 0, Bco[,1], Bco[,2], code = 2, length = 0.09)
-        text(Bco[,1], Bco[,2], rownames(B), col=1, cex=0.8, pos=1)
+        text(Bco[,1], Bco[,2], rownames(B), col=1, cex=cex.text.arrow, pos=1)
     }
 
     for(i in choices) {
         aa <- seq(i, I*K, I)
 ##        print(i)
 ##        print(aa)
-        lines(c(ACco[aa,1]), c(ACco[aa,2]), col=2, lty = 3, type = "o", cex=0.5)
-##        text(ACco[aa[c(1:K)],1], ACco[aa[c(1:K)],2], rowlabACco[aa[c(1:K)]], col=1, cex=0.6)
-        text(ACco[aa[c(1,K)],1], ACco[aa[c(1,K)],2], rowlabACco[aa[c(1,K)]], col=1, cex=0.6)
+        lines(c(ACco[aa,1]), c(ACco[aa,2]), col=2, lty = 3, type = "o", cex=cex.line)
+        text(ACco[aa[c(1,K)],1], ACco[aa[c(1,K)],2], rowlabACco[aa[c(1,K)]], col=1, cex=cex.text)
     }
 
     return(invisible(x))

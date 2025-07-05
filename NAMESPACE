@@ -2,7 +2,7 @@ importFrom("graphics", "abline", "arrows", "axis", "box", "hist",
          "legend", "lines", "pairs", "par", "points", "rect",
          "strwidth", "text", "title")
 importFrom("grDevices", "dev.interactive", "palette")
-importFrom("stats", "runif", "median", "mad", "qnorm", "sd", "mahalanobis", "qchisq")
+importFrom("stats", "runif", "median", "mad", "qnorm", "sd", "mahalanobis", "qchisq", "var")
 importFrom("stats", "weights")
 importFrom("stats", "na.omit")
 importFrom("stats", "coef")

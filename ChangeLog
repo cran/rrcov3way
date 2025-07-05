@@ -1,3 +1,13 @@
+2025-07-05  Valentin Todorov  <valentin.todorov@chello.at>
+    *
+    * DESCRIPTION (Version): 0.6-1
+    * DESCRIPTION (Version): 0.6-0
+    *
+    *   DESCRIPTION: change maintainer mail
+    *   data: add data sets Kier2001 and satisfaction
+    *   R/*.R: fix issues with roxygen2 - add @export to S3 methods
+    *
+    
 2024-01-12  Valentin Todorov  <valentin.todorov@chello.at>
     *
     * DESCRIPTION (Version): 0.5-0

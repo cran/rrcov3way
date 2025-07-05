@@ -464,6 +464,7 @@ Tucker3 <- function(X, P=2, Q=2, R=2,
 ## - jbplot = joint biplot
 ## - tjplot = trajectory plot
 ##
+#' @export
 plot.tucker3 <- function(x, which=c("dd", "comp", "allcomp", "jbplot", "tjplot", "all"), ask = (which=="all" && dev.interactive(TRUE)), id.n, ...)
 {
     which <- match.arg(which)
@@ -493,6 +494,7 @@ plot.tucker3 <- function(x, which=c("dd", "comp", "allcomp", "jbplot", "tjplot",
     invisible(ret)
 }
 
+#' @export
 print.tucker3 <- function(x, ...)
 {
     if(!is.null(cl <- x$call)) {

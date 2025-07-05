@@ -89,21 +89,21 @@ A brief overview of multilinear tools, robustification procedures and compositio
 
     Violetta Simonacci\\
     Department of Human and Social Sciences\\
-    L’Orientale--University of Naples\\
+    L'Orientale--University of Naples\\
     P.zza S.Giovanni Maggiore, 30\\
     Naples, 80134, Italy\\
     E-mail:  \email{vsimonacci@unior.it}\\
 
     Maria Anna Di Palma\\
     Department of Human and Social Sciences\\
-    L’Orientale--University of Naples\\
+    LOrientale--University of Naples\\
     P.zza S.Giovanni Maggiore, 30\\
     Naples, 80134, Italy\\
     E-mail:  \email{madipalma@unior.it}\\
 
     Michele Gallo\\
     Department of Human and Social Sciences\\
-    L’Orientale--University of Naples\\
+    L'Orientale--University of Naples\\
     P.zza S.Giovanni Maggiore, 30\\
     Naples, 80134, Italy\\
     E-mail:  \email{mgallo@unior.it}\\
@@ -125,10 +125,9 @@ A brief overview of multilinear tools, robustification procedures and compositio
 \renewcommand{\v}[1]{\mathbf{#1}}
 %% Sweave options for the complete document
 %%\SweaveOpts{keep.source=TRUE}
-\SweaveOpts{prefix.string=images/rrcov3way}
+\SweaveOpts{prefix.string=rrcov3way}
 \SweaveOpts{width=60}
 \SweaveOpts{concordance=FALSE}
-\graphicspath{{./images/}}
 
 
 \begin{document}
@@ -702,7 +701,7 @@ cat("\n Selected number of components: ", o1$pcaobj$k, "\n")
 @
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.7\textwidth]{images/rrcov3way-robust-pca}\\
+\includegraphics[width=0.7\textwidth]{rrcov3way-robust-pca}\\
 \caption{Selecting the number of components for robust PCA: The screeplot.}
 \label{fig-robust-pca}
 \end{figure}
@@ -1071,7 +1070,7 @@ legend("topleft", legend = legend, col = 1:p, lty = 1:p, pch = 1:p)
 @
 \begin{figure}[H]
 \centering
-\includegraphics{images/rrcov3way-girls-average-plot}\\
+\includegraphics{rrcov3way-girls-average-plot}\\
 \caption{Average growth curves for the girls data set. The variables
 with an asterisk were divided by 10 to make the ranges similar}
 \label{fig-average-girl}
@@ -1153,7 +1152,7 @@ par(oldpar)
 @
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.7\textwidth]{images/rrcov3way-girls-ddplot}
+\includegraphics[width=0.7\textwidth]{rrcov3way-girls-ddplot}
 \caption{Classical and robust distance-distance plot for a three component PARAFAC model of the girls data set.}
 \label{fig-girls-ddplot}
 \end{figure}
@@ -1186,7 +1185,7 @@ par(oldpar)
 @
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.7\textwidth]{images/rrcov3way-girls-paired}
+\includegraphics[width=0.7\textwidth]{rrcov3way-girls-paired}
 \caption{Side-by-side paired components plots of mode A of the girls growth curves data.}
 \label{fig-girls-paired}
 \end{figure}
@@ -1198,7 +1197,7 @@ par(oldpar)
 @
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.7\textwidth]{images/rrcov3way-girls-paired-B}
+\includegraphics[width=0.7\textwidth]{rrcov3way-girls-paired-B}
 \caption{Side-by-side paired components plots of mode B of the girls
 growth curves data. The variables are presented as arrows.}
 \label{fig-girls-paired-B}
@@ -1227,7 +1226,7 @@ plot(cp, which = "percomp")
 @
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.7\textwidth]{images/rrcov3way-girls-percomp}
+\includegraphics[width=0.7\textwidth]{rrcov3way-girls-percomp}
 \caption{Per-component plot for the girls growth curves data from a PARAFAC analysis with 2 components.}
 \label{fig-girls-percomp}
 \end{figure}
@@ -1249,7 +1248,7 @@ plot(t3, which="allcomp")
 @
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.7\textwidth]{images/rrcov3way-girls-allcomp}
+\includegraphics[width=0.7\textwidth]{rrcov3way-girls-allcomp}
 \caption{All components plot for the girls growth curves data with the age
 on the horizontal axis (mode C) and the component scores on the vertical axis.}
 \label{fig-girls-allcomp}
@@ -1270,7 +1269,7 @@ plot(amino.cp, which = "allcomp",
 @
 \begin{figure}
 \centering
-\includegraphics[width=0.7\textwidth]{images/rrcov3way-amino-allcomp}
+\includegraphics[width=0.7\textwidth]{rrcov3way-amino-allcomp}
 \caption{All components plot for the Anderson data---plot of PARAFAC
 components of the excitation mode (mode C).}
 \label{fig-amino-allcomp}
@@ -1333,7 +1332,7 @@ plot(t3x, which = "jbplot")
 @
 \begin{figure}
 \centering
-\includegraphics[width=0.7\textwidth]{images/rrcov3way-girls-jointbiplot}
+\includegraphics[width=0.7\textwidth]{rrcov3way-girls-jointbiplot}
 \caption{Joint  biplot for the girls growth curves data from a Tucker3
 analysis with $3\times3\times2$ components for the first age component.}
 \label{fig-girls-jointbiplot}
@@ -1372,7 +1371,7 @@ plot(t3x, which = "tjplot", arrows = TRUE)
 @
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.6\textwidth]{images/rrcov3way-girls-tjplot}
+\includegraphics[width=0.6\textwidth]{rrcov3way-girls-tjplot}
 \caption{Trajectory plot for the girls growth curves data from a Tucker3
 analysis with $3\times3\times2$ components. The trajectories represent
 the development of the subjects (girls)
@@ -1390,7 +1389,7 @@ plot(t3x, which = "tjplot", choices = c(9, 11, 25, 2), arrows = FALSE)
 @
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.6\textwidth]{images/rrcov3way-girls-tjplot2}
+\includegraphics[width=0.6\textwidth]{rrcov3way-girls-tjplot2}
 \caption{Trajectory plot for several objects in the girls growth curves data from a Tucker3
 analysis with $3\times3\times2$ components. }
 \label{fig-girls-tjplot2}
@@ -1593,8 +1592,8 @@ plot(Arnot3, which = "comp", mode = "B",
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.45\textwidth]{images/rrcov3way-Arno-t3-comp-modeA}
-\includegraphics[width=0.45\textwidth]{images/rrcov3way-Arno-t3-comp-modeB}
+\includegraphics[width=0.45\textwidth]{rrcov3way-Arno-t3-comp-modeA}
+\includegraphics[width=0.45\textwidth]{rrcov3way-Arno-t3-comp-modeB}
 \caption{Pair-wise component plot for the Tucker3 decomposition of the Arno data.
 The left-hand panel (a) corresponds to mode A and the right-hand one, (b) ---to mode B.}
 \label{fig-Arno-t3-comp-pair-wise}
@@ -1611,7 +1610,7 @@ plot(Arnot3, which = "jbplot", main = "Joint biplot")
 @
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.7\textwidth]{images/rrcov3way-Arno-t3-comp-joint}
+\includegraphics[width=0.7\textwidth]{rrcov3way-Arno-t3-comp-joint}
 \caption{Joint component plot for the Tucker3 decomposition of the Arno data.}
 \label{fig-Arno-t3-comp-joint}
 \end{figure}
@@ -1655,7 +1654,7 @@ plot(Arnot3, which = "tjplot", main = "Trajectory biplot")
 @
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.7\textwidth]{images/rrcov3way-Arno-t3-comp-trajectory}
+\includegraphics[width=0.7\textwidth]{rrcov3way-Arno-t3-comp-trajectory}
 \caption{Trajectory plot for the Tucker3 decomposition of the Arno data.}
 \label{fig-Arno-t3-comp-trajectory}
 \end{figure}
@@ -1686,7 +1685,7 @@ persp(x, y, amino[2, , ], ticktype = "detailed",
 @
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.7\textwidth]{images/rrcov3way-amino-surface}
+\includegraphics[width=0.7\textwidth]{rrcov3way-amino-surface}
 \caption{Fluorescence landscape of one sample.}
 \label{fig-amino-surface}
 \end{figure}
@@ -1713,7 +1712,7 @@ p
 @
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.7\textwidth]{images/rrcov3way-amino-excitation}
+\includegraphics[width=0.7\textwidth]{rrcov3way-amino-excitation}
 \caption{Plot of two excitation spectra.}
 \label{fig-amino-excitation}
 \end{figure}
@@ -1740,8 +1739,8 @@ plot(p2, which = "allcomp", mode = "B", points = FALSE,
 @
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.45\textwidth]{images/rrcov3way-amino-PARAFAC-none}
-\includegraphics[width=0.45\textwidth]{images/rrcov3way-amino-PARAFAC-nonneg}
+\includegraphics[width=0.45\textwidth]{rrcov3way-amino-PARAFAC-none}
+\includegraphics[width=0.45\textwidth]{rrcov3way-amino-PARAFAC-nonneg}
 \caption{Emission spectra decomposition: (a) Unconstrained PARAFAC with three
 components and (b) Nonnegative PARAFAC with three components.}
 \label{fig-amino-PARAFAC}

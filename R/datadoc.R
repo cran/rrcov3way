@@ -135,3 +135,97 @@ NULL
 #' }
 #' @keywords datasets
 NULL
+#' Fictious data set of Kiers and Mechelen (2001).
+#'
+#' A fictitious data presented by Kiers and Mechelen (2001) to illustrate Tucker3 
+#'  model: A set of six persons with scores on five response variables for four 
+#'  different situations. The response variables indicate to what extent each 
+#'  individual displays an emotional, sensitive, caring, thorough, or accurate 
+#'  behavior. The data set is represented as a 6 x 5 x 4 array. The data are 
+#'  chosen such that they correspond to a Tucker3 model with \code{P=2, Q=2, R=2}.
+#'
+#' @name Kiers2001
+#' @docType data
+#' @usage data(Kiers2001)
+#' @format A three-way array with dimension \code{6 x 5 x 4}.
+#'  The first dimension refers to the 6 persons. The second dimension
+#'  refers to the five responce variables.
+#'  The third dimension refers to four different situations.
+#' @source
+#' Kiers HAL, Mechelen IV (2001) Three-way component analysis: Principles and
+#' illustrative application. Psychological Methods 6(1):84--110 
+#' @references
+#' Todorov, V., Simonacci, V., Gallo, M., and Di Palma, M. (2025). Robust tools
+#'  for three-way component analysis of compositional data: The R package
+#'  rrcov3way. Behaviormetrika. In press.
+#'
+#' @examples
+#'
+#'  data(Kiers2001)
+#'
+#'  t3 <- Tucker3(Kiers2001, P=2, Q=2, R=2)
+#'  t3
+#'  t3$A
+#'  t3$B
+#'  t3$C
+#'  t3$G
+#'  plot(t3)
+#'  plot(t3, which="jbplot", xlim=c(0, 2))
+#'
+#' @keywords datasets
+NULL
+#' Student satisfaction data
+#'
+#' The primary assessment tool for analyzing student satisfaction is an 
+#'  annual questionnaire organized into five categories: degree program, course 
+#'  characteristics, teaching, equipment, and overall satisfaction. 
+#'  Each questionnaire comprises 18 standardized questions rated on a ten-point 
+#'  Likert scale (1 = "Strongly Disagree" to 10 = "Strongly Agree"). The  
+#'  original microdata were aggregated by 10 faculties and six academic years. 
+#'  Thus, we have a threeway array with dimensions \code{10 x 18 x 6}.
+#'
+#' @name satisfaction
+#' @docType data
+#' @usage data(satisfaction)
+#' @format A three-way array with dimension \code{10 x 18 x 6}.
+#'  The first dimension refers to the 10 faculties. The second dimension
+#'  refers to 18 standardized questions rated on a ten-point Likert scale 
+#'  (1 = "Strongly Disagree" to 10 = "Strongly Agree").
+#'  The third dimension refers to six consequtive academic years (2012--2017).
+#' @source
+#'  Italian universities are mandated by Law No. 370/99 to evaluate
+#'  teaching quality through student opinion surveys. The National Agency for
+#'  the Evaluation of Universities and Research (ANVUR), established in 2006,
+#'  supervises the periodic assessment of academic quality. Following Presidential
+#'  Decree 76/2010, ANVUR standardized methodologies for evaluating institutions
+#'  and degree programs, with a strong focus on student involvement.
+#'  The University of Florence provided microdata, which were later aggregated 
+#'  into data for 10 faculties, 18 questions and 6 academic years.
+#' 
+#' Simonacci V, Gallo M (2017) Statistical tools for student evaluation of academic
+#'  educational quality. Quality & Quantity 51(2):565--579 
+#' @references
+#'  Gallo M, Simonacci V, Todorov V (2021) A compositional three-way approach
+#'  for student satisfaction analysis. In: Filzmoser P, Hron K, Martin--Fernandez
+#'  JA, Palarea-Albaladejo J (eds) Advances in Compositional Data Analysis,
+#'  Springer, Cham, pp 143--162
+#'
+#' Todorov, V., Simonacci, V., Gallo, M., and Di Palma, M. (2025). Robust tools
+#'  for three-way component analysis of compositional data: The R package
+#'  rrcov3way. Behaviormetrika. In press.
+ 
+#' @examples
+#'
+#'  data(satisfaction)
+#'
+#'  t3 <- Tucker3(satisfaction, P=2, Q=2, R=1, coda.transform="clr")
+#'  t3
+#'  t3$A
+#'  t3$B
+#'  t3$C
+#'  t3$G
+#'  plot(t3)
+#'  plot(t3, which="jbplot", xlim=c(-1, 1))
+#'
+#' @keywords datasets
+NULL

@@ -79,7 +79,7 @@ Parafac <- function(X, ncomp=2,
         ## ret <- sqrt(qnorm(0.975, unimcd$center, sqrt(unimcd$cov))^3)
         ##
         ## c) Using UNIMCD
-         unimcd <- rrcov:::unimcd(rd^(2/3), quan=h)
+         unimcd <- unimcd(rd^(2/3), quan=h)
          ret <- sqrt(qnorm(crit, unimcd$tmcd, unimcd$smcd)^3)
 
         ## d) Using UNIMCD by CovMcd
@@ -573,6 +573,7 @@ Parafac <- function(X, ncomp=2,
 ## - percomp= per component plot
 ## - allcomp= all components plot
 ##
+#' @export
 plot.parafac <- function(x, which=c("dd", "comp", "percomp", "allcomp", "all"), ask = (which=="all" && dev.interactive(TRUE)), id.n, ...)
 {
     which <- match.arg(which)
@@ -598,6 +599,7 @@ plot.parafac <- function(x, which=c("dd", "comp", "percomp", "allcomp", "all"), 
     invisible(ret)
 }
 
+#' @export
 print.parafac <- function(x, ...)
 {
     if(!is.null(cl <- x$call)) {

@@ -20,7 +20,7 @@ of *Parafac* and *Tucker 3* models (Engelen and Hubert (2011)
 [doi:10.1016/j.aca.2011.04.043](https://doi.org/10.1016/j.aca.2011.04.043)).
 Robust versions for compositional data are also provided (Gallo (2015)
 [doi:10.1080/03610926.2013.798664](https://doi.org/10.1080/03610926.2013.798664),
-Di Palma et al. (2018)
+Di Palma et al. (2018)
 [doi:10.1080/02664763.2017.1381669](https://doi.org/10.1080/02664763.2017.1381669)).
 
 Several optimization methods alternative to ALS are available (Simonacci
